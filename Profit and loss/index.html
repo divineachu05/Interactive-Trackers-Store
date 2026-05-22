@@ -1,0 +1,401 @@
+<!-- Export Buttons -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+  <button onclick="exportToExcel()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl">
+    📊 Download Excel File (.xls)
+  </button>
+
+  <button onclick="exportToCSV()" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl">
+    📥 Download CSV for Google Sheets
+  </button>
+</div>
+
+<p class="text-center text-sm text-slate-500 mt-3">
+  Open the Excel file in Microsoft Excel, or upload/import the CSV file into Google Sheets.
+</p>
+
+<script>
+function getFinancialExportData() {
+  const incomeRows = [];
+  let totalIncome = 0;
+
+  document.querySelectorAll('#income-items .checklist-item').forEach(item => {
+    const descInput = item.querySelector('input[type="text"]');
+    const amountInput = item.querySelector('.amount-input');
+    const completedInput = item.querySelector('input[type="checkbox"]');
+
+    const description = descInput ? descInput.value : '';
+    const amount = amountInput ? parseFloat(amountInput.value) || 0 : 0;
+    const completed = completedInput && completedInput.checked ? 'Yes' : 'No';
+
+    incomeRows.push({
+      category: 'Income',
+      description: description,
+      amount: amount,
+      completed: completed
+    });
+
+    totalIncome += amount;
+  });
+
+  const expenseRows = [];
+  let totalExpenses = 0;
+
+  document.querySelectorAll('#expenses-items .checklist-item').forEach(item => {
+    const descInput = item.querySelector('input[type="text"]');
+    const amountInput = item.querySelector('.amount-input');
+    const completedInput = item.querySelector('input[type="checkbox"]');
+
+    const description = descInput ? descInput.value : '';
+    const amount = amountInput ? parseFloat(amountInput.value) || 0 : 0;
+    const completed = completedInput && completedInput.checked ? 'Yes' : 'No';
+
+    expenseRows.push({
+      category: 'Expense',
+      description: description,
+      amount: amount,
+      completed: completed
+    });
+
+    totalExpenses += amount;
+  });
+
+  const reviewRows = [];
+
+  document.querySelectorAll('#review-items .checklist-item').forEach(item => {
+    const descInput = item.querySelector('input[type="text"]');
+    const completedInput = item.querySelector('input[type="checkbox"]');
+
+    reviewRows.push({
+      category: 'Review',
+      description: descInput ? descInput.value : '',
+      amount: '',
+      completed: completedInput && completedInput.checked ? 'Yes' : 'No'
+    });
+  });
+
+  return {
+    incomeRows: incomeRows,
+    expenseRows: expenseRows,
+    reviewRows: reviewRows,
+    totalIncome: totalIncome,
+    totalExpenses: totalExpenses,
+    netProfit: totalIncome - totalExpenses
+  };
+}
+
+function exportToExcel() {
+  const data = getFinancialExportData();
+  const generatedDate = new Date().toLocaleDateString();
+
+  const htmlTable = `
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <style>
+        table {
+          border-collapse: collapse;
+          font-family: Arial, sans-serif;
+        }
+
+        th {
+          background: #5b21b6;
+          color: #ffffff;
+          font-weight: bold;
+        }
+
+        th, td {
+          border: 1px solid #999999;
+          padding: 8px;
+        }
+
+        .section {
+          background: #ede9fe;
+          font-weight: bold;
+          font-size: 16px;
+        }
+
+        .total {
+          background: #dcfce7;
+          font-weight: bold;
+        }
+
+        .expenseTotal {
+          background: #fee2e2;
+          font-weight: bold;
+        }
+
+        .summary {
+          background: #fef3c7;
+          font-weight: bold;
+        }
+      </style>
+    </head>
+
+    <body>
+      <table>
+        <tr>
+          <td colspan="4" class="section">P&amp;L FINANCIAL CHECKLIST</td>
+        </tr>
+
+        <tr>
+          <td colspan="4">Generated: ${generatedDate}</td>
+        </tr>
+
+        <tr>
+          <td colspan="4"></td>
+        </tr>
+
+        <tr>
+          <td colspan="4" class="section">INCOME &amp; REVENUE ITEMS</td>
+        </tr>
+
+        <tr>
+          <th>Category</th>
+          <th>Description</th>
+          <th>Amount</th>
+          <th>Completed</th>
+        </tr>
+
+        ${data.incomeRows.map(row => `
+          <tr>
+            <td>${escapeHTML(row.category)}</td>
+            <td>${escapeHTML(row.description)}</td>
+            <td>${Number(row.amount).toFixed(2)}</td>
+            <td>${escapeHTML(row.completed)}</td>
+          </tr>
+        `).join('')}
+
+        <tr class="total">
+          <td colspan="2">TOTAL INCOME</td>
+          <td>${data.totalIncome.toFixed(2)}</td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td colspan="4"></td>
+        </tr>
+
+        <tr>
+          <td colspan="4" class="section">EXPENSES &amp; COSTS</td>
+        </tr>
+
+        <tr>
+          <th>Category</th>
+          <th>Description</th>
+          <th>Amount</th>
+          <th>Completed</th>
+        </tr>
+
+        ${data.expenseRows.map(row => `
+          <tr>
+            <td>${escapeHTML(row.category)}</td>
+            <td>${escapeHTML(row.description)}</td>
+            <td>${Number(row.amount).toFixed(2)}</td>
+            <td>${escapeHTML(row.completed)}</td>
+          </tr>
+        `).join('')}
+
+        <tr class="expenseTotal">
+          <td colspan="2">TOTAL EXPENSES</td>
+          <td>${data.totalExpenses.toFixed(2)}</td>
+          <td></td>
+        </tr>
+
+        <tr>
+          <td colspan="4"></td>
+        </tr>
+
+        <tr>
+          <td colspan="4" class="section">FINAL REVIEW &amp; VERIFICATION</td>
+        </tr>
+
+        <tr>
+          <th>Category</th>
+          <th>Description</th>
+          <th>Amount</th>
+          <th>Completed</th>
+        </tr>
+
+        ${data.reviewRows.map(row => `
+          <tr>
+            <td>${escapeHTML(row.category)}</td>
+            <td>${escapeHTML(row.description)}</td>
+            <td></td>
+            <td>${escapeHTML(row.completed)}</td>
+          </tr>
+        `).join('')}
+
+        <tr>
+          <td colspan="4"></td>
+        </tr>
+
+        <tr class="summary">
+          <td colspan="2">Total Income</td>
+          <td>${data.totalIncome.toFixed(2)}</td>
+          <td></td>
+        </tr>
+
+        <tr class="summary">
+          <td colspan="2">Total Expenses</td>
+          <td>${data.totalExpenses.toFixed(2)}</td>
+          <td></td>
+        </tr>
+
+        <tr class="summary">
+          <td colspan="2">Net Profit/Loss</td>
+          <td>${data.netProfit.toFixed(2)}</td>
+          <td></td>
+        </tr>
+      </table>
+    </body>
+    </html>
+  `;
+
+  const blob = new Blob([htmlTable], {
+    type: 'application/vnd.ms-excel;charset=utf-8;'
+  });
+
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+
+  link.href = url;
+  link.download = 'PL_Financial_Checklist_' + new Date().toISOString().split('T')[0] + '.xls';
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  URL.revokeObjectURL(url);
+}
+
+function exportToCSV() {
+  const data = getFinancialExportData();
+  const csvLines = [];
+
+  csvLines.push('P&L FINANCIAL CHECKLIST');
+  csvLines.push('Generated: ' + new Date().toLocaleDateString());
+  csvLines.push('');
+
+  csvLines.push('INCOME & REVENUE ITEMS');
+  csvLines.push('Category,Description,Amount,Completed');
+
+  data.incomeRows.forEach(row => {
+    csvLines.push([
+      row.category,
+      row.description,
+      Number(row.amount).toFixed(2),
+      row.completed
+    ].map(escapeCSV).join(','));
+  });
+
+  csvLines.push([
+    'TOTAL INCOME',
+    '',
+    data.totalIncome.toFixed(2),
+    ''
+  ].map(escapeCSV).join(','));
+
+  csvLines.push('');
+
+  csvLines.push('EXPENSES & COSTS');
+  csvLines.push('Category,Description,Amount,Completed');
+
+  data.expenseRows.forEach(row => {
+    csvLines.push([
+      row.category,
+      row.description,
+      Number(row.amount).toFixed(2),
+      row.completed
+    ].map(escapeCSV).join(','));
+  });
+
+  csvLines.push([
+    'TOTAL EXPENSES',
+    '',
+    data.totalExpenses.toFixed(2),
+    ''
+  ].map(escapeCSV).join(','));
+
+  csvLines.push('');
+
+  csvLines.push('FINAL REVIEW & VERIFICATION');
+  csvLines.push('Category,Description,Amount,Completed');
+
+  data.reviewRows.forEach(row => {
+    csvLines.push([
+      row.category,
+      row.description,
+      '',
+      row.completed
+    ].map(escapeCSV).join(','));
+  });
+
+  csvLines.push('');
+
+  csvLines.push('SUMMARY');
+
+  csvLines.push([
+    'Total Income',
+    '',
+    data.totalIncome.toFixed(2),
+    ''
+  ].map(escapeCSV).join(','));
+
+  csvLines.push([
+    'Total Expenses',
+    '',
+    data.totalExpenses.toFixed(2),
+    ''
+  ].map(escapeCSV).join(','));
+
+  csvLines.push([
+    'Net Profit/Loss',
+    '',
+    data.netProfit.toFixed(2),
+    ''
+  ].map(escapeCSV).join(','));
+
+  const blob = new Blob([csvLines.join('\r\n')], {
+    type: 'text/csv;charset=utf-8;'
+  });
+
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+
+  link.href = url;
+  link.download = 'PL_Financial_Checklist_Google_Sheets_' + new Date().toISOString().split('T')[0] + '.csv';
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  URL.revokeObjectURL(url);
+}
+
+function escapeCSV(str) {
+  if (str === null || str === undefined) {
+    return '';
+  }
+
+  str = str.toString();
+
+  if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+    return '"' + str.replace(/"/g, '""') + '"';
+  }
+
+  return str;
+}
+
+function escapeHTML(str) {
+  if (str === null || str === undefined) {
+    return '';
+  }
+
+  return str.toString()
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+</script>
