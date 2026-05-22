@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>P&amp;L Financial Checklist</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        .slide-out { animation: slideOut 0.2s ease-out forwards; }
+        @keyframes slideOut { to { opacity: 0; transform: translateX(20px); } }
+        .gradient-bg { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .income-gradient { background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); }
+        .expense-gradient { background: linear-gradient(135deg, #fc466b 0%, #3f5efb 100%); }
+        .review-gradient { background: linear-gradient(135deg, #fdbb2d 0%, #22c1c3 100%); }
+    </style>
+  <style>body { box-sizing: border-box; }</style>
+  
+</head>
+ <body class="bg-gradient-to-br from-purple-100 via-pink-50 to-indigo-100 min-h-screen">
+  <div class="container mx-auto px-6 py-8 max-w-6xl"><!-- Header -->
+   <div class="bg-white rounded-2xl shadow-2xl p-8 mb-8 border border-purple-200">
+    <div class="gradient-bg rounded-xl p-6 mb-6 text-white">
+     <div class="flex items-center justify-between">
+      <div>
+       <h1 class="text-4xl font-bold mb-2">💰 P&amp;L Financial Checklist</h1>
+       <p class="text-purple-100 text-lg">Track your income, expenses, and financial progress</p>
+      </div>
+      <div class="text-right bg-white/20 rounded-lg p-4">
+       <div class="text-sm text-purple-100 mb-1">
+        Period Ending
+       </div><input type="date" class="px-3 py-2 rounded-lg bg-white/90 text-purple-800 font-medium focus:ring-2 focus:ring-yellow-400">
+      </div>
+     </div>
+    </div><!-- Financial Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+     <div class="income-gradient rounded-xl p-6 text-white">
+      <div class="text-sm opacity-90 mb-1">
+       Total Income
+      </div>
+      <div id="total-income" class="text-3xl font-bold">
+       $0.00
+      </div>
+     </div>
+     <div class="expense-gradient rounded-xl p-6 text-white">
+      <div class="text-sm opacity-90 mb-1">
+       Total Expenses
+      </div>
+      <div id="total-expenses" class="text-3xl font-bold">
+       $0.00
+      </div>
+     </div>
+     <div class="review-gradient rounded-xl p-6 text-white">
+      <div class="text-sm opacity-90 mb-1">
+       Net Profit/Loss
+      </div>
+      <div id="net-profit" class="text-3xl font-bold">
+       $0.00
+      </div>
+     </div>
+     <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl p-6 text-white">
+      <div class="text-sm opacity-90 mb-1">
+       Progress
+      </div>
+      <div id="progress-percentage" class="text-3xl font-bold">
+       0%
+      </div>
+     </div>
+    </div><!-- Progress Bar -->
+    <div class="mb-6">
+     <div class="flex justify-between text-sm text-slate-600 mb-2"><span class="font-medium">Completion Progress</span> <span id="progress-text">0 of 0 items completed</span>
+     </div>
+     <div class="w-full bg-slate-200 rounded-full h-4 shadow-inner">
+      <div id="progress-bar" class="bg-gradient-to-r from-emerald-400 via-cyan-400 to-blue-500 h-4 rounded-full transition-all duration-700 shadow-lg" style="width: 0%"></div>
+     </div>
+    </div><!-- Export & Save Controls -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+      <button onclick="exportToExcel()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl">
+        📊 Download Excel File (.xls)
+      </button>
+      <button onclick="exportToCSV()" class="w-full bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl">
+        📥 Download CSV for Google Sheets
+      </button>
+    </div>
+    <p class="text-center text-sm text-slate-500 mt-3">
+      Open the Excel file in Microsoft Excel, or upload/import the CSV file into Google Sheets.
+    </p>
+   </div><!-- Income Section -->
+   <div class="bg-white rounded-2xl shadow-2xl p-6 mb-8 border border-emerald-200">
+    <div class="income-gradient rounded-xl p-6 mb-6">
+     <div class="flex items-center justify-between text-white">
+      <h2 class="text-2xl font-bold flex items-center"><span class="text-3xl mr-3">📈</span> Income &amp; Revenue Items</h2><button onclick="addItem('income')" class="bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-xl font-semibold transition-all flex items-center shadow-lg hover:shadow-xl"> <span class="text-xl mr-2">+</span> Add Income Item </button>
+     </div>
+    </div><!-- Income Table Header -->
+    <div class="grid grid-cols-12 gap-4 p-4 bg-emerald-50 rounded-lg font-semibold text-emerald-800 mb-4">
+     <div class="col-span-1 text-center">
+      ✓
+     </div>
+     <div class="col-span-6">
+      Income Description
+     </div>
+     <div class="col-span-3 text-center">
+      Amount ($)
+     </div>
+     <div class="col-span-2 text-center">
+      Actions
+     </div>
+    </div>
+    <div id="income-items" class="space-y-3">
+     <div class="checklist-item fade-in" data-category="income">
+      <div class="grid grid-cols-12 gap-4 p-4 bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl border-2 border-emerald-200 hover:border-emerald-300 transition-all">
+       <div class="col-span-1 flex justify-center"><input type="checkbox" class="w-6 h-6 text-emerald-600 rounded-lg focus:ring-emerald-500 focus:ring-2" onchange="updateProgress()">
+       </div>
+       <div class="col-span-6"><input type="text" value="Sales Revenue - Product Sales" class="w-full bg-transparent font-semibold text-slate-800 focus:outline-none focus:bg-white focus:px-3 focus:py-2 focus:rounded-lg focus:shadow-md transition-all">
+       </div>
+       <div class="col-span-3"><input type="number" step="0.01" placeholder="0.00" class="amount-input w-full px-3 py-2 bg-white border-2 border-emerald-200 rounded-lg font-bold text-emerald-700 text-center focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" onchange="updateFinancials()">
+       </div>
+       <div class="col-span-2 flex justify-center"><button onclick="deleteItem(this)" class="text-red-500 hover:text-red-700 p-2 rounded-lg hover:bg-red-50 transition-colors">
+         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+         </svg></button>
+       </div>
+      </div>
+     </div>
+     <div class="checklist-item fade-in" data-category="income">
+      <div class="grid grid-cols-12 gap-4 p-4 bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl border-2 border-emerald-200 hover:border-emerald-300 transition-all">
+       <div class="col-span-1 flex justify-center"><input type="checkbox" class="w-6 h-6 text-emerald-600 rounded-lg focus:ring-emerald-500 focus:ring-2" onchange="updateProgress()">
+       </div>
+       <div class="col-span-6"><input type="text" value="Service Revenue" class="w-full bg-transparent font-semibold text-slate-800 focus:outline-none focus:bg-white focus:px-3 focus:py-2 focus:rounded-lg focus:shadow-md transition-all">
+       </div>
+       <div class="col-span-3"><input type="number" step="0.01" placeholder="0.00" class="amount-input w-full px-3 py-2 bg-white border-2 border-emerald-200 rounded-lg font-bold text-emerald-700 text-center focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" onchange="updateFinancials()">
+       </div>
+       <div class="col-span-2 flex justify-center"><button onclick="deleteItem(this)" class="text-red-500 hover:text-red-700 p-2 rounded-lg hover:bg-red-50 transition-colors">
+         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+         </svg></button>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div><!-- Expenses Section -->
+   <div class="bg-white rounded-2xl shadow-2xl p-6 mb-8 border border-pink-200">
+    <div class="expense-gradient rounded-xl p-6 mb-6">
+     <div class="flex items-center justify-between text-white">
+      <h2 class="text-2xl font-bold flex items-center"><span class="text-3xl mr-3">📉</span> Expenses &amp; Costs</h2><button onclick="addItem('expenses')" class="bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-xl font-semibold transition-all flex items-center shadow-lg hover:shadow-xl"> <span class="text-xl mr-2">+</span> Add Expense Item </button>
+     </div>
+    </div><!-- Expenses Table Header -->
+    <div class="grid grid-cols-12 gap-4 p-4 bg-pink-50 rounded-lg font-semibold text-pink-800 mb-4">
+     <div class="col-span-1 text-center">
+      ✓
+     </div>
+     <div class="col-span-6">
+      Expense Description
+     </div>
+     <div class="col-span-3 text-center">
+      Amount ($)
+     </div>
+     <div class="col-span-2 text-center">
+      Actions
+     </div>
+    </div>
+    <div id="expenses-items" class="space-y-3">
+     <div class="checklist-item fade-in" data-category="expenses">
+      <div class="grid grid-cols-12 gap-4 p-4 bg-gradient-to-r from-pink-50 to-red-50 rounded-xl border-2 border-pink-200 hover:border-pink-300 transition-all">
+       <div class="col-span-1 flex justify-center"><input type="checkbox" class="w-6 h-6 text-pink-600 rounded-lg focus:ring-pink-500 focus:ring-2" onchange="updateProgress()">
+       </div>
+       <div class="col-span-6"><input type="text" value="Cost of Goods Sold (COGS)" class="w-full bg-transparent font-semibold text-slate-800 focus:outline-none focus:bg-white focus:px-3 focus:py-2 focus:rounded-lg focus:shadow-md transition-all">
+       </div>
+       <div class="col-span-3"><input type="number" step="0.01" placeholder="0.00" class="amount-input w-full px-3 py-2 bg-white border-2 border-pink-200 rounded-lg font-bold text-pink-700 text-center focus:ring-2 focus:ring-pink-500 focus:border-pink-500" onchange="updateFinancials()">
+       </div>
+       <div class="col-span-2 flex justify-center"><button onclick="deleteItem(this)" class="text-red-500 hover:text-red-700 p-2 rounded-lg hover:bg-red-50 transition-colors">
+         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+         </svg></button>
+       </div>
+      </div>
+     </div>
+     <div class="checklist-item fade-in" data-category="expenses">
+      <div class="grid grid-cols-12 gap-4 p-4 bg-gradient-to-r from-pink-50 to-red-50 rounded-xl border-2 border-pink-200 hover:border-pink-300 transition-all">
+       <div class="col-span-1 flex justify-center"><input type="checkbox" class="w-6 h-6 text-pink-600 rounded-lg focus:ring-pink-500 focus:ring-2" onchange="updateProgress()">
+       </div>
+       <div class="col-span-6"><input type="text" value="Operating Expenses" class="w-full bg-transparent font-semibold text-slate-800 focus:outline-none focus:bg-white focus:px-3 focus:py-2 focus:rounded-lg focus:shadow-md transition-all">
+       </div>
+       <div class="col-span-3"><input type="number" step="0.01" placeholder="0.00" class="amount-input w-full px-3 py-2 bg-white border-2 border-pink-200 rounded-lg font-bold text-pink-700 text-center focus:ring-2 focus:ring-pink-500 focus:border-pink-500" onchange="updateFinancials()">
+       </div>
+       <div class="col-span-2 flex justify-center"><button onclick="deleteItem(this)" class="text-red-500 hover:text-red-700 p-2 rounded-lg hover:bg-red-50 transition-colors">
+         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+         </svg></button>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div><!-- Review Section -->
+   <div class="bg-white rounded-2xl shadow-2xl p-6 mb-8 border border-yellow-200">
+    <div class="review-gradient rounded-xl p-6 mb-6">
+     <div class="flex items-center justify-between text-white">
+      <h2 class="text-2xl font-bold flex items-center"><span class="text-3xl mr-3">🔍</span> Final Review &amp; Verification</h2><button onclick="addItem('review')" class="bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-xl font-semibold transition-all flex items-center shadow-lg hover:shadow-xl"> <span class="text-xl mr-2">+</span> Add Review Item </button>
+     </div>
+    </div><!-- Review Table Header -->
+    <div class="grid grid-cols-12 gap-4 p-4 bg-yellow-50 rounded-lg font-semibold text-yellow-800 mb-4">
+     <div class="col-span-1 text-center">
+      ✓
+     </div>
+     <div class="col-span-9">
+      Review Task
+     </div>
+     <div class="col-span-2 text-center">
+      Actions
+     </div>
+    </div>
+    <div id="review-items" class="space-y-3">
+     <div class="checklist-item fade-in" data-category="review">
+      <div class="grid grid-cols-12 gap-4 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border-2 border-yellow-200 hover:border-yellow-300 transition-all">
+       <div class="col-span-1 flex justify-center"><input type="checkbox" class="w-6 h-6 text-yellow-600 rounded-lg focus:ring-yellow-500 focus:ring-2" onchange="updateProgress()">
+       </div>
+       <div class="col-span-9"><input type="text" value="Verify all calculations are accurate" class="w-full bg-transparent font-semibold text-slate-800 focus:outline-none focus:bg-white focus:px-3 focus:py-2 focus:rounded-lg focus:shadow-md transition-all">
+       </div>
+       <div class="col-span-2 flex justify-center"><button onclick="deleteItem(this)" class="text-red-500 hover:text-red-700 p-2 rounded-lg hover:bg-red-50 transition-colors">
+         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+         </svg></button>
+       </div>
+      </div>
+     </div>
+     <div class="checklist-item fade-in" data-category="review">
+      <div class="grid grid-cols-12 gap-4 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border-2 border-yellow-200 hover:border-yellow-300 transition-all">
+       <div class="col-span-1 flex justify-center"><input type="checkbox" class="w-6 h-6 text-yellow-600 rounded-lg focus:ring-yellow-500 focus:ring-2" onchange="updateProgress()">
+       </div>
+       <div class="col-span-9"><input type="text" value="Cross-reference with supporting documents" class="w-full bg-transparent font-semibold text-slate-800 focus:outline-none focus:bg-white focus:px-3 focus:py-2 focus:rounded-lg focus:shadow-md transition-all">
+       </div>
+       <div class="col-span-2 flex justify-center"><button onclick="deleteItem(this)" class="text-red-500 hover:text-red-700 p-2 rounded-lg hover:bg-red-50 transition-colors">
+         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewbox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+         </svg></button>
+       </div>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+        let itemCounter = 0;
+
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', function() {
+            updateProgress();
+            updateFinancials();
+        });
+
+        function addItem(category) {
+            itemCounter++;
+            const container = document.getElementById(category + '-items');
+            
+            const newItem = document.createElement('div');
+            newItem.className = 'checklist-item fade-in';
+            newItem.setAttribute('data-category', category);
+            newItem.setAttribute('data-item-id', 'item-' + itemCounter);
+            
+            if (category === 'income') {
+                newItem.innerHTML = `
+                    <div class="grid grid-cols-12 gap-4 p-4 bg-gradient-to-r from-emerald-50 to-green-50 rounded-xl border-2 border-emerald-200 hover:border-emerald-300 transition-all">
+                        <div class="col-span-1 flex justify-center">
+                            <input type="checkbox" class="w-6 h-6 text-emerald-600 rounded-lg focus:ring-emerald-500 focus:ring-2" onchange="updateProgress()">
+                        </div>
+                        <div class="col-span-6">
+                            <input type="text" value="New income item" class="w-full bg-transparent font-semibold text-slate-800 focus:outline-none focus:bg-white focus:px-3 focus:py-2 focus:rounded-lg focus:shadow-md transition-all">
+                        </div>
+                        <div class="col-span-3">
+                            <input type="number" step="0.01" placeholder="0.00" class="amount-input w-full px-3 py-2 bg-white border-2 border-emerald-200 rounded-lg font-bold text-emerald-700 text-center focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500" onchange="updateFinancials()">
+                        </div>
+                        <div class="col-span-2 flex justify-center">
+                            <button onclick="deleteItem(this)" class="text-red-500 hover:text-red-700 p-2 rounded-lg hover:bg-red-50 transition-colors">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else if (category === 'expenses') {
+                newItem.innerHTML = `
+                    <div class="grid grid-cols-12 gap-4 p-4 bg-gradient-to-r from-pink-50 to-red-50 rounded-xl border-2 border-pink-200 hover:border-pink-300 transition-all">
+                        <div class="col-span-1 flex justify-center">
+                            <input type="checkbox" class="w-6 h-6 text-pink-600 rounded-lg focus:ring-pink-500 focus:ring-2" onchange="updateProgress()">
+                        </div>
+                        <div class="col-span-6">
+                            <input type="text" value="New expense item" class="w-full bg-transparent font-semibold text-slate-800 focus:outline-none focus:bg-white focus:px-3 focus:py-2 focus:rounded-lg focus:shadow-md transition-all">
+                        </div>
+                        <div class="col-span-3">
+                            <input type="number" step="0.01" placeholder="0.00" class="amount-input w-full px-3 py-2 bg-white border-2 border-pink-200 rounded-lg font-bold text-pink-700 text-center focus:ring-2 focus:ring-pink-500 focus:border-pink-500" onchange="updateFinancials()">
+                        </div>
+                        <div class="col-span-2 flex justify-center">
+                            <button onclick="deleteItem(this)" class="text-red-500 hover:text-red-700 p-2 rounded-lg hover:bg-red-50 transition-colors">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else {
+                newItem.innerHTML = `
+                    <div class="grid grid-cols-12 gap-4 p-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border-2 border-yellow-200 hover:border-yellow-300 transition-all">
+                        <div class="col-span-1 flex justify-center">
+                            <input type="checkbox" class="w-6 h-6 text-yellow-600 rounded-lg focus:ring-yellow-500 focus:ring-2" onchange="updateProgress()">
+                        </div>
+                        <div class="col-span-9">
+                            <input type="text" value="New review item" class="w-full bg-transparent font-semibold text-slate-800 focus:outline-none focus:bg-white focus:px-3 focus:py-2 focus:rounded-lg focus:shadow-md transition-all">
+                        </div>
+                        <div class="col-span-2 flex justify-center">
+                            <button onclick="deleteItem(this)" class="text-red-500 hover:text-red-700 p-2 rounded-lg hover:bg-red-50 transition-colors">
+                                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            container.appendChild(newItem);
+            
+            // Focus on the new input field
+            const textInput = newItem.querySelector('input[type="text"]');
+            textInput.focus();
+            textInput.select();
+            
+            updateProgress();
+            updateFinancials();
+        }
+
+        function deleteItem(button) {
+            const item = button.closest('.checklist-item');
+            item.classList.add('slide-out');
+            
+            setTimeout(() => {
+                item.remove();
+                updateProgress();
+                updateFinancials();
+            }, 200);
+        }
+
+        function updateProgress() {
+            const allCheckboxes = document.querySelectorAll('.checklist-item input[type="checkbox"]');
+            const checkedBoxes = document.querySelectorAll('.checklist-item input[type="checkbox"]:checked');
+            
+            const total = allCheckboxes.length;
+            const completed = checkedBoxes.length;
+            const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+            
+            // Update progress bar
+            document.getElementById('progress-bar').style.width = percentage + '%';
+            document.getElementById('progress-text').textContent = `${completed} of ${total} items completed`;
+            document.getElementById('progress-percentage').textContent = percentage + '%';
+        }
+
+        function updateFinancials() {
+            // Calculate total income
+            const incomeInputs = document.querySelectorAll('#income-items .amount-input');
+            let totalIncome = 0;
+            incomeInputs.forEach(input => {
+                const value = parseFloat(input.value) || 0;
+                totalIncome += value;
+            });
+
+            // Calculate total expenses
+            const expenseInputs = document.querySelectorAll('#expenses-items .amount-input');
+            let totalExpenses = 0;
+            expenseInputs.forEach(input => {
+                const value = parseFloat(input.value) || 0;
+                totalExpenses += value;
+            });
+
+            // Calculate net profit/loss
+            const netProfit = totalIncome - totalExpenses;
+
+            // Update display
+            document.getElementById('total-income').textContent = '$' + totalIncome.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            document.getElementById('total-expenses').textContent = '$' + totalExpenses.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            
+            const netProfitElement = document.getElementById('net-profit');
+            netProfitElement.textContent = '$' + netProfit.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            
+            // Change color based on profit/loss
+            const netProfitCard = netProfitElement.closest('.review-gradient');
+            if (netProfit > 0) {
+                netProfitCard.style.background = 'linear-gradient(135deg, #11998e 0%, #38ef7d 100%)';
+            } else if (netProfit < 0) {
+                netProfitCard.style.background = 'linear-gradient(135deg, #fc466b 0%, #3f5efb 100%)';
+            } else {
+                netProfitCard.style.background = 'linear-gradient(135deg, #fdbb2d 0%, #22c1c3 100%)';
+            }
+        }
+
+        function exportToCSV() {
+            // Build CSV content
+            let csvLines = [];
+            
+            // Header
+            csvLines.push('P&L FINANCIAL CHECKLIST');
+            csvLines.push('Generated: ' + new Date().toLocaleDateString());
+            csvLines.push('');
+            csvLines.push('');
+            
+            // INCOME SECTION
+            csvLines.push('INCOME & REVENUE ITEMS');
+            csvLines.push('Description,Amount');
+            
+            let totalIncome = 0;
+            const incomeItems = document.querySelectorAll('#income-items .checklist-item');
+            incomeItems.forEach(item => {
+                const desc = item.querySelector('input[type="text"]').value || '';
+                const amount = parseFloat(item.querySelector('.amount-input').value) || 0;
+                csvLines.push(escapeCSV(desc) + ',' + amount.toFixed(2));
+                totalIncome += amount;
+            });
+            
+            csvLines.push(escapeCSV('TOTAL INCOME') + ',' + totalIncome.toFixed(2));
+            csvLines.push('');
+            csvLines.push('');
+            
+            // EXPENSES SECTION
+            csvLines.push('EXPENSES & COSTS');
+            csvLines.push('Description,Amount');
+            
+            let totalExpenses = 0;
+            const expenseItems = document.querySelectorAll('#expenses-items .checklist-item');
+            expenseItems.forEach(item => {
+                const desc = item.querySelector('input[type="text"]').value || '';
+                const amount = parseFloat(item.querySelector('.amount-input').value) || 0;
+                csvLines.push(escapeCSV(desc) + ',' + amount.toFixed(2));
+                totalExpenses += amount;
+            });
+            
+            csvLines.push(escapeCSV('TOTAL EXPENSES') + ',' + totalExpenses.toFixed(2));
+            csvLines.push('');
+            csvLines.push('');
+            
+            // SUMMARY
+            csvLines.push('SUMMARY');
+            csvLines.push(escapeCSV('Total Income') + ',' + totalIncome.toFixed(2));
+            csvLines.push(escapeCSV('Total Expenses') + ',' + totalExpenses.toFixed(2));
+            const netProfit = totalIncome - totalExpenses;
+            csvLines.push(escapeCSV('Net Profit/Loss') + ',' + netProfit.toFixed(2));
+            
+            // Join with line breaks
+            const csvContent = csvLines.join('\r\n');
+            
+            // Create blob
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', 'PL_Checklist_' + new Date().toISOString().split('T')[0] + '.csv');
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+        
+        function escapeCSV(str) {
+            if (str === null || str === undefined) {
+                return '';
+            }
+            str = str.toString();
+            if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                return '"' + str.replace(/"/g, '""') + '"';
+            }
+            return str;
+        }
+
+
+        function getFinancialExportData() {
+            const incomeRows = [];
+            let totalIncome = 0;
+            document.querySelectorAll('#income-items .checklist-item').forEach(item => {
+                const descInput = item.querySelector('input[type="text"]');
+                const amountInput = item.querySelector('.amount-input');
+                const completedInput = item.querySelector('input[type="checkbox"]');
+                const description = descInput ? descInput.value : '';
+                const amount = amountInput ? (parseFloat(amountInput.value) || 0) : 0;
+                const completed = completedInput && completedInput.checked ? 'Yes' : 'No';
+                incomeRows.push({ category: 'Income', description, amount, completed });
+                totalIncome += amount;
+            });
+
+            const expenseRows = [];
+            let totalExpenses = 0;
+            document.querySelectorAll('#expenses-items .checklist-item').forEach(item => {
+                const descInput = item.querySelector('input[type="text"]');
+                const amountInput = item.querySelector('.amount-input');
+                const completedInput = item.querySelector('input[type="checkbox"]');
+                const description = descInput ? descInput.value : '';
+                const amount = amountInput ? (parseFloat(amountInput.value) || 0) : 0;
+                const completed = completedInput && completedInput.checked ? 'Yes' : 'No';
+                expenseRows.push({ category: 'Expense', description, amount, completed });
+                totalExpenses += amount;
+            });
+
+            const reviewRows = [];
+            document.querySelectorAll('#review-items .checklist-item').forEach(item => {
+                const descInput = item.querySelector('input[type="text"]');
+                const completedInput = item.querySelector('input[type="checkbox"]');
+                reviewRows.push({
+                    category: 'Review',
+                    description: descInput ? descInput.value : '',
+                    amount: '',
+                    completed: completedInput && completedInput.checked ? 'Yes' : 'No'
+                });
+            });
+
+            return {
+                incomeRows,
+                expenseRows,
+                reviewRows,
+                totalIncome,
+                totalExpenses,
+                netProfit: totalIncome - totalExpenses
+            };
+        }
+
+        function exportToExcel() {
+            const data = getFinancialExportData();
+            const generatedDate = new Date().toLocaleDateString();
+
+            const htmlTable = `
+                <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel">
+                <head>
+                    <meta charset="UTF-8">
+                    <style>
+                        table { border-collapse: collapse; font-family: Arial, sans-serif; }
+                        th { background: #5b21b6; color: #ffffff; font-weight: bold; }
+                        th, td { border: 1px solid #999999; padding: 8px; }
+                        .section { background: #ede9fe; font-weight: bold; font-size: 16px; }
+                        .total { background: #dcfce7; font-weight: bold; }
+                        .expenseTotal { background: #fee2e2; font-weight: bold; }
+                        .summary { background: #fef3c7; font-weight: bold; }
+                    </style>
+                </head>
+                <body>
+                    <table>
+                        <tr><td colspan="4" class="section">P&amp;L FINANCIAL CHECKLIST</td></tr>
+                        <tr><td colspan="4">Generated: ${generatedDate}</td></tr>
+                        <tr><td colspan="4"></td></tr>
+                        <tr><td colspan="4" class="section">INCOME &amp; REVENUE ITEMS</td></tr>
+                        <tr><th>Category</th><th>Description</th><th>Amount</th><th>Completed</th></tr>
+                        ${data.incomeRows.map(row => `<tr><td>${escapeHTML(row.category)}</td><td>${escapeHTML(row.description)}</td><td>${Number(row.amount).toFixed(2)}</td><td>${escapeHTML(row.completed)}</td></tr>`).join('')}
+                        <tr class="total"><td colspan="2">TOTAL INCOME</td><td>${data.totalIncome.toFixed(2)}</td><td></td></tr>
+                        <tr><td colspan="4"></td></tr>
+                        <tr><td colspan="4" class="section">EXPENSES &amp; COSTS</td></tr>
+                        <tr><th>Category</th><th>Description</th><th>Amount</th><th>Completed</th></tr>
+                        ${data.expenseRows.map(row => `<tr><td>${escapeHTML(row.category)}</td><td>${escapeHTML(row.description)}</td><td>${Number(row.amount).toFixed(2)}</td><td>${escapeHTML(row.completed)}</td></tr>`).join('')}
+                        <tr class="expenseTotal"><td colspan="2">TOTAL EXPENSES</td><td>${data.totalExpenses.toFixed(2)}</td><td></td></tr>
+                        <tr><td colspan="4"></td></tr>
+                        <tr><td colspan="4" class="section">FINAL REVIEW &amp; VERIFICATION</td></tr>
+                        <tr><th>Category</th><th>Description</th><th>Amount</th><th>Completed</th></tr>
+                        ${data.reviewRows.map(row => `<tr><td>${escapeHTML(row.category)}</td><td>${escapeHTML(row.description)}</td><td></td><td>${escapeHTML(row.completed)}</td></tr>`).join('')}
+                        <tr><td colspan="4"></td></tr>
+                        <tr class="summary"><td colspan="2">Total Income</td><td>${data.totalIncome.toFixed(2)}</td><td></td></tr>
+                        <tr class="summary"><td colspan="2">Total Expenses</td><td>${data.totalExpenses.toFixed(2)}</td><td></td></tr>
+                        <tr class="summary"><td colspan="2">Net Profit/Loss</td><td>${data.netProfit.toFixed(2)}</td><td></td></tr>
+                    </table>
+                </body>
+                </html>
+            `;
+
+            const blob = new Blob([htmlTable], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.href = url;
+            link.download = 'PL_Financial_Checklist_' + new Date().toISOString().split('T')[0] + '.xls';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        function exportToCSV() {
+            const data = getFinancialExportData();
+            const csvLines = [];
+
+            csvLines.push('P&L FINANCIAL CHECKLIST');
+            csvLines.push('Generated: ' + new Date().toLocaleDateString());
+            csvLines.push('');
+
+            csvLines.push('INCOME & REVENUE ITEMS');
+            csvLines.push('Category,Description,Amount,Completed');
+            data.incomeRows.forEach(row => csvLines.push([row.category, row.description, Number(row.amount).toFixed(2), row.completed].map(escapeCSV).join(',')));
+            csvLines.push(['TOTAL INCOME', '', data.totalIncome.toFixed(2), ''].map(escapeCSV).join(','));
+            csvLines.push('');
+
+            csvLines.push('EXPENSES & COSTS');
+            csvLines.push('Category,Description,Amount,Completed');
+            data.expenseRows.forEach(row => csvLines.push([row.category, row.description, Number(row.amount).toFixed(2), row.completed].map(escapeCSV).join(',')));
+            csvLines.push(['TOTAL EXPENSES', '', data.totalExpenses.toFixed(2), ''].map(escapeCSV).join(','));
+            csvLines.push('');
+
+            csvLines.push('FINAL REVIEW & VERIFICATION');
+            csvLines.push('Category,Description,Amount,Completed');
+            data.reviewRows.forEach(row => csvLines.push([row.category, row.description, '', row.completed].map(escapeCSV).join(',')));
+            csvLines.push('');
+
+            csvLines.push('SUMMARY');
+            csvLines.push(['Total Income', '', data.totalIncome.toFixed(2), ''].map(escapeCSV).join(','));
+            csvLines.push(['Total Expenses', '', data.totalExpenses.toFixed(2), ''].map(escapeCSV).join(','));
+            csvLines.push(['Net Profit/Loss', '', data.netProfit.toFixed(2), ''].map(escapeCSV).join(','));
+
+            const blob = new Blob([csvLines.join('\r\n')], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.href = url;
+            link.download = 'PL_Financial_Checklist_Google_Sheets_' + new Date().toISOString().split('T')[0] + '.csv';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        function escapeHTML(str) {
+            if (str === null || str === undefined) return '';
+            return str.toString()
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+    </script>
+</body>
+</html>
