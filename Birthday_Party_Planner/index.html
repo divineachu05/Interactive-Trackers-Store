@@ -1,0 +1,864 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Birthday Party Planner</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    body { font-family: 'Inter', sans-serif; box-sizing: border-box; }
+    .fade-in { animation: fadeIn 0.25s ease-in; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+    .slide-out { animation: slideOut 0.18s ease-out forwards; }
+    @keyframes slideOut { to { opacity: 0; transform: translateX(16px); } }
+    .header-gradient { background: linear-gradient(135deg, #f9a8d4 0%, #c084fc 45%, #93c5fd 100%); }
+    .timeline-gradient { background: linear-gradient(135deg, #fb7185 0%, #f59e0b 100%); }
+    .budget-gradient { background: linear-gradient(135deg, #22c55e 0%, #14b8a6 100%); }
+    .guests-gradient { background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%); }
+    .vendors-gradient { background: linear-gradient(135deg, #06b6d4 0%, #6366f1 100%); }
+    .dayof-gradient { background: linear-gradient(135deg, #f97316 0%, #ef4444 100%); }
+    .seating-gradient { background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%); }
+    .gifts-gradient { background: linear-gradient(135deg, #f43f5e 0%, #d946ef 100%); }
+    .shopping-gradient { background: linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%); }
+    .tab.active { background: #fce7f3; color: #7e22ce; border-bottom: 4px solid #d946ef; }
+    .section { display: none; }
+    .section.active { display: block; }
+  </style>
+</head>
+
+<body class="bg-gradient-to-br from-pink-100 via-purple-50 to-blue-100 min-h-screen">
+  <div class="container mx-auto px-4 md:px-6 py-8 max-w-7xl">
+
+    <!-- Header -->
+    <div class="bg-white rounded-3xl shadow-2xl border border-purple-200 overflow-hidden mb-8">
+      <div class="header-gradient p-8 text-center text-white">
+        <h1 class="text-4xl md:text-5xl font-extrabold mb-3">🎂 Birthday Party Planner</h1>
+        <p class="text-lg md:text-xl text-white/90">Plan the perfect celebration with ease</p>
+      </div>
+
+      <!-- Summary Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-5 p-6">
+        <div class="rounded-2xl p-6 border-2 border-yellow-300 bg-yellow-50">
+          <p class="text-purple-700 font-semibold mb-2">Overall Progress</p>
+          <p id="progress-percentage" class="text-4xl font-extrabold text-orange-500">0%</p>
+          <div class="w-full bg-pink-100 rounded-full h-3 mt-4">
+            <div id="progress-bar" class="bg-gradient-to-r from-pink-500 to-purple-500 h-3 rounded-full transition-all duration-700" style="width:0%"></div>
+          </div>
+          <p id="progress-text" class="text-sm text-slate-500 mt-2">0 of 0 tasks completed</p>
+        </div>
+
+        <div class="rounded-2xl p-6 border-2 border-green-300 bg-green-50">
+          <p class="text-purple-700 font-semibold mb-2">Task Status</p>
+          <p class="text-slate-700">Completed: <span id="completed-count" class="text-green-600 font-bold">0</span></p>
+          <p class="text-slate-700">Pending: <span id="pending-count" class="text-pink-600 font-bold">0</span></p>
+        </div>
+
+        <div class="rounded-2xl p-6 border-2 border-pink-300 bg-pink-50">
+          <p class="text-purple-700 font-semibold mb-2">Budget Overview</p>
+          <p class="text-slate-700">Budget: <span id="budget-total" class="text-blue-600 font-bold">$950.00</span></p>
+          <p class="text-slate-700">Spent: <span id="budget-spent" class="text-orange-600 font-bold">$280.00</span></p>
+          <p class="text-slate-700">Left: <span id="budget-left" class="text-green-600 font-bold">$670.00</span></p>
+        </div>
+
+        <div class="rounded-2xl p-6 border-2 border-purple-300 bg-purple-50">
+          <p class="text-purple-700 font-semibold mb-2">Party Details</p>
+          <input id="party-name" class="w-full mb-2 px-3 py-2 rounded-lg border border-purple-200" value="My Birthday Party" />
+          <input id="party-date" type="date" class="w-full px-3 py-2 rounded-lg border border-purple-200" />
+        </div>
+      </div>
+
+      <!-- Export / Upload Controls -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 px-6 pb-6">
+        <button onclick="exportToWord()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition-all">
+          📄 Download Word/Google Docs
+        </button>
+
+        <button onclick="document.getElementById('word-upload').click()" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition-all">
+          ⬆️ Upload Word/Google Docs
+        </button>
+
+        <button onclick="exportToCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition-all">
+          📊 Download Excel/Google Sheet
+        </button>
+
+        <button onclick="document.getElementById('csv-upload').click()" class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition-all">
+          ⬆️ Upload Excel/Google Sheet
+        </button>
+
+        <input id="word-upload" type="file" accept=".doc,.html,.htm,.txt" class="hidden" onchange="importWordFile(event)">
+        <input id="csv-upload" type="file" accept=".csv,.txt" class="hidden" onchange="importCSVFile(event)">
+      </div>
+      <p class="text-center text-sm text-slate-500 px-6 pb-6">
+        Download or upload your planner using Word/Google Docs or Excel/Google Sheet CSV files.
+      </p>
+    </div>
+
+    <!-- Tabs -->
+    <div class="bg-white rounded-2xl shadow-xl border border-purple-200 overflow-hidden mb-8">
+      <div class="flex flex-wrap text-purple-700 font-bold">
+        <button class="tab active px-5 py-4 transition-all" onclick="showSection('timeline', this)">📅 Timeline</button>
+        <button class="tab px-5 py-4 transition-all" onclick="showSection('budget', this)">💰 Budget</button>
+        <button class="tab px-5 py-4 transition-all" onclick="showSection('guests', this)">👥 Guests</button>
+        <button class="tab px-5 py-4 transition-all" onclick="showSection('vendors', this)">🏪 Vendors</button>
+        <button class="tab px-5 py-4 transition-all" onclick="showSection('dayof', this)">⏰ Day-of</button>
+        <button class="tab px-5 py-4 transition-all" onclick="showSection('seating', this)">🪑 Seating</button>
+        <button class="tab px-5 py-4 transition-all" onclick="showSection('gifts', this)">🎁 Gifts</button>
+        <button class="tab px-5 py-4 transition-all" onclick="showSection('shopping', this)">🛒 Shopping</button>
+      </div>
+    </div>
+
+    <!-- Sections -->
+    <div id="timeline" class="section active"></div>
+    <div id="budget" class="section"></div>
+    <div id="guests" class="section"></div>
+    <div id="vendors" class="section"></div>
+    <div id="dayof" class="section"></div>
+    <div id="seating" class="section"></div>
+    <div id="gifts" class="section"></div>
+    <div id="shopping" class="section"></div>
+  </div>
+
+<script>
+let counters = {
+  timeline: 0,
+  budget: 0,
+  guests: 0,
+  vendors: 0,
+  dayof: 0,
+  seating: 0,
+  gifts: 0,
+  shopping: 0
+};
+
+const sectionData = {
+  timeline: {
+    title: 'Party Timeline',
+    icon: '📅',
+    gradient: 'timeline-gradient',
+    headers: ['✓', 'Task', 'Due / Time', 'Notes', 'Actions'],
+    rows: [
+      ['Set date and save-the-date', '4 weeks before', 'Choose date, time, and theme'],
+      ['Book venue or confirm home setup', '3 weeks before', 'Confirm location and space'],
+      ['Send invitations', '2 weeks before', 'Include RSVP date']
+    ]
+  },
+  budget: {
+    title: 'Budget Tracker',
+    icon: '💰',
+    gradient: 'budget-gradient',
+    headers: ['✓', 'Budget Item', 'Planned ($)', 'Spent ($)', 'Actions'],
+    rows: [
+      ['Venue / Decorations', '300', '120'],
+      ['Food and Drinks', '400', '100'],
+      ['Cake', '150', '60'],
+      ['Games / Activities', '100', '0']
+    ]
+  },
+  guests: {
+    title: 'Guest List',
+    icon: '👥',
+    gradient: 'guests-gradient',
+    headers: ['✓', 'Guest Name', 'RSVP', 'Notes', 'Actions'],
+    rows: [
+      ['Family Guest', 'Pending', 'Invite sent'],
+      ['Friend Guest', 'Yes', 'Bringing a gift']
+    ]
+  },
+  vendors: {
+    title: 'Vendor Contacts',
+    icon: '🏪',
+    gradient: 'vendors-gradient',
+    headers: ['✓', 'Vendor', 'Contact / Phone', 'Service', 'Actions'],
+    rows: [
+      ['Cake Vendor', '555-123-4567', 'Birthday cake'],
+      ['Decoration Vendor', '555-987-6543', 'Balloons and backdrop']
+    ]
+  },
+  dayof: {
+    title: 'Day-of Schedule',
+    icon: '⏰',
+    gradient: 'dayof-gradient',
+    headers: ['✓', 'Activity', 'Time', 'Notes', 'Actions'],
+    rows: [
+      ['Set up decorations', '10:00 AM', 'Prepare tables and balloons'],
+      ['Guests arrive', '2:00 PM', 'Welcome guests'],
+      ['Cake cutting', '4:00 PM', 'Take photos']
+    ]
+  },
+  seating: {
+    title: 'Seating Plan',
+    icon: '🪑',
+    gradient: 'seating-gradient',
+    headers: ['✓', 'Table / Area', 'Guests', 'Notes', 'Actions'],
+    rows: [
+      ['Table 1', 'Family', 'Close to cake table'],
+      ['Table 2', 'Friends', 'Near games area']
+    ]
+  },
+  gifts: {
+    title: 'Gift Tracker',
+    icon: '🎁',
+    gradient: 'gifts-gradient',
+    headers: ['✓', 'Gift / Item', 'From', 'Thank-you Sent?', 'Actions'],
+    rows: [
+      ['Toy / Gift Card', 'Auntie', 'No'],
+      ['Clothes', 'Friend', 'No']
+    ]
+  },
+  shopping: {
+    title: 'Shopping Checklist',
+    icon: '🛒',
+    gradient: 'shopping-gradient',
+    headers: ['✓', 'Item', 'Quantity / Budget', 'Store / Notes', 'Actions'],
+    rows: [
+      ['Balloons', '20', 'Party store'],
+      ['Paper plates', '50', 'Dollar store'],
+      ['Candles', '1 pack', 'Grocery store']
+    ]
+  }
+};
+
+window.addEventListener('DOMContentLoaded', function() {
+  buildAllSections();
+  updateProgress();
+  updateBudget();
+});
+
+function buildAllSections() {
+  Object.keys(sectionData).forEach(sectionId => {
+    const data = sectionData[sectionId];
+    const section = document.getElementById(sectionId);
+    section.innerHTML = `
+      <div class="bg-white rounded-3xl shadow-2xl p-6 md:p-8 border border-purple-100 mb-8">
+        <div class="${data.gradient} rounded-2xl p-6 mb-6 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-3xl font-extrabold">${data.icon} ${data.title}</h2>
+            <p class="text-white/90 mt-1">Add, edit, check off, delete, and export your planning details.</p>
+          </div>
+          <button onclick="addRow('${sectionId}')" class="bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition-all">
+            + Add Item
+          </button>
+        </div>
+
+        <div class="hidden md:grid grid-cols-12 gap-4 p-4 rounded-xl bg-purple-50 text-purple-800 font-bold mb-4">
+          <div class="col-span-1 text-center">${data.headers[0]}</div>
+          <div class="col-span-4">${data.headers[1]}</div>
+          <div class="col-span-2 text-center">${data.headers[2]}</div>
+          <div class="col-span-3 text-center">${data.headers[3]}</div>
+          <div class="col-span-2 text-center">${data.headers[4]}</div>
+        </div>
+
+        <div id="${sectionId}-items" class="space-y-3"></div>
+      </div>
+    `;
+
+    data.rows.forEach(row => createRow(sectionId, row));
+  });
+}
+
+function createRow(sectionId, rowValues) {
+  counters[sectionId]++;
+  const container = document.getElementById(sectionId + '-items');
+  const item = document.createElement('div');
+  item.className = 'planner-item fade-in';
+  item.setAttribute('data-section', sectionId);
+
+  const borderColor = {
+    timeline: 'border-orange-200',
+    budget: 'border-emerald-200',
+    guests: 'border-purple-200',
+    vendors: 'border-cyan-200',
+    dayof: 'border-red-200',
+    seating: 'border-indigo-200',
+    gifts: 'border-pink-200',
+    shopping: 'border-green-200'
+  }[sectionId] || 'border-purple-200';
+
+  item.innerHTML = `
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4 p-4 bg-gradient-to-r from-white to-purple-50 rounded-2xl border-2 ${borderColor} hover:shadow-lg transition-all">
+      <div class="md:col-span-1 flex items-center justify-start md:justify-center gap-2">
+        <span class="md:hidden font-bold text-slate-600">Done:</span>
+        <input type="checkbox" class="task-check w-6 h-6 rounded-lg" onchange="updateProgress()">
+      </div>
+
+      <div class="md:col-span-4">
+        <label class="md:hidden text-sm font-bold text-purple-700">Item</label>
+        ${buildMainField(sectionId, rowValues[0])}
+      </div>
+
+      <div class="md:col-span-2">
+        <label class="md:hidden text-sm font-bold text-purple-700">Detail</label>
+        ${buildSecondField(sectionId, rowValues[1])}
+      </div>
+
+      <div class="md:col-span-3">
+        <label class="md:hidden text-sm font-bold text-purple-700">Notes / Option</label>
+        ${buildThirdField(sectionId, rowValues[2])}
+      </div>
+
+      <div class="md:col-span-2 flex justify-center">
+        <button onclick="deleteRow(this)" class="text-red-500 hover:text-red-700 px-4 py-2 rounded-xl hover:bg-red-50 font-bold transition-all">
+          🗑 Delete
+        </button>
+      </div>
+    </div>
+  `;
+
+  container.appendChild(item);
+}
+
+function buildMainField(sectionId, value) {
+  if (sectionId === 'budget') {
+    return buildSelect('field-main', value, [
+      'Venue / Decorations',
+      'Food and Drinks',
+      'Cake',
+      'Games / Activities',
+      'Entertainment',
+      'Photography',
+      'Other'
+    ]);
+  }
+
+  if (sectionId === 'shopping') {
+    return buildSelect('field-main', value, [
+      'Balloons',
+      'Paper plates',
+      'Candles',
+      'Decorations',
+      'Drinks',
+      'Snacks',
+      'Party favors',
+      'Other'
+    ]);
+  }
+
+  return `<input type="text" value="${escapeAttribute(value)}" class="field-main w-full px-3 py-2 rounded-lg border border-purple-100 font-semibold focus:ring-2 focus:ring-purple-400">`;
+}
+
+function buildSecondField(sectionId, value) {
+  if (sectionId === 'timeline') {
+    return `<input type="date" value="${toDateValue(value)}" class="field-second amount-or-detail w-full px-3 py-2 rounded-lg border border-purple-100 text-center focus:ring-2 focus:ring-purple-400" oninput="updateBudget()">`;
+  }
+
+  if (sectionId === 'dayof') {
+    return `<input type="time" value="${toTimeValue(value)}" class="field-second amount-or-detail w-full px-3 py-2 rounded-lg border border-purple-100 text-center focus:ring-2 focus:ring-purple-400" oninput="updateBudget()">`;
+  }
+
+  if (sectionId === 'guests') {
+    return buildSelect('field-second amount-or-detail', value, [
+      'Pending',
+      'Confirmed',
+      'Declined',
+      'Maybe'
+    ], 'updateBudget()');
+  }
+
+  if (sectionId === 'budget') {
+    return `<input type="number" min="0" step="0.01" value="${numberOnly(value)}" class="field-second amount-or-detail w-full px-3 py-2 rounded-lg border border-purple-100 text-center focus:ring-2 focus:ring-purple-400" oninput="updateBudget()">`;
+  }
+
+  if (sectionId === 'shopping') {
+    return `<input type="number" min="0" step="1" value="${numberOnly(value)}" class="field-second amount-or-detail w-full px-3 py-2 rounded-lg border border-purple-100 text-center focus:ring-2 focus:ring-purple-400" oninput="updateBudget()">`;
+  }
+
+  return `<input type="text" value="${escapeAttribute(value)}" class="field-second amount-or-detail w-full px-3 py-2 rounded-lg border border-purple-100 text-center focus:ring-2 focus:ring-purple-400" oninput="updateBudget()">`;
+}
+
+function buildThirdField(sectionId, value) {
+  if (sectionId === 'budget') {
+    return `<input type="number" min="0" step="0.01" value="${numberOnly(value)}" class="field-third w-full px-3 py-2 rounded-lg border border-purple-100 text-center focus:ring-2 focus:ring-purple-400" oninput="updateBudget()">`;
+  }
+
+  if (sectionId === 'vendors') {
+    return buildSelect('field-third', value, [
+      'Cake',
+      'Decorations',
+      'Catering',
+      'Entertainment',
+      'Photography',
+      'Venue',
+      'Other'
+    ], 'updateBudget()');
+  }
+
+  if (sectionId === 'gifts') {
+    return buildSelect('field-third', value, [
+      'No',
+      'Yes',
+      'Not Needed'
+    ], 'updateBudget()');
+  }
+
+  if (sectionId === 'shopping') {
+    return buildSelect('field-third', value, [
+      'Party Store',
+      'Grocery Store',
+      'Dollar Store',
+      'Online',
+      'Already Have',
+      'Other'
+    ], 'updateBudget()');
+  }
+
+  return `<input type="text" value="${escapeAttribute(value)}" class="field-third w-full px-3 py-2 rounded-lg border border-purple-100 text-center focus:ring-2 focus:ring-purple-400" oninput="updateBudget()">`;
+}
+
+function buildSelect(className, value, options, changeHandler = '') {
+  const safeValue = value || '';
+  let allOptions = [...options];
+
+  if (safeValue && !allOptions.includes(safeValue)) {
+    allOptions.unshift(safeValue);
+  }
+
+  const optionHTML = allOptions.map(option => {
+    const selected = option === safeValue ? 'selected' : '';
+    return `<option value="${escapeAttribute(option)}" ${selected}>${escapeHTML(option)}</option>`;
+  }).join('');
+
+  const onChange = changeHandler ? `onchange="${changeHandler}"` : '';
+
+  return `<select class="${className} w-full px-3 py-2 rounded-lg border border-purple-100 text-center font-semibold focus:ring-2 focus:ring-purple-400 bg-white" ${onChange}>${optionHTML}</select>`;
+}
+
+function toDateValue(value) {
+  if (!value) return '';
+  const text = String(value).trim();
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) {
+    return text;
+  }
+
+  return '';
+}
+
+function toTimeValue(value) {
+  if (!value) return '';
+  const text = String(value).trim();
+
+  const match24 = text.match(/^([01]?\d|2[0-3]):([0-5]\d)$/);
+  if (match24) {
+    return `${match24[1].padStart(2, '0')}:${match24[2]}`;
+  }
+
+  const match12 = text.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+  if (match12) {
+    let hour = parseInt(match12[1], 10);
+    const minute = match12[2];
+    const period = match12[3].toUpperCase();
+
+    if (period === 'PM' && hour < 12) hour += 12;
+    if (period === 'AM' && hour === 12) hour = 0;
+
+    return `${String(hour).padStart(2, '0')}:${minute}`;
+  }
+
+  return '';
+}
+
+function numberOnly(value) {
+  const number = parseFloat(String(value || '').replace(/[^0-9.-]/g, ''));
+  return isNaN(number) ? '0' : String(number);
+}
+
+function addRow(sectionId) {
+  const defaults = {
+    timeline: ['New party task', '', 'Notes'],
+    budget: ['New budget item', '0', '0'],
+    guests: ['Guest name', 'Pending', 'Notes'],
+    vendors: ['Vendor name', 'Contact', 'Other'],
+    dayof: ['New activity', '', 'Notes'],
+    seating: ['Table / Area', 'Guests', 'Notes'],
+    gifts: ['Gift item', 'From', 'No'],
+    shopping: ['Other', '1', 'Other']
+  };
+  createRow(sectionId, defaults[sectionId]);
+  updateProgress();
+  updateBudget();
+}
+
+function deleteRow(button) {
+  const item = button.closest('.planner-item');
+  item.classList.add('slide-out');
+  setTimeout(() => {
+    item.remove();
+    updateProgress();
+    updateBudget();
+  }, 180);
+}
+
+function showSection(sectionId, button) {
+  document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+  document.getElementById(sectionId).classList.add('active');
+
+  document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+  button.classList.add('active');
+}
+
+function updateProgress() {
+  const allChecks = document.querySelectorAll('.planner-item .task-check');
+  const checked = document.querySelectorAll('.planner-item .task-check:checked');
+
+  const total = allChecks.length;
+  const completed = checked.length;
+  const pending = total - completed;
+  const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+  document.getElementById('progress-percentage').textContent = percentage + '%';
+  document.getElementById('progress-bar').style.width = percentage + '%';
+  document.getElementById('progress-text').textContent = completed + ' of ' + total + ' tasks completed';
+  document.getElementById('completed-count').textContent = completed;
+  document.getElementById('pending-count').textContent = pending;
+}
+
+function updateBudget() {
+  let planned = 0;
+  let spent = 0;
+
+  document.querySelectorAll('#budget-items .planner-item').forEach(item => {
+    const plannedValue = parseMoney(item.querySelector('.field-second')?.value || '0');
+    const spentValue = parseMoney(item.querySelector('.field-third')?.value || '0');
+    planned += plannedValue;
+    spent += spentValue;
+  });
+
+  const left = planned - spent;
+  document.getElementById('budget-total').textContent = formatMoney(planned);
+  document.getElementById('budget-spent').textContent = formatMoney(spent);
+  document.getElementById('budget-left').textContent = formatMoney(left);
+}
+
+function parseMoney(value) {
+  const number = parseFloat(String(value).replace(/[^0-9.-]/g, ''));
+  return isNaN(number) ? 0 : number;
+}
+
+function formatMoney(value) {
+  return '$' + value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function getPlannerData() {
+  const data = [];
+  Object.keys(sectionData).forEach(sectionId => {
+    document.querySelectorAll('#' + sectionId + '-items .planner-item').forEach(item => {
+      data.push({
+        section: sectionData[sectionId].title,
+        completed: item.querySelector('.task-check')?.checked ? 'Yes' : 'No',
+        item: item.querySelector('.field-main')?.value || '',
+        detail: item.querySelector('.field-second')?.value || '',
+        notes: item.querySelector('.field-third')?.value || ''
+      });
+    });
+  });
+  return data;
+}
+
+function exportToCSV() {
+  const partyName = document.getElementById('party-name').value || 'Birthday Party';
+  const partyDate = document.getElementById('party-date').value || '';
+  const rows = getPlannerData();
+
+  const csvLines = [];
+  csvLines.push('BIRTHDAY PARTY PLANNER');
+  csvLines.push('Party Name,' + escapeCSV(partyName));
+  csvLines.push('Party Date,' + escapeCSV(partyDate));
+  csvLines.push('Generated,' + escapeCSV(new Date().toLocaleDateString()));
+  csvLines.push('');
+  csvLines.push('Section,Completed,Item,Detail,Notes');
+
+  rows.forEach(row => {
+    csvLines.push([
+      row.section,
+      row.completed,
+      row.item,
+      row.detail,
+      row.notes
+    ].map(escapeCSV).join(','));
+  });
+
+  csvLines.push('');
+  csvLines.push('Budget Summary');
+  csvLines.push('Total Budget,' + escapeCSV(document.getElementById('budget-total').textContent));
+  csvLines.push('Total Spent,' + escapeCSV(document.getElementById('budget-spent').textContent));
+  csvLines.push('Remaining,' + escapeCSV(document.getElementById('budget-left').textContent));
+
+  downloadFile(csvLines.join('\r\n'), 'Birthday_Party_Planner_Google_Sheets_' + todayStamp() + '.csv', 'text/csv;charset=utf-8;');
+}
+
+function exportToExcel() {
+  const partyName = document.getElementById('party-name').value || 'Birthday Party';
+  const partyDate = document.getElementById('party-date').value || '';
+  const rows = getPlannerData();
+
+  let tableRows = rows.map(row => `
+    <tr>
+      <td>${escapeHTML(row.section)}</td>
+      <td>${escapeHTML(row.completed)}</td>
+      <td>${escapeHTML(row.item)}</td>
+      <td>${escapeHTML(row.detail)}</td>
+      <td>${escapeHTML(row.notes)}</td>
+    </tr>
+  `).join('');
+
+  const htmlTable = `
+    <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel">
+    <head>
+      <meta charset="UTF-8">
+      <style>
+        table { border-collapse: collapse; font-family: Arial, sans-serif; }
+        th { background: #7e22ce; color: #ffffff; font-weight: bold; }
+        th, td { border: 1px solid #999999; padding: 8px; }
+        .title { background: #fce7f3; font-size: 18px; font-weight: bold; }
+        .summary { background: #dcfce7; font-weight: bold; }
+      </style>
+    </head>
+    <body>
+      <table>
+        <tr><td colspan="5" class="title">BIRTHDAY PARTY PLANNER</td></tr>
+        <tr><td colspan="2">Party Name</td><td colspan="3">${escapeHTML(partyName)}</td></tr>
+        <tr><td colspan="2">Party Date</td><td colspan="3">${escapeHTML(partyDate)}</td></tr>
+        <tr><td colspan="2">Generated</td><td colspan="3">${escapeHTML(new Date().toLocaleDateString())}</td></tr>
+        <tr><td colspan="5"></td></tr>
+        <tr><th>Section</th><th>Completed</th><th>Item</th><th>Detail</th><th>Notes</th></tr>
+        ${tableRows}
+        <tr><td colspan="5"></td></tr>
+        <tr class="summary"><td colspan="2">Total Budget</td><td colspan="3">${escapeHTML(document.getElementById('budget-total').textContent)}</td></tr>
+        <tr class="summary"><td colspan="2">Total Spent</td><td colspan="3">${escapeHTML(document.getElementById('budget-spent').textContent)}</td></tr>
+        <tr class="summary"><td colspan="2">Remaining</td><td colspan="3">${escapeHTML(document.getElementById('budget-left').textContent)}</td></tr>
+      </table>
+    </body>
+    </html>
+  `;
+
+  downloadFile(htmlTable, 'Birthday_Party_Planner_' + todayStamp() + '.xls', 'application/vnd.ms-excel;charset=utf-8;');
+}
+
+
+function exportToWord() {
+  const partyName = document.getElementById('party-name').value || 'Birthday Party';
+  const partyDate = document.getElementById('party-date').value || '';
+  const rows = getPlannerData();
+
+  let tableRows = rows.map(row => `
+    <tr>
+      <td>${escapeHTML(row.section)}</td>
+      <td>${escapeHTML(row.completed)}</td>
+      <td>${escapeHTML(row.item)}</td>
+      <td>${escapeHTML(row.detail)}</td>
+      <td>${escapeHTML(row.notes)}</td>
+    </tr>
+  `).join('');
+
+  const wordContent = `
+    <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word">
+    <head>
+      <meta charset="UTF-8">
+      <title>Birthday Party Planner</title>
+      <style>
+        body { font-family: Arial, sans-serif; color: #1f2937; }
+        h1 { color: #7e22ce; }
+        p { font-size: 14px; }
+        table { border-collapse: collapse; width: 100%; margin-top: 16px; }
+        th { background: #7e22ce; color: #ffffff; font-weight: bold; }
+        th, td { border: 1px solid #999999; padding: 8px; text-align: left; }
+        .summary { background: #dcfce7; font-weight: bold; }
+      </style>
+    </head>
+    <body>
+      <h1>Birthday Party Planner</h1>
+      <p><strong>Party Name:</strong> ${escapeHTML(partyName)}</p>
+      <p><strong>Party Date:</strong> ${escapeHTML(partyDate)}</p>
+      <p><strong>Generated:</strong> ${escapeHTML(new Date().toLocaleDateString())}</p>
+
+      <table>
+        <tr>
+          <th>Section</th>
+          <th>Completed</th>
+          <th>Item</th>
+          <th>Detail</th>
+          <th>Notes / Option</th>
+        </tr>
+        ${tableRows}
+      </table>
+
+      <h2>Budget Summary</h2>
+      <table>
+        <tr class="summary"><td>Total Budget</td><td>${escapeHTML(document.getElementById('budget-total').textContent)}</td></tr>
+        <tr class="summary"><td>Total Spent</td><td>${escapeHTML(document.getElementById('budget-spent').textContent)}</td></tr>
+        <tr class="summary"><td>Remaining</td><td>${escapeHTML(document.getElementById('budget-left').textContent)}</td></tr>
+      </table>
+    </body>
+    </html>
+  `;
+
+  downloadFile(wordContent, 'Birthday_Party_Planner_' + todayStamp() + '.doc', 'application/msword;charset=utf-8;');
+}
+
+function importCSVFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+    const rows = parseCSV(e.target.result);
+    const dataRows = rows.filter(row => row.length >= 5 && row[0] !== 'Section' && row[0] !== 'BIRTHDAY PARTY PLANNER');
+
+    importPlannerRows(dataRows);
+    alert('Excel/Google Sheet CSV uploaded successfully. Your planner has been updated.');
+    event.target.value = '';
+  };
+
+  reader.readAsText(file);
+}
+
+function importWordFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(e.target.result, 'text/html');
+    const importedRows = [];
+
+    Array.from(doc.querySelectorAll('tr')).forEach(tr => {
+      const cells = Array.from(tr.querySelectorAll('td')).map(td => td.textContent.trim());
+
+      if (cells.length >= 5 && cells[0] !== 'Section') {
+        importedRows.push(cells);
+      }
+    });
+
+    if (importedRows.length === 0) {
+      alert('No planner table was found. Please upload a Word/Google Docs file exported from this planner.');
+    } else {
+      importPlannerRows(importedRows);
+      alert('Word/Google Docs file uploaded successfully. Your planner has been updated.');
+    }
+
+    event.target.value = '';
+  };
+
+  reader.readAsText(file);
+}
+
+function importPlannerRows(rows) {
+  Object.keys(sectionData).forEach(sectionId => {
+    const container = document.getElementById(sectionId + '-items');
+    if (container) container.innerHTML = '';
+  });
+
+  rows.forEach(row => {
+    const sectionId = findSectionIdByTitle(row[0] || '');
+
+    if (sectionId) {
+      createRow(sectionId, [row[2] || '', row[3] || '', row[4] || '']);
+
+      const container = document.getElementById(sectionId + '-items');
+      const lastItem = container.lastElementChild;
+      const checkbox = lastItem ? lastItem.querySelector('.task-check') : null;
+
+      if (checkbox && String(row[1] || '').toLowerCase() === 'yes') {
+        checkbox.checked = true;
+      }
+    }
+  });
+
+  updateProgress();
+  updateBudget();
+}
+
+function findSectionIdByTitle(title) {
+  const cleanTitle = String(title).toLowerCase().trim();
+
+  return Object.keys(sectionData).find(sectionId => {
+    return sectionData[sectionId].title.toLowerCase().trim() === cleanTitle;
+  });
+}
+
+function parseCSV(text) {
+  const rows = [];
+  let row = [];
+  let value = '';
+  let insideQuotes = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    const nextChar = text[i + 1];
+
+    if (char === '"' && insideQuotes && nextChar === '"') {
+      value += '"';
+      i++;
+    } else if (char === '"') {
+      insideQuotes = !insideQuotes;
+    } else if (char === ',' && !insideQuotes) {
+      row.push(value);
+      value = '';
+    } else if ((char === '\n' || char === '\r') && !insideQuotes) {
+      if (value !== '' || row.length > 0) {
+        row.push(value);
+        rows.push(row);
+        row = [];
+        value = '';
+      }
+
+      if (char === '\r' && nextChar === '\n') i++;
+    } else {
+      value += char;
+    }
+  }
+
+  if (value !== '' || row.length > 0) {
+    row.push(value);
+    rows.push(row);
+  }
+
+  return rows;
+}
+
+
+function downloadFile(content, fileName, type) {
+  const blob = new Blob([content], { type: type });
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  link.href = url;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
+function todayStamp() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function escapeCSV(str) {
+  if (str === null || str === undefined) return '';
+  str = str.toString();
+  if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+    return '"' + str.replace(/"/g, '""') + '"';
+  }
+  return str;
+}
+
+function escapeHTML(str) {
+  if (str === null || str === undefined) return '';
+  return str.toString()
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function escapeAttribute(str) {
+  return escapeHTML(str).replace(/`/g, '&#096;');
+}
+</script>
+</body>
+</html>
