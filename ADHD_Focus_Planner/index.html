@@ -1,0 +1,524 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ADHD / Focus / Productivity Planner</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    body {
+      font-family: 'Inter', sans-serif;
+      box-sizing: border-box;
+      background:
+        radial-gradient(circle at top left, rgba(255,184,0,.22), transparent 35%),
+        radial-gradient(circle at top right, rgba(124,58,237,.22), transparent 35%),
+        radial-gradient(circle at bottom left, rgba(20,184,166,.18), transparent 28%),
+        linear-gradient(135deg, #fff7ed 0%, #fef3c7 16%, #eef2ff 55%, #f5f3ff 100%);
+    }
+    .fade-in { animation: fadeIn .25s ease-in; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(-8px);} to { opacity:1; transform:translateY(0);} }
+    .slide-out { animation: slideOut .18s ease-out forwards; }
+    @keyframes slideOut { to { opacity:0; transform:translateX(16px);} }
+    .hero-gradient { background: linear-gradient(135deg, #f59e0b 0%, #f97316 22%, #7c3aed 60%, #2563eb 100%); }
+    .focus-gradient { background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%); }
+    .priorities-gradient { background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%); }
+    .time-gradient { background: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%); }
+    .habits-gradient { background: linear-gradient(135deg, #10b981 0%, #14b8a6 100%); }
+    .braindump-gradient { background: linear-gradient(135deg, #ef4444 0%, #f97316 100%); }
+    .weekly-gradient { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); }
+    .goals-gradient { background: linear-gradient(135deg, #db2777 0%, #9333ea 100%); }
+    .energy-gradient { background: linear-gradient(135deg, #059669 0%, #0284c7 100%); }
+    .glass-card { background: rgba(255,255,255,.94); backdrop-filter: blur(12px); }
+    .tab.active { background: linear-gradient(135deg, #fef3c7 0%, #ede9fe 100%); color: #7c2d12; border-bottom: 4px solid #f97316; }
+    .section { display:none; }
+    .section.active { display:block; }
+    .bold-shadow { box-shadow: 0 18px 45px rgba(124,58,237,.18); }
+    .button-shine { position:relative; overflow:hidden; }
+    .button-shine::after {
+      content:""; position:absolute; top:0; left:-100%; width:80%; height:100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
+      transition:.6s;
+    }
+    .button-shine:hover::after { left:120%; }
+  </style>
+</head>
+<body class="min-h-screen">
+  <div class="container mx-auto px-4 md:px-6 py-8 max-w-7xl">
+    <div class="glass-card rounded-3xl bold-shadow border border-orange-200 overflow-hidden mb-8">
+      <div class="hero-gradient p-8 md:p-10 text-center text-white relative overflow-hidden">
+        <div class="absolute -top-16 -left-16 w-40 h-40 bg-white/15 rounded-full"></div>
+        <div class="absolute -bottom-20 -right-12 w-52 h-52 bg-yellow-300/20 rounded-full"></div>
+        <p class="relative inline-block px-5 py-2 rounded-full bg-white/20 text-white font-bold mb-4">Interactive ADHD Focus & Productivity Dashboard</p>
+        <h1 class="relative text-4xl md:text-6xl font-black mb-3 tracking-tight">🧠 ADHD / Focus Planner</h1>
+        <p class="relative text-lg md:text-2xl text-white/90">Stay organized with structure, clarity, time blocks, focus tasks, and routines</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-5 p-6">
+        <div class="rounded-3xl p-6 border-2 border-amber-300 bg-gradient-to-br from-yellow-100 to-orange-100 shadow-lg">
+          <p class="text-orange-900 font-extrabold mb-2">Overall Progress</p>
+          <p id="progress-percentage" class="text-5xl font-black text-orange-600">0%</p>
+          <div class="w-full bg-white rounded-full h-4 mt-4 shadow-inner">
+            <div id="progress-bar" class="bg-gradient-to-r from-orange-500 via-pink-500 to-violet-600 h-4 rounded-full transition-all duration-700" style="width:0%"></div>
+          </div>
+          <p id="progress-text" class="text-sm text-slate-600 mt-2 font-semibold">0 of 0 tasks completed</p>
+        </div>
+
+        <div class="rounded-3xl p-6 border-2 border-violet-300 bg-gradient-to-br from-violet-100 to-fuchsia-100 shadow-lg">
+          <p class="text-violet-900 font-extrabold mb-2">Task Status</p>
+          <p class="text-slate-700 text-lg">Completed: <span id="completed-count" class="text-emerald-700 font-black">0</span></p>
+          <p class="text-slate-700 text-lg">Pending: <span id="pending-count" class="text-pink-700 font-black">0</span></p>
+        </div>
+
+        <div class="rounded-3xl p-6 border-2 border-cyan-300 bg-gradient-to-br from-cyan-100 to-sky-100 shadow-lg">
+          <p class="text-orange-900 font-extrabold mb-2">Productivity Budget</p>
+          <p class="text-slate-700">Budget: <span id="budget-total" class="text-blue-700 font-black">$100.00</span></p>
+          <p class="text-slate-700">Spent: <span id="budget-spent" class="text-orange-700 font-black">$0.00</span></p>
+          <p class="text-slate-700">Left: <span id="budget-left" class="text-emerald-700 font-black">$100.00</span></p>
+        </div>
+
+        <div class="rounded-3xl p-6 border-2 border-pink-300 bg-gradient-to-br from-pink-100 to-rose-100 shadow-lg">
+          <p class="text-orange-900 font-extrabold mb-2">Planner Details</p>
+          <input id="planner-name" class="w-full mb-2 px-3 py-2 rounded-xl border-2 border-orange-200 font-semibold" value="My Focus Planner" />
+          <input id="planner-date" type="date" class="w-full px-3 py-2 rounded-xl border-2 border-orange-200 font-semibold" />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 px-6 pb-6">
+        <button onclick="exportToCSV()" class="button-shine bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-6 py-4 rounded-2xl font-black shadow-xl transition-all">📊 Download to Excel/Google Sheets (CSV)</button>
+        <button onclick="exportToWord()" class="button-shine bg-gradient-to-r from-blue-600 to-purple-700 hover:from-blue-700 hover:to-purple-800 text-white px-6 py-4 rounded-2xl font-black shadow-xl transition-all">📄 Download Word/Google Docs</button>
+        <button onclick="document.getElementById('csv-upload').click()" class="button-shine bg-gradient-to-r from-orange-500 to-pink-600 hover:from-orange-600 hover:to-pink-700 text-white px-6 py-4 rounded-2xl font-black shadow-xl transition-all">⬆️ Upload Excel/Google Sheets (CSV)</button>
+        <button onclick="document.getElementById('word-upload').click()" class="button-shine bg-gradient-to-r from-violet-600 to-indigo-700 hover:from-violet-700 hover:to-indigo-800 text-white px-6 py-4 rounded-2xl font-black shadow-xl transition-all">⬆️ Upload Word/Google Docs</button>
+        <input id="csv-upload" type="file" accept=".csv,.txt" class="hidden" onchange="importCSVFile(event)">
+        <input id="word-upload" type="file" accept=".doc,.html,.htm,.txt" class="hidden" onchange="importWordFile(event)">
+      </div>
+      <p class="text-center text-sm text-slate-500 px-6 pb-6 font-semibold">Download or upload CSV files for Excel/Google Sheets. Download or upload Word/Google Docs files for document-style planning.</p>
+    </div>
+
+    <div class="glass-card rounded-3xl shadow-xl border border-orange-200 overflow-hidden mb-8">
+      <div class="flex flex-wrap text-orange-700 font-black">
+        <button class="tab active px-5 py-4 transition-all" onclick="showSection('focus', this)">🎯 Focus</button>
+        <button class="tab px-5 py-4 transition-all" onclick="showSection('priorities', this)">⭐ Priorities</button>
+        <button class="tab px-5 py-4 transition-all" onclick="showSection('timeblocks', this)">⏰ Time Blocks</button>
+        <button class="tab px-5 py-4 transition-all" onclick="showSection('habits', this)">🔁 Habits</button>
+        <button class="tab px-5 py-4 transition-all" onclick="showSection('braindump', this)">📝 Brain Dump</button>
+        <button class="tab px-5 py-4 transition-all" onclick="showSection('weekly', this)">📅 Weekly Plan</button>
+        <button class="tab px-5 py-4 transition-all" onclick="showSection('goals', this)">🚀 Goals</button>
+        <button class="tab px-5 py-4 transition-all" onclick="showSection('energy', this)">⚡ Energy & Mood</button>
+      </div>
+    </div>
+
+    <div id="focus" class="section active"></div>
+    <div id="priorities" class="section"></div>
+    <div id="timeblocks" class="section"></div>
+    <div id="habits" class="section"></div>
+    <div id="braindump" class="section"></div>
+    <div id="weekly" class="section"></div>
+    <div id="goals" class="section"></div>
+    <div id="energy" class="section"></div>
+  </div>
+
+<script>
+let counters = { focus:0, priorities:0, timeblocks:0, habits:0, braindump:0, weekly:0, goals:0, energy:0 };
+
+const sectionData = {
+  focus: { title:'Daily Focus Planner', icon:'🎯', gradient:'focus-gradient', border:'border-orange-300', rowBg:'from-orange-50 to-amber-50', headers:['✓','Focus Task','Time / Duration','Notes','Actions'], rows:[['Top focus task','25 minutes','Use timer and remove distractions'],['Second focus task','30 minutes','Break task into small steps'],['Quick win task','10 minutes','Do something easy first']]},
+  priorities: { title:'Priority Task List', icon:'⭐', gradient:'priorities-gradient', border:'border-violet-300', rowBg:'from-violet-50 to-fuchsia-50', headers:['✓','Priority Task','Priority Level','Notes','Actions'], rows:[['Reply to important email','High','Do before noon'],['Submit assignment / report','High','Break into smaller chunks'],['Organize workspace','Medium','5-minute reset']]},
+  timeblocks: { title:'Time Blocking Schedule', icon:'⏰', gradient:'time-gradient', border:'border-sky-300', rowBg:'from-cyan-50 to-blue-50', headers:['✓','Activity','Time Block','Notes','Actions'], rows:[['Morning routine','8:00 AM - 8:30 AM','Keep it simple'],['Deep work session','9:00 AM - 10:00 AM','Turn off notifications'],['Admin / Email','11:00 AM - 11:30 AM','Batch small tasks']]},
+  habits: { title:'Habit Tracker', icon:'🔁', gradient:'habits-gradient', border:'border-emerald-300', rowBg:'from-emerald-50 to-teal-50', headers:['✓','Habit','Frequency','Notes','Actions'], rows:[['Drink water','Daily','Refill bottle'],['Take medication / vitamins','Daily','Set reminder'],['5-minute tidy-up','Daily','End of day reset']]},
+  braindump: { title:'Brain Dump List', icon:'📝', gradient:'braindump-gradient', border:'border-rose-300', rowBg:'from-rose-50 to-orange-50', headers:['✓','Thought / Task','Category','Notes','Actions'], rows:[['Idea for project','Work','Add to next planning block'],['Need to buy groceries','Personal','Keep list simple'],['Schedule appointment','Errand','Call tomorrow morning']]},
+  weekly: { title:'Weekly Planner', icon:'📅', gradient:'weekly-gradient', border:'border-indigo-300', rowBg:'from-indigo-50 to-violet-50', headers:['✓','Plan Item','Day / Time','Notes','Actions'], rows:[['Plan the week','Monday Morning','Set 3 main priorities'],['Check deadlines','Wednesday','Review calendar'],['Weekly review','Friday Afternoon','Celebrate progress']]},
+  goals: { title:'Goal Tracker', icon:'🚀', gradient:'goals-gradient', border:'border-pink-300', rowBg:'from-pink-50 to-fuchsia-50', headers:['✓','Goal','Target / Deadline','Notes','Actions'], rows:[['Finish one major project','End of month','Work in short focus sessions'],['Improve morning routine','2 weeks','Track consistency'],['Reduce overwhelm','Ongoing','Use task breakdowns']]},
+  energy: { title:'Energy & Mood Tracker', icon:'⚡', gradient:'energy-gradient', border:'border-cyan-300', rowBg:'from-cyan-50 to-emerald-50', headers:['✓','Check-In Item','Level / Rating','Notes','Actions'], rows:[['Morning energy','7/10','Better after breakfast'],['Focus level','6/10','Need fewer distractions'],['Mood check','8/10','Feeling motivated today']]}
+};
+
+window.addEventListener('DOMContentLoaded', function(){ buildAllSections(); updateProgress(); updateBudget(); });
+
+function buildAllSections() {
+  Object.keys(sectionData).forEach(sectionId => {
+    const data = sectionData[sectionId];
+    const section = document.getElementById(sectionId);
+    section.innerHTML = `
+      <div class="glass-card rounded-3xl bold-shadow p-6 md:p-8 border border-orange-100 mb-8">
+        <div class="${data.gradient} rounded-3xl p-6 mb-6 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl">
+          <div>
+            <h2 class="text-3xl md:text-4xl font-black">${data.icon} ${data.title}</h2>
+            <p class="text-white/90 mt-1 font-semibold">Add, edit, check off, delete, and export your focus and productivity details.</p>
+          </div>
+          <button onclick="addRow('${sectionId}')" class="button-shine bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-2xl font-black shadow-lg transition-all border border-white/30">+ Add Item</button>
+        </div>
+        <div class="hidden md:grid grid-cols-12 gap-4 p-4 rounded-2xl bg-gradient-to-r from-yellow-100 to-violet-100 text-orange-900 font-black mb-4 border border-orange-200">
+          <div class="col-span-1 text-center">${data.headers[0]}</div>
+          <div class="col-span-4">${data.headers[1]}</div>
+          <div class="col-span-2 text-center">${data.headers[2]}</div>
+          <div class="col-span-3 text-center">${data.headers[3]}</div>
+          <div class="col-span-2 text-center">${data.headers[4]}</div>
+        </div>
+        <div id="${sectionId}-items" class="space-y-3"></div>
+      </div>`;
+    data.rows.forEach(row => createRow(sectionId, row));
+  });
+}
+
+function createRow(sectionId, rowValues) {
+  counters[sectionId]++;
+  const data = sectionData[sectionId];
+  const container = document.getElementById(sectionId + '-items');
+  const item = document.createElement('div');
+  item.className = 'planner-item fade-in';
+  item.setAttribute('data-section', sectionId);
+  item.innerHTML = `
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4 p-4 bg-gradient-to-r ${data.rowBg} rounded-3xl border-2 ${data.border} hover:shadow-xl transition-all">
+      <div class="md:col-span-1 flex items-center justify-start md:justify-center gap-2">
+        <span class="md:hidden font-black text-slate-700">Done:</span>
+        <input type="checkbox" class="task-check w-6 h-6 rounded-lg accent-orange-600" onchange="updateProgress()">
+      </div>
+      <div class="md:col-span-4">
+        <label class="md:hidden text-sm font-black text-orange-700">Item</label>
+        <input type="text" value="${escapeAttribute(rowValues[0])}" class="field-main w-full px-3 py-2 rounded-xl border-2 border-white font-bold focus:ring-2 focus:ring-orange-500 shadow-sm">
+      </div>
+      <div class="md:col-span-2">
+        <label class="md:hidden text-sm font-black text-orange-700">Detail</label>
+        <input type="text" value="${escapeAttribute(rowValues[1])}" class="field-second w-full px-3 py-2 rounded-xl border-2 border-white text-center font-semibold focus:ring-2 focus:ring-orange-500 shadow-sm" oninput="updateBudget()">
+      </div>
+      <div class="md:col-span-3">
+        <label class="md:hidden text-sm font-black text-orange-700">Notes / Spent</label>
+        <input type="text" value="${escapeAttribute(rowValues[2])}" class="field-third w-full px-3 py-2 rounded-xl border-2 border-white text-center font-semibold focus:ring-2 focus:ring-orange-500 shadow-sm" oninput="updateBudget()">
+      </div>
+      <div class="md:col-span-2 flex justify-center">
+        <button onclick="deleteRow(this)" class="bg-red-100 text-red-700 hover:bg-red-200 px-4 py-2 rounded-xl font-black transition-all">🗑 Delete</button>
+      </div>
+    </div>`;
+  container.appendChild(item);
+}
+
+function addRow(sectionId) {
+  const defaults = {
+    focus:['New focus task','25 minutes','Notes'],
+    priorities:['New priority task','Medium','Notes'],
+    timeblocks:['New activity','Time block','Notes'],
+    habits:['New habit','Daily','Notes'],
+    braindump:['New thought / task','Category','Notes'],
+    weekly:['New weekly item','Day / Time','Notes'],
+    goals:['New goal','Target / Deadline','Notes'],
+    energy:['New check-in','Level / Rating','Notes']
+  };
+  createRow(sectionId, defaults[sectionId]);
+  updateProgress();
+  updateBudget();
+}
+
+function deleteRow(button) {
+  const item = button.closest('.planner-item');
+  item.classList.add('slide-out');
+  setTimeout(() => { item.remove(); updateProgress(); updateBudget(); }, 180);
+}
+
+function showSection(sectionId, button) {
+  document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+  document.getElementById(sectionId).classList.add('active');
+  document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+  button.classList.add('active');
+}
+
+function updateProgress() {
+  const allChecks = document.querySelectorAll('.planner-item .task-check');
+  const checked = document.querySelectorAll('.planner-item .task-check:checked');
+  const total = allChecks.length;
+  const completed = checked.length;
+  const pending = total - completed;
+  const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+  document.getElementById('progress-percentage').textContent = percentage + '%';
+  document.getElementById('progress-bar').style.width = percentage + '%';
+  document.getElementById('progress-text').textContent = completed + ' of ' + total + ' tasks completed';
+  document.getElementById('completed-count').textContent = completed;
+  document.getElementById('pending-count').textContent = pending;
+}
+
+function updateBudget() {
+  let planned = 0;
+  let spent = 0;
+  document.querySelectorAll('#goals-items .planner-item').forEach(item => {
+    planned += parseMoney(item.querySelector('.field-second')?.value || '0');
+    spent += parseMoney(item.querySelector('.field-third')?.value || '0');
+  });
+  document.querySelectorAll('#habits-items .planner-item').forEach(item => {
+    spent += parseMoney(item.querySelector('.field-third')?.value || '0');
+  });
+  document.getElementById('budget-total').textContent = formatMoney(planned || 100);
+  document.getElementById('budget-spent').textContent = formatMoney(spent);
+  document.getElementById('budget-left').textContent = formatMoney((planned || 100) - spent);
+}
+
+function parseMoney(value) {
+  const number = parseFloat(String(value).replace(/[^0-9.-]/g, ''));
+  return isNaN(number) ? 0 : number;
+}
+function formatMoney(value) { return '$' + value.toLocaleString('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 }); }
+
+function getPlannerData() {
+  const data = [];
+  Object.keys(sectionData).forEach(sectionId => {
+    document.querySelectorAll('#' + sectionId + '-items .planner-item').forEach(item => {
+      data.push({
+        section: sectionData[sectionId].title,
+        completed: item.querySelector('.task-check')?.checked ? 'Yes' : 'No',
+        item: item.querySelector('.field-main')?.value || '',
+        detail: item.querySelector('.field-second')?.value || '',
+        notes: item.querySelector('.field-third')?.value || ''
+      });
+    });
+  });
+  return data;
+}
+
+function exportToCSV() {
+  const plannerName = document.getElementById('planner-name').value || 'Focus Planner';
+  const plannerDate = document.getElementById('planner-date').value || '';
+  const rows = getPlannerData();
+  const csvLines = [];
+  csvLines.push('ADHD / FOCUS / PRODUCTIVITY PLANNER');
+  csvLines.push('Planner Name,' + escapeCSV(plannerName));
+  csvLines.push('Planner Date,' + escapeCSV(plannerDate));
+  csvLines.push('Generated,' + escapeCSV(new Date().toLocaleDateString()));
+  csvLines.push('');
+  csvLines.push('Section,Completed,Item,Detail,Notes');
+  rows.forEach(row => { csvLines.push([row.section,row.completed,row.item,row.detail,row.notes].map(escapeCSV).join(',')); });
+  csvLines.push('');
+  csvLines.push('Productivity Budget Summary');
+  csvLines.push('Total Budget,' + escapeCSV(document.getElementById('budget-total').textContent));
+  csvLines.push('Total Spent,' + escapeCSV(document.getElementById('budget-spent').textContent));
+  csvLines.push('Remaining,' + escapeCSV(document.getElementById('budget-left').textContent));
+  downloadFile(csvLines.join('\\r\\n'), 'ADHD_Focus_Productivity_Planner_Google_Sheets_' + todayStamp() + '.csv', 'text/csv;charset=utf-8;');
+}
+
+function exportToExcel() {
+  const plannerName = document.getElementById('planner-name').value || 'Focus Planner';
+  const plannerDate = document.getElementById('planner-date').value || '';
+  const rows = getPlannerData();
+  let tableRows = rows.map(row => `
+    <tr>
+      <td>${escapeHTML(row.section)}</td>
+      <td>${escapeHTML(row.completed)}</td>
+      <td>${escapeHTML(row.item)}</td>
+      <td>${escapeHTML(row.detail)}</td>
+      <td>${escapeHTML(row.notes)}</td>
+    </tr>`).join('');
+  const htmlTable = `
+    <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel">
+    <head>
+      <meta charset="UTF-8">
+      <style>
+        table { border-collapse: collapse; font-family: Arial, sans-serif; }
+        th { background: #7c3aed; color: #ffffff; font-weight: bold; }
+        th, td { border: 1px solid #999999; padding: 8px; }
+        .title { background: #fef3c7; color: #7c2d12; font-size: 18px; font-weight: bold; }
+        .summary { background: #dbeafe; font-weight: bold; }
+      </style>
+    </head>
+    <body>
+      <table>
+        <tr><td colspan="5" class="title">ADHD / FOCUS / PRODUCTIVITY PLANNER</td></tr>
+        <tr><td colspan="2">Planner Name</td><td colspan="3">${escapeHTML(plannerName)}</td></tr>
+        <tr><td colspan="2">Planner Date</td><td colspan="3">${escapeHTML(plannerDate)}</td></tr>
+        <tr><td colspan="2">Generated</td><td colspan="3">${escapeHTML(new Date().toLocaleDateString())}</td></tr>
+        <tr><td colspan="5"></td></tr>
+        <tr><th>Section</th><th>Completed</th><th>Item</th><th>Detail</th><th>Notes</th></tr>
+        ${tableRows}
+        <tr><td colspan="5"></td></tr>
+        <tr class="summary"><td colspan="2">Total Budget</td><td colspan="3">${escapeHTML(document.getElementById('budget-total').textContent)}</td></tr>
+        <tr class="summary"><td colspan="2">Total Spent</td><td colspan="3">${escapeHTML(document.getElementById('budget-spent').textContent)}</td></tr>
+        <tr class="summary"><td colspan="2">Remaining</td><td colspan="3">${escapeHTML(document.getElementById('budget-left').textContent)}</td></tr>
+      </table>
+    </body>
+    </html>`;
+  downloadFile(htmlTable, 'ADHD_Focus_Productivity_Planner_' + todayStamp() + '.xls', 'application/vnd.ms-excel;charset=utf-8;');
+}
+
+
+function exportToWord() {
+  const plannerName = document.getElementById('planner-name').value || 'Focus Planner';
+  const plannerDate = document.getElementById('planner-date').value || '';
+  const rows = getPlannerData();
+
+  let tableRows = rows.map(row => `
+    <tr>
+      <td>${escapeHTML(row.section)}</td>
+      <td>${escapeHTML(row.completed)}</td>
+      <td>${escapeHTML(row.item)}</td>
+      <td>${escapeHTML(row.detail)}</td>
+      <td>${escapeHTML(row.notes)}</td>
+    </tr>`).join('');
+
+  const wordContent = `
+    <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word">
+    <head>
+      <meta charset="UTF-8">
+      <title>ADHD / Focus / Productivity Planner</title>
+      <style>
+        body { font-family: Arial, sans-serif; color: #1f2937; }
+        h1 { color: #7c3aed; }
+        .subtitle { color: #7c2d12; font-weight: bold; }
+        table { border-collapse: collapse; width: 100%; margin-top: 16px; }
+        th { background: #7c3aed; color: #ffffff; font-weight: bold; }
+        th, td { border: 1px solid #999999; padding: 8px; text-align: left; }
+        .summary { background: #dbeafe; font-weight: bold; }
+      </style>
+    </head>
+    <body>
+      <h1>ADHD / Focus / Productivity Planner</h1>
+      <p class="subtitle">Planner Name: ${escapeHTML(plannerName)}</p>
+      <p class="subtitle">Planner Date: ${escapeHTML(plannerDate)}</p>
+      <p>Generated: ${escapeHTML(new Date().toLocaleDateString())}</p>
+
+      <table>
+        <tr><th>Section</th><th>Completed</th><th>Item</th><th>Detail</th><th>Notes</th></tr>
+        ${tableRows}
+      </table>
+
+      <h2>Productivity Budget Summary</h2>
+      <table>
+        <tr class="summary"><td>Total Budget</td><td>${escapeHTML(document.getElementById('budget-total').textContent)}</td></tr>
+        <tr class="summary"><td>Total Spent</td><td>${escapeHTML(document.getElementById('budget-spent').textContent)}</td></tr>
+        <tr class="summary"><td>Remaining</td><td>${escapeHTML(document.getElementById('budget-left').textContent)}</td></tr>
+      </table>
+    </body>
+    </html>`;
+
+  downloadFile(wordContent, 'ADHD_Focus_Productivity_Planner_' + todayStamp() + '.doc', 'application/msword;charset=utf-8;');
+}
+
+
+
+function importCSVFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const rows = parseCSV(e.target.result);
+    const dataRows = rows.filter(row => row.length >= 5 && row[0] !== 'Section' && row[0] !== 'ADHD / FOCUS / PRODUCTIVITY PLANNER');
+    importPlannerRows(dataRows);
+    alert('CSV uploaded successfully. Your planner has been updated.');
+    event.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+function importWordFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(e.target.result, 'text/html');
+    const importedRows = [];
+
+    Array.from(doc.querySelectorAll('tr')).forEach(tr => {
+      const cells = Array.from(tr.querySelectorAll('td')).map(td => td.textContent.trim());
+      if (cells.length >= 5 && cells[0] !== 'Section') importedRows.push(cells);
+    });
+
+    if (importedRows.length === 0) {
+      alert('No planner table was found. Please upload a Word/Google Docs file exported from this planner.');
+    } else {
+      importPlannerRows(importedRows);
+      alert('Word/Google Docs file uploaded successfully. Your planner has been updated.');
+    }
+    event.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+function importPlannerRows(rows) {
+  Object.keys(sectionData).forEach(sectionId => {
+    const container = document.getElementById(sectionId + '-items');
+    if (container) container.innerHTML = '';
+  });
+
+  rows.forEach(row => {
+    const sectionId = findSectionIdByTitle(row[0] || '');
+    if (sectionId) {
+      createRow(sectionId, [row[2] || '', row[3] || '', row[4] || '']);
+      const container = document.getElementById(sectionId + '-items');
+      const lastItem = container.lastElementChild;
+      const checkbox = lastItem ? lastItem.querySelector('.task-check') : null;
+      if (checkbox && String(row[1] || '').toLowerCase() === 'yes') checkbox.checked = true;
+    }
+  });
+
+  updateProgress();
+  updateBudget();
+}
+
+function findSectionIdByTitle(title) {
+  const cleanTitle = String(title).toLowerCase().trim();
+  return Object.keys(sectionData).find(sectionId => sectionData[sectionId].title.toLowerCase().trim() === cleanTitle);
+}
+
+function parseCSV(text) {
+  const rows = [];
+  let row = [];
+  let value = '';
+  let insideQuotes = false;
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    const nextChar = text[i + 1];
+
+    if (char === '"' && insideQuotes && nextChar === '"') {
+      value += '"';
+      i++;
+    } else if (char === '"') {
+      insideQuotes = !insideQuotes;
+    } else if (char === ',' && !insideQuotes) {
+      row.push(value);
+      value = '';
+    } else if ((char === '\n' || char === '\r') && !insideQuotes) {
+      if (value !== '' || row.length > 0) {
+        row.push(value);
+        rows.push(row);
+        row = [];
+        value = '';
+      }
+      if (char === '\r' && nextChar === '\n') i++;
+    } else {
+      value += char;
+    }
+  }
+
+  if (value !== '' || row.length > 0) {
+    row.push(value);
+    rows.push(row);
+  }
+
+  return rows;
+}
+
+function downloadFile(content, fileName, type) {
+  const blob = new Blob([content], { type:type });
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  link.href = url;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+function todayStamp() { return new Date().toISOString().split('T')[0]; }
+function escapeCSV(str) {
+  if (str === null || str === undefined) return '';
+  str = str.toString();
+  if (str.includes(',') || str.includes('"') || str.includes('\\n')) { return '"' + str.replace(/"/g, '""') + '"'; }
+  return str;
+}
+function escapeHTML(str) {
+  if (str === null || str === undefined) return '';
+  return str.toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+function escapeAttribute(str) { return escapeHTML(str).replace(/`/g, '&#096;'); }
+</script>
+</body>
+</html>
