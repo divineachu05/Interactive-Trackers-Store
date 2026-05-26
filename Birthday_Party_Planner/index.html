@@ -3,89 +3,74 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ADHD / Focus / Productivity Planner</title>
+  <title>Birthday Party Planner</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-    body {
-      font-family: 'Inter', sans-serif;
-      box-sizing: border-box;
-      background:
-        radial-gradient(circle at top left, rgba(255,184,0,.22), transparent 35%),
-        radial-gradient(circle at top right, rgba(124,58,237,.22), transparent 35%),
-        radial-gradient(circle at bottom left, rgba(20,184,166,.18), transparent 28%),
-        linear-gradient(135deg, #fff7ed 0%, #fef3c7 16%, #eef2ff 55%, #f5f3ff 100%);
-    }
-    .fade-in { animation: fadeIn .25s ease-in; }
-    @keyframes fadeIn { from { opacity:0; transform:translateY(-8px);} to { opacity:1; transform:translateY(0);} }
-    .slide-out { animation: slideOut .18s ease-out forwards; }
-    @keyframes slideOut { to { opacity:0; transform:translateX(16px);} }
-    .hero-gradient { background: linear-gradient(135deg, #f59e0b 0%, #f97316 22%, #7c3aed 60%, #2563eb 100%); }
-    .focus-gradient { background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%); }
-    .priorities-gradient { background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%); }
-    .time-gradient { background: linear-gradient(135deg, #2563eb 0%, #0ea5e9 100%); }
-    .habits-gradient { background: linear-gradient(135deg, #10b981 0%, #14b8a6 100%); }
-    .braindump-gradient { background: linear-gradient(135deg, #ef4444 0%, #f97316 100%); }
-    .weekly-gradient { background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%); }
-    .goals-gradient { background: linear-gradient(135deg, #db2777 0%, #9333ea 100%); }
-    .energy-gradient { background: linear-gradient(135deg, #059669 0%, #0284c7 100%); }
-    .glass-card { background: rgba(255,255,255,.94); backdrop-filter: blur(12px); }
-    .tab.active { background: linear-gradient(135deg, #fef3c7 0%, #ede9fe 100%); color: #7c2d12; border-bottom: 4px solid #f97316; }
-    .section { display:none; }
-    .section.active { display:block; }
-    .bold-shadow { box-shadow: 0 18px 45px rgba(124,58,237,.18); }
-    .button-shine { position:relative; overflow:hidden; }
-    .button-shine::after {
-      content:""; position:absolute; top:0; left:-100%; width:80%; height:100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
-      transition:.6s;
-    }
-    .button-shine:hover::after { left:120%; }
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+    body { font-family: 'Inter', sans-serif; box-sizing: border-box; }
+    .fade-in { animation: fadeIn 0.25s ease-in; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: translateY(0); } }
+    .slide-out { animation: slideOut 0.18s ease-out forwards; }
+    @keyframes slideOut { to { opacity: 0; transform: translateX(16px); } }
+    .header-gradient { background: linear-gradient(135deg, #f9a8d4 0%, #c084fc 45%, #93c5fd 100%); }
+    .timeline-gradient { background: linear-gradient(135deg, #fb7185 0%, #f59e0b 100%); }
+    .budget-gradient { background: linear-gradient(135deg, #22c55e 0%, #14b8a6 100%); }
+    .guests-gradient { background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%); }
+    .vendors-gradient { background: linear-gradient(135deg, #06b6d4 0%, #6366f1 100%); }
+    .dayof-gradient { background: linear-gradient(135deg, #f97316 0%, #ef4444 100%); }
+    .seating-gradient { background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%); }
+    .gifts-gradient { background: linear-gradient(135deg, #f43f5e 0%, #d946ef 100%); }
+    .shopping-gradient { background: linear-gradient(135deg, #0ea5e9 0%, #22c55e 100%); }
+    .tab.active { background: #fce7f3; color: #7e22ce; border-bottom: 4px solid #d946ef; }
+    .section { display: none; }
+    .section.active { display: block; }
   </style>
 </head>
-<body class="min-h-screen">
+
+<body class="bg-gradient-to-br from-pink-100 via-purple-50 to-blue-100 min-h-screen">
   <div class="container mx-auto px-4 md:px-6 py-8 max-w-7xl">
-    <div class="glass-card rounded-3xl bold-shadow border border-orange-200 overflow-hidden mb-8">
-      <div class="hero-gradient p-8 md:p-10 text-center text-white relative overflow-hidden">
-        <div class="absolute -top-16 -left-16 w-40 h-40 bg-white/15 rounded-full"></div>
-        <div class="absolute -bottom-20 -right-12 w-52 h-52 bg-yellow-300/20 rounded-full"></div>
-        <p class="relative inline-block px-5 py-2 rounded-full bg-white/20 text-white font-bold mb-4">Interactive ADHD Focus & Productivity Dashboard</p>
-        <h1 class="relative text-4xl md:text-6xl font-black mb-3 tracking-tight">🧠 ADHD / Focus Planner</h1>
-        <p class="relative text-lg md:text-2xl text-white/90">Stay organized with structure, clarity, time blocks, focus tasks, and routines</p>
+
+    <!-- Header -->
+    <div class="bg-white rounded-3xl shadow-2xl border border-purple-200 overflow-hidden mb-8">
+      <div class="header-gradient p-8 text-center text-white">
+        <h1 class="text-4xl md:text-5xl font-extrabold mb-3">🎂 Birthday Party Planner</h1>
+        <p class="text-lg md:text-xl text-white/90">Plan the perfect celebration with ease</p>
       </div>
 
+      <!-- Summary Cards -->
       <div class="grid grid-cols-1 md:grid-cols-4 gap-5 p-6">
-        <div class="rounded-3xl p-6 border-2 border-amber-300 bg-gradient-to-br from-yellow-100 to-orange-100 shadow-lg">
-          <p class="text-orange-900 font-extrabold mb-2">Overall Progress</p>
-          <p id="progress-percentage" class="text-5xl font-black text-orange-600">0%</p>
-          <div class="w-full bg-white rounded-full h-4 mt-4 shadow-inner">
-            <div id="progress-bar" class="bg-gradient-to-r from-orange-500 via-pink-500 to-violet-600 h-4 rounded-full transition-all duration-700" style="width:0%"></div>
+        <div class="rounded-2xl p-6 border-2 border-yellow-300 bg-yellow-50">
+          <p class="text-purple-700 font-semibold mb-2">Overall Progress</p>
+          <p id="progress-percentage" class="text-4xl font-extrabold text-orange-500">0%</p>
+          <div class="w-full bg-pink-100 rounded-full h-3 mt-4">
+            <div id="progress-bar" class="bg-gradient-to-r from-pink-500 to-purple-500 h-3 rounded-full transition-all duration-700" style="width:0%"></div>
           </div>
-          <p id="progress-text" class="text-sm text-slate-600 mt-2 font-semibold">0 of 0 tasks completed</p>
+          <p id="progress-text" class="text-sm text-slate-500 mt-2">0 of 0 tasks completed</p>
         </div>
 
-        <div class="rounded-3xl p-6 border-2 border-violet-300 bg-gradient-to-br from-violet-100 to-fuchsia-100 shadow-lg">
-          <p class="text-violet-900 font-extrabold mb-2">Task Status</p>
-          <p class="text-slate-700 text-lg">Completed: <span id="completed-count" class="text-emerald-700 font-black">0</span></p>
-          <p class="text-slate-700 text-lg">Pending: <span id="pending-count" class="text-pink-700 font-black">0</span></p>
+        <div class="rounded-2xl p-6 border-2 border-green-300 bg-green-50">
+          <p class="text-purple-700 font-semibold mb-2">Task Status</p>
+          <p class="text-slate-700">Completed: <span id="completed-count" class="text-green-600 font-bold">0</span></p>
+          <p class="text-slate-700">Pending: <span id="pending-count" class="text-pink-600 font-bold">0</span></p>
         </div>
 
-        <div class="rounded-3xl p-6 border-2 border-cyan-300 bg-gradient-to-br from-cyan-100 to-sky-100 shadow-lg">
-          <p class="text-orange-900 font-extrabold mb-2">Productivity Budget</p>
-          <p class="text-slate-700">Budget: <span id="budget-total" class="text-blue-700 font-black">$100.00</span></p>
-          <p class="text-slate-700">Spent: <span id="budget-spent" class="text-orange-700 font-black">$0.00</span></p>
-          <p class="text-slate-700">Left: <span id="budget-left" class="text-emerald-700 font-black">$100.00</span></p>
+        <div class="rounded-2xl p-6 border-2 border-pink-300 bg-pink-50">
+          <p class="text-purple-700 font-semibold mb-2">Budget Overview</p>
+          <p class="text-slate-700">Budget: <span id="budget-total" class="text-blue-600 font-bold">$950.00</span></p>
+          <p class="text-slate-700">Spent: <span id="budget-spent" class="text-orange-600 font-bold">$280.00</span></p>
+          <p class="text-slate-700">Left: <span id="budget-left" class="text-green-600 font-bold">$670.00</span></p>
         </div>
 
-        <div class="rounded-3xl p-6 border-2 border-pink-300 bg-gradient-to-br from-pink-100 to-rose-100 shadow-lg">
-          <p class="text-orange-900 font-extrabold mb-2">Planner Details</p>
-          <input id="planner-name" class="w-full mb-2 px-3 py-2 rounded-xl border-2 border-orange-200 font-semibold" value="My Focus Planner" />
-          <input id="planner-date" type="date" class="w-full px-3 py-2 rounded-xl border-2 border-orange-200 font-semibold" />
+        <div class="rounded-2xl p-6 border-2 border-purple-300 bg-purple-50">
+          <p class="text-purple-700 font-semibold mb-2">Party Details</p>
+          <input id="party-name" class="w-full mb-2 px-3 py-2 rounded-lg border border-purple-200" value="My Birthday Party" />
+          <input id="party-date" type="date" class="w-full px-3 py-2 rounded-lg border border-purple-200" />
         </div>
       </div>
 
+      <!-- Export / Upload Controls -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 px-6 pb-6">
-        <button onclick="saveBeautifulFormToComputer()" class="button-shine min-h-[76px] flex items-center justify-center text-center leading-tight bg-gradient-to-r from-pink-500 via-purple-600 to-blue-600 hover:from-pink-600 hover:via-purple-700 hover:to-blue-700 text-white px-4 py-3 rounded-2xl font-black shadow-xl transition-all">
+        <button onclick="savePlannerToComputer()" class="button-shine min-h-[76px] flex items-center justify-center text-center leading-tight bg-gradient-to-r from-pink-500 via-purple-600 to-blue-600 hover:from-pink-600 hover:via-purple-700 hover:to-blue-700 text-white px-4 py-3 rounded-2xl font-black shadow-xl transition-all">
           💾 Save Beautiful Form<br>to Your Device
         </button>
 
@@ -93,7 +78,7 @@
           ⬆️ Upload Beautiful Form<br>from Your Device
         </button>
 
-        <button onclick="exportToWord()" class="button-shine min-h-[76px] flex items-center justify-center text-center leading-tight bg-gradient-to-r from-blue-600 to-purple-700 hover:from-blue-700 hover:to-purple-800 text-white px-4 py-3 rounded-2xl font-black shadow-xl transition-all">
+        <button onclick="exportToWord()" class="button-shine min-h-[76px] flex items-center justify-center text-center leading-tight bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white px-4 py-3 rounded-2xl font-black shadow-xl transition-all">
           📄 Download Word<br>Google Docs
         </button>
 
@@ -108,162 +93,322 @@
         <input id="beautiful-form-upload" type="file" accept=".html,.htm" class="hidden" onchange="importBeautifulFormFile(event)">
         <input id="word-upload" type="file" accept=".doc,.html,.htm,.txt" class="hidden" onchange="importWordFile(event)">
       </div>
-      <p class="text-center text-sm text-slate-500 px-6 pb-6 font-semibold">
-        Save a beautiful readable form to your device, upload it from your device later, or download/upload with Word/Google Docs and Excel/Google Sheet files.
+      <p class="text-center text-sm text-slate-500 px-6 pb-6">
+        Download, upload, or save your planner to your computer using Word/Google Docs, Excel/Google Sheet CSV, or a reusable planner save file.
       </p>
     </div>
 
-    <div class="glass-card rounded-3xl shadow-xl border border-orange-200 overflow-hidden mb-8">
-      <div class="flex flex-wrap text-orange-700 font-black">
-        <button class="tab active px-5 py-4 transition-all" onclick="showSection('focus', this)">🎯 Focus</button>
-        <button class="tab px-5 py-4 transition-all" onclick="showSection('priorities', this)">⭐ Priorities</button>
-        <button class="tab px-5 py-4 transition-all" onclick="showSection('timeblocks', this)">⏰ Time Blocks</button>
-        <button class="tab px-5 py-4 transition-all" onclick="showSection('habits', this)">🔁 Habits</button>
-        <button class="tab px-5 py-4 transition-all" onclick="showSection('braindump', this)">📝 Brain Dump</button>
-        <button class="tab px-5 py-4 transition-all" onclick="showSection('weekly', this)">📅 Weekly Plan</button>
-        <button class="tab px-5 py-4 transition-all" onclick="showSection('goals', this)">🚀 Goals</button>
-        <button class="tab px-5 py-4 transition-all" onclick="showSection('energy', this)">⚡ Energy & Mood</button>
+    <!-- Tabs -->
+    <div class="bg-white rounded-2xl shadow-xl border border-purple-200 overflow-hidden mb-8">
+      <div class="flex flex-wrap text-purple-700 font-bold">
+        <button class="tab active px-5 py-4 transition-all" onclick="showSection('timeline', this)">📅 Timeline</button>
+        <button class="tab px-5 py-4 transition-all" onclick="showSection('budget', this)">💰 Budget</button>
+        <button class="tab px-5 py-4 transition-all" onclick="showSection('guests', this)">👥 Guests</button>
+        <button class="tab px-5 py-4 transition-all" onclick="showSection('vendors', this)">🏪 Vendors</button>
+        <button class="tab px-5 py-4 transition-all" onclick="showSection('dayof', this)">⏰ Day-of</button>
+        <button class="tab px-5 py-4 transition-all" onclick="showSection('seating', this)">🪑 Seating</button>
+        <button class="tab px-5 py-4 transition-all" onclick="showSection('gifts', this)">🎁 Gifts</button>
+        <button class="tab px-5 py-4 transition-all" onclick="showSection('shopping', this)">🛒 Shopping</button>
       </div>
     </div>
 
-    <div id="focus" class="section active"></div>
-    <div id="priorities" class="section"></div>
-    <div id="timeblocks" class="section"></div>
-    <div id="habits" class="section"></div>
-    <div id="braindump" class="section"></div>
-    <div id="weekly" class="section"></div>
-    <div id="goals" class="section"></div>
-    <div id="energy" class="section"></div>
+    <!-- Sections -->
+    <div id="timeline" class="section active"></div>
+    <div id="budget" class="section"></div>
+    <div id="guests" class="section"></div>
+    <div id="vendors" class="section"></div>
+    <div id="dayof" class="section"></div>
+    <div id="seating" class="section"></div>
+    <div id="gifts" class="section"></div>
+    <div id="shopping" class="section"></div>
   </div>
 
 <script>
-let counters = { focus:0, priorities:0, timeblocks:0, habits:0, braindump:0, weekly:0, goals:0, energy:0 };
-
-const sectionData = {
-  focus: { title:'Daily Focus Planner', icon:'🎯', gradient:'focus-gradient', border:'border-orange-300', rowBg:'from-orange-50 to-amber-50', headers:['✓','Focus Task','Time / Duration','Notes','Actions'], rows:[['Top focus task','25 minutes','Use timer and remove distractions'],['Second focus task','30 minutes','Break task into small steps'],['Quick win task','10 minutes','Do something easy first']]},
-  priorities: { title:'Priority Task List', icon:'⭐', gradient:'priorities-gradient', border:'border-violet-300', rowBg:'from-violet-50 to-fuchsia-50', headers:['✓','Priority Task','Priority Level','Notes','Actions'], rows:[['Reply to important email','High','Do before noon'],['Submit assignment / report','High','Break into smaller chunks'],['Organize workspace','Medium','5-minute reset']]},
-  timeblocks: { title:'Time Blocking Schedule', icon:'⏰', gradient:'time-gradient', border:'border-sky-300', rowBg:'from-cyan-50 to-blue-50', headers:['✓','Activity','Time Block','Notes','Actions'], rows:[['Morning routine','8:00 AM - 8:30 AM','Keep it simple'],['Deep work session','9:00 AM - 10:00 AM','Turn off notifications'],['Admin / Email','11:00 AM - 11:30 AM','Batch small tasks']]},
-  habits: { title:'Habit Tracker', icon:'🔁', gradient:'habits-gradient', border:'border-emerald-300', rowBg:'from-emerald-50 to-teal-50', headers:['✓','Habit','Frequency','Notes','Actions'], rows:[['Drink water','Daily','Refill bottle'],['Take medication / vitamins','Daily','Set reminder'],['5-minute tidy-up','Daily','End of day reset']]},
-  braindump: { title:'Brain Dump List', icon:'📝', gradient:'braindump-gradient', border:'border-rose-300', rowBg:'from-rose-50 to-orange-50', headers:['✓','Thought / Task','Category','Notes','Actions'], rows:[['Idea for project','Work','Add to next planning block'],['Need to buy groceries','Personal','Keep list simple'],['Schedule appointment','Errand','Call tomorrow morning']]},
-  weekly: { title:'Weekly Planner', icon:'📅', gradient:'weekly-gradient', border:'border-indigo-300', rowBg:'from-indigo-50 to-violet-50', headers:['✓','Plan Item','Day / Time','Notes','Actions'], rows:[['Plan the week','Monday Morning','Set 3 main priorities'],['Check deadlines','Wednesday','Review calendar'],['Weekly review','Friday Afternoon','Celebrate progress']]},
-  goals: { title:'Goal Tracker', icon:'🚀', gradient:'goals-gradient', border:'border-pink-300', rowBg:'from-pink-50 to-fuchsia-50', headers:['✓','Goal','Target / Deadline','Notes','Actions'], rows:[['Finish one major project','End of month','Work in short focus sessions'],['Improve morning routine','2 weeks','Track consistency'],['Reduce overwhelm','Ongoing','Use task breakdowns']]},
-  energy: { title:'Energy & Mood Tracker', icon:'⚡', gradient:'energy-gradient', border:'border-cyan-300', rowBg:'from-cyan-50 to-emerald-50', headers:['✓','Check-In Item','Level / Rating','Notes','Actions'], rows:[['Morning energy','7/10','Better after breakfast'],['Focus level','6/10','Need fewer distractions'],['Mood check','8/10','Feeling motivated today']]}
+let counters = {
+  timeline: 0,
+  budget: 0,
+  guests: 0,
+  vendors: 0,
+  dayof: 0,
+  seating: 0,
+  gifts: 0,
+  shopping: 0
 };
 
-window.addEventListener('DOMContentLoaded', function(){ buildAllSections(); updateProgress(); updateBudget(); });
+const sectionData = {
+  timeline: {
+    title: 'Party Timeline',
+    icon: '📅',
+    gradient: 'timeline-gradient',
+    headers: ['✓', 'Task', 'Due / Time', 'Notes', 'Actions'],
+    rows: [
+      ['Set date and save-the-date', '4 weeks before', 'Choose date, time, and theme'],
+      ['Book venue or confirm home setup', '3 weeks before', 'Confirm location and space'],
+      ['Send invitations', '2 weeks before', 'Include RSVP date']
+    ]
+  },
+  budget: {
+    title: 'Budget Tracker',
+    icon: '💰',
+    gradient: 'budget-gradient',
+    headers: ['✓', 'Budget Item', 'Planned ($)', 'Spent ($)', 'Actions'],
+    rows: [
+      ['Venue / Decorations', '300', '120'],
+      ['Food and Drinks', '400', '100'],
+      ['Cake', '150', '60'],
+      ['Games / Activities', '100', '0']
+    ]
+  },
+  guests: {
+    title: 'Guest List',
+    icon: '👥',
+    gradient: 'guests-gradient',
+    headers: ['✓', 'Guest Name', 'RSVP', 'Notes', 'Actions'],
+    rows: [
+      ['Family Guest', 'Pending', 'Invite sent'],
+      ['Friend Guest', 'Yes', 'Bringing a gift']
+    ]
+  },
+  vendors: {
+    title: 'Vendor Contacts',
+    icon: '🏪',
+    gradient: 'vendors-gradient',
+    headers: ['✓', 'Vendor', 'Contact / Phone', 'Service', 'Actions'],
+    rows: [
+      ['Cake Vendor', '555-123-4567', 'Birthday cake'],
+      ['Decoration Vendor', '555-987-6543', 'Balloons and backdrop']
+    ]
+  },
+  dayof: {
+    title: 'Day-of Schedule',
+    icon: '⏰',
+    gradient: 'dayof-gradient',
+    headers: ['✓', 'Activity', 'Time', 'Notes', 'Actions'],
+    rows: [
+      ['Set up decorations', '10:00 AM', 'Prepare tables and balloons'],
+      ['Guests arrive', '2:00 PM', 'Welcome guests'],
+      ['Cake cutting', '4:00 PM', 'Take photos']
+    ]
+  },
+  seating: {
+    title: 'Seating Plan',
+    icon: '🪑',
+    gradient: 'seating-gradient',
+    headers: ['✓', 'Table / Area', 'Guests', 'Notes', 'Actions'],
+    rows: [
+      ['Table 1', 'Family', 'Close to cake table'],
+      ['Table 2', 'Friends', 'Near games area']
+    ]
+  },
+  gifts: {
+    title: 'Gift Tracker',
+    icon: '🎁',
+    gradient: 'gifts-gradient',
+    headers: ['✓', 'Gift / Item', 'From', 'Thank-you Sent?', 'Actions'],
+    rows: [
+      ['Toy / Gift Card', 'Auntie', 'No'],
+      ['Clothes', 'Friend', 'No']
+    ]
+  },
+  shopping: {
+    title: 'Shopping Checklist',
+    icon: '🛒',
+    gradient: 'shopping-gradient',
+    headers: ['✓', 'Item', 'Quantity / Budget', 'Store / Notes', 'Actions'],
+    rows: [
+      ['Balloons', '20', 'Party store'],
+      ['Paper plates', '50', 'Dollar store'],
+      ['Candles', '1 pack', 'Grocery store']
+    ]
+  }
+};
+
+window.addEventListener('DOMContentLoaded', function() {
+  buildAllSections();
+  updateProgress();
+  updateBudget();
+});
 
 function buildAllSections() {
   Object.keys(sectionData).forEach(sectionId => {
     const data = sectionData[sectionId];
     const section = document.getElementById(sectionId);
     section.innerHTML = `
-      <div class="glass-card rounded-3xl bold-shadow p-6 md:p-8 border border-orange-100 mb-8">
-        <div class="${data.gradient} rounded-3xl p-6 mb-6 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xl">
+      <div class="bg-white rounded-3xl shadow-2xl p-6 md:p-8 border border-purple-100 mb-8">
+        <div class="${data.gradient} rounded-2xl p-6 mb-6 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
           <div>
-            <h2 class="text-3xl md:text-4xl font-black">${data.icon} ${data.title}</h2>
-            <p class="text-white/90 mt-1 font-semibold">Add, edit, check off, delete, and export your focus and productivity details.</p>
+            <h2 class="text-3xl font-extrabold">${data.icon} ${data.title}</h2>
+            <p class="text-white/90 mt-1">Add, edit, check off, delete, and export your planning details.</p>
           </div>
-          <button onclick="addRow('${sectionId}')" class="button-shine bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-2xl font-black shadow-lg transition-all border border-white/30">+ Add Item</button>
+          <button onclick="addRow('${sectionId}')" class="bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition-all">
+            + Add Item
+          </button>
         </div>
-        <div class="hidden md:grid grid-cols-12 gap-4 p-4 rounded-2xl bg-gradient-to-r from-yellow-100 to-violet-100 text-orange-900 font-black mb-4 border border-orange-200">
+
+        <div class="hidden md:grid grid-cols-12 gap-4 p-4 rounded-xl bg-purple-50 text-purple-800 font-bold mb-4">
           <div class="col-span-1 text-center">${data.headers[0]}</div>
           <div class="col-span-4">${data.headers[1]}</div>
           <div class="col-span-2 text-center">${data.headers[2]}</div>
           <div class="col-span-3 text-center">${data.headers[3]}</div>
           <div class="col-span-2 text-center">${data.headers[4]}</div>
         </div>
+
         <div id="${sectionId}-items" class="space-y-3"></div>
-      </div>`;
+      </div>
+    `;
+
     data.rows.forEach(row => createRow(sectionId, row));
   });
 }
 
 function createRow(sectionId, rowValues) {
   counters[sectionId]++;
-  const data = sectionData[sectionId];
   const container = document.getElementById(sectionId + '-items');
   const item = document.createElement('div');
   item.className = 'planner-item fade-in';
   item.setAttribute('data-section', sectionId);
+
+  const borderColor = {
+    timeline: 'border-orange-200',
+    budget: 'border-emerald-200',
+    guests: 'border-purple-200',
+    vendors: 'border-cyan-200',
+    dayof: 'border-red-200',
+    seating: 'border-indigo-200',
+    gifts: 'border-pink-200',
+    shopping: 'border-green-200'
+  }[sectionId] || 'border-purple-200';
+
   item.innerHTML = `
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4 p-4 bg-gradient-to-r ${data.rowBg} rounded-3xl border-2 ${data.border} hover:shadow-xl transition-all">
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4 p-4 bg-gradient-to-r from-white to-purple-50 rounded-2xl border-2 ${borderColor} hover:shadow-lg transition-all">
       <div class="md:col-span-1 flex items-center justify-start md:justify-center gap-2">
-        <span class="md:hidden font-black text-slate-700">Done:</span>
-        <input type="checkbox" class="task-check w-6 h-6 rounded-lg accent-orange-600" onchange="updateProgress()">
+        <span class="md:hidden font-bold text-slate-600">Done:</span>
+        <input type="checkbox" class="task-check w-6 h-6 rounded-lg" onchange="updateProgress()">
       </div>
+
       <div class="md:col-span-4">
-        <label class="md:hidden text-sm font-black text-orange-700">Item</label>
+        <label class="md:hidden text-sm font-bold text-purple-700">Item</label>
         ${buildMainField(sectionId, rowValues[0])}
       </div>
+
       <div class="md:col-span-2">
-        <label class="md:hidden text-sm font-black text-orange-700">Detail</label>
+        <label class="md:hidden text-sm font-bold text-purple-700">Detail</label>
         ${buildSecondField(sectionId, rowValues[1])}
       </div>
+
       <div class="md:col-span-3">
-        <label class="md:hidden text-sm font-black text-orange-700">Notes / Option</label>
+        <label class="md:hidden text-sm font-bold text-purple-700">Notes / Option</label>
         ${buildThirdField(sectionId, rowValues[2])}
       </div>
+
       <div class="md:col-span-2 flex justify-center">
-        <button onclick="deleteRow(this)" class="bg-red-100 text-red-700 hover:bg-red-200 px-4 py-2 rounded-xl font-black transition-all">🗑 Delete</button>
+        <button onclick="deleteRow(this)" class="text-red-500 hover:text-red-700 px-4 py-2 rounded-xl hover:bg-red-50 font-bold transition-all">
+          🗑 Delete
+        </button>
       </div>
-    </div>`;
+    </div>
+  `;
+
   container.appendChild(item);
 }
 
 function buildMainField(sectionId, value) {
-  return `<input type="text" value="${escapeAttribute(value)}" class="field-main w-full px-3 py-2 rounded-xl border-2 border-white font-bold focus:ring-2 focus:ring-orange-500 shadow-sm">`;
+  if (sectionId === 'budget') {
+    return buildSelectWithOther('field-main', value, [
+      'Venue / Decorations',
+      'Food and Drinks',
+      'Cake',
+      'Games / Activities',
+      'Entertainment',
+      'Photography',
+      'Other'
+    ]);
+  }
+
+  if (sectionId === 'shopping') {
+    return buildSelectWithOther('field-main', value, [
+      'Balloons',
+      'Paper plates',
+      'Candles',
+      'Decorations',
+      'Drinks',
+      'Snacks',
+      'Party favors',
+      'Other'
+    ]);
+  }
+
+  return `<input type="text" value="${escapeAttribute(value)}" class="field-main w-full px-3 py-2 rounded-lg border border-purple-100 font-semibold focus:ring-2 focus:ring-purple-400">`;
 }
 
 function buildSecondField(sectionId, value) {
-  if (sectionId === 'priorities') {
-    return buildSelectWithOther('field-second', value, ['High', 'Medium', 'Low', 'Urgent', 'Later', 'Other'], 'updateBudget()');
+  if (sectionId === 'timeline') {
+    return `<input type="date" value="${toDateValue(value)}" class="field-second amount-or-detail w-full px-3 py-2 rounded-lg border border-purple-100 text-center focus:ring-2 focus:ring-purple-400" oninput="updateBudget()">`;
   }
 
-  if (sectionId === 'timeblocks') {
-    return `<input type="time" value="${toTimeValue(value)}" class="field-second w-full px-3 py-2 rounded-xl border-2 border-white text-center font-semibold focus:ring-2 focus:ring-orange-500 shadow-sm" oninput="updateBudget()">`;
+  if (sectionId === 'dayof') {
+    return `<input type="time" value="${toTimeValue(value)}" class="field-second amount-or-detail w-full px-3 py-2 rounded-lg border border-purple-100 text-center focus:ring-2 focus:ring-purple-400" oninput="updateBudget()">`;
   }
 
-  if (sectionId === 'habits') {
-    return buildSelectWithOther('field-second', value, ['Daily', 'Weekly', 'Morning', 'Afternoon', 'Evening', 'As Needed', 'Other'], 'updateBudget()');
+  if (sectionId === 'guests') {
+    return buildSelectWithOther('field-second amount-or-detail', value, [
+      'Pending',
+      'Confirmed',
+      'Declined',
+      'Maybe',
+      'Other'
+    ], 'updateBudget()');
   }
 
-  if (sectionId === 'braindump') {
-    return buildSelectWithOther('field-second', value, ['Work', 'Personal', 'School', 'Errand', 'Idea', 'Reminder', 'Other'], 'updateBudget()');
+  if (sectionId === 'budget') {
+    return `<input type="number" min="0" step="0.01" value="${numberOnly(value)}" class="field-second amount-or-detail w-full px-3 py-2 rounded-lg border border-purple-100 text-center focus:ring-2 focus:ring-purple-400" oninput="updateBudget()">`;
   }
 
-  if (sectionId === 'weekly') {
-    return buildSelectWithOther('field-second', value, ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Other'], 'updateBudget()');
+  if (sectionId === 'shopping') {
+    return `<input type="number" min="0" step="1" value="${numberOnly(value)}" class="field-second amount-or-detail w-full px-3 py-2 rounded-lg border border-purple-100 text-center focus:ring-2 focus:ring-purple-400" oninput="updateBudget()">`;
   }
 
-  if (sectionId === 'goals') {
-    return `<input type="date" value="${toDateValue(value)}" class="field-second w-full px-3 py-2 rounded-xl border-2 border-white text-center font-semibold focus:ring-2 focus:ring-orange-500 shadow-sm" oninput="updateBudget()">`;
-  }
-
-  if (sectionId === 'energy') {
-    return buildSelectWithOther('field-second', value, ['1/10', '2/10', '3/10', '4/10', '5/10', '6/10', '7/10', '8/10', '9/10', '10/10', 'Other'], 'updateBudget()');
-  }
-
-  return `<input type="text" value="${escapeAttribute(value)}" class="field-second w-full px-3 py-2 rounded-xl border-2 border-white text-center font-semibold focus:ring-2 focus:ring-orange-500 shadow-sm" oninput="updateBudget()">`;
+  return `<input type="text" value="${escapeAttribute(value)}" class="field-second amount-or-detail w-full px-3 py-2 rounded-lg border border-purple-100 text-center focus:ring-2 focus:ring-purple-400" oninput="updateBudget()">`;
 }
 
 function buildThirdField(sectionId, value) {
-  if (sectionId === 'focus') {
-    return buildSelectWithOther('field-third', value, ['Use timer', 'Remove distractions', 'Break into small steps', 'Take a short break', 'Ask for help', 'Other'], 'updateBudget()');
+  if (sectionId === 'budget') {
+    return `<input type="number" min="0" step="0.01" value="${numberOnly(value)}" class="field-third w-full px-3 py-2 rounded-lg border border-purple-100 text-center focus:ring-2 focus:ring-purple-400" oninput="updateBudget()">`;
   }
 
-  if (sectionId === 'timeblocks') {
-    return buildSelectWithOther('field-third', value, ['Focus Mode', 'Admin Task', 'Break', 'Meeting', 'Errand', 'Self Care', 'Other'], 'updateBudget()');
+  if (sectionId === 'vendors') {
+    return buildSelectWithOther('field-third', value, [
+      'Cake',
+      'Decorations',
+      'Catering',
+      'Entertainment',
+      'Photography',
+      'Venue',
+      'Other'
+    ], 'updateBudget()');
   }
 
-  if (sectionId === 'habits') {
-    return buildSelectWithOther('field-third', value, ['Not Started', 'In Progress', 'Completed', 'Skipped', 'Other'], 'updateBudget()');
+  if (sectionId === 'gifts') {
+    return buildSelectWithOther('field-third', value, [
+      'No',
+      'Yes',
+      'Not Needed',
+      'Other'
+    ], 'updateBudget()');
   }
 
-  if (sectionId === 'energy') {
-    return buildSelectWithOther('field-third', value, ['Calm', 'Focused', 'Tired', 'Overwhelmed', 'Motivated', 'Distracted', 'Other'], 'updateBudget()');
+  if (sectionId === 'shopping') {
+    return buildSelectWithOther('field-third', value, [
+      'Party Store',
+      'Grocery Store',
+      'Dollar Store',
+      'Online',
+      'Already Have',
+      'Other'
+    ], 'updateBudget()');
   }
 
-  return `<input type="text" value="${escapeAttribute(value)}" class="field-third w-full px-3 py-2 rounded-xl border-2 border-white text-center font-semibold focus:ring-2 focus:ring-orange-500 shadow-sm" oninput="updateBudget()">`;
+  return `<input type="text" value="${escapeAttribute(value)}" class="field-third w-full px-3 py-2 rounded-lg border border-purple-100 text-center focus:ring-2 focus:ring-purple-400" oninput="updateBudget()">`;
 }
 
 function buildSelectWithOther(className, value, options, changeHandler = '') {
@@ -274,7 +419,9 @@ function buildSelectWithOther(className, value, options, changeHandler = '') {
   const uniqueId = 'other_' + Math.random().toString(36).slice(2, 10);
   const allOptions = [...options];
 
-  if (!allOptions.includes('Other')) allOptions.push('Other');
+  if (!allOptions.includes('Other')) {
+    allOptions.push('Other');
+  }
 
   const optionHTML = allOptions.map(option => {
     const selected = option === selectedValue ? 'selected' : '';
@@ -285,16 +432,17 @@ function buildSelectWithOther(className, value, options, changeHandler = '') {
 
   return `
     <div class="space-y-2">
-      <select class="${className} dropdown-source w-full px-3 py-2 rounded-xl border-2 border-white text-center font-semibold focus:ring-2 focus:ring-orange-500 shadow-sm bg-white"
+      <select class="${className} dropdown-source w-full px-3 py-2 rounded-lg border border-purple-100 text-center font-semibold focus:ring-2 focus:ring-purple-400 bg-white"
               data-other-target="${uniqueId}"
               onchange="${extraHandler}toggleOtherInput(this)">
         ${optionHTML}
       </select>
+
       <input id="${uniqueId}"
              type="text"
              value="${shouldShowOtherInput ? escapeAttribute(safeValue) : ''}"
              placeholder="Type other option here..."
-             class="other-input ${className} ${selectedValue === 'Other' ? '' : 'hidden'} w-full px-3 py-2 rounded-xl border-2 border-orange-100 text-center font-semibold focus:ring-2 focus:ring-orange-500 shadow-sm bg-white"
+             class="other-input ${className} ${selectedValue === 'Other' ? '' : 'hidden'} w-full px-3 py-2 rounded-lg border border-purple-200 text-center font-semibold focus:ring-2 focus:ring-purple-400 bg-white"
              oninput="${changeHandler || ''}">
     </div>
   `;
@@ -333,7 +481,9 @@ function toDateValue(value) {
   if (!value) return '';
   const text = String(value).trim();
 
-  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) return text;
+  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) {
+    return text;
+  }
 
   return '';
 }
@@ -343,7 +493,9 @@ function toTimeValue(value) {
   const text = String(value).trim();
 
   const match24 = text.match(/^([01]?\d|2[0-3]):([0-5]\d)$/);
-  if (match24) return `${match24[1].padStart(2, '0')}:${match24[2]}`;
+  if (match24) {
+    return `${match24[1].padStart(2, '0')}:${match24[2]}`;
+  }
 
   const match12 = text.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
   if (match12) {
@@ -360,16 +512,21 @@ function toTimeValue(value) {
   return '';
 }
 
+function numberOnly(value) {
+  const number = parseFloat(String(value || '').replace(/[^0-9.-]/g, ''));
+  return isNaN(number) ? '0' : String(number);
+}
+
 function addRow(sectionId) {
   const defaults = {
-    focus:['New focus task','25 minutes','Notes'],
-    priorities:['New priority task','Medium','Notes'],
-    timeblocks:['New activity','','Focus Mode'],
-    habits:['New habit','Daily','Notes'],
-    braindump:['New thought / task','Category','Notes'],
-    weekly:['New weekly item','Monday','Notes'],
-    goals:['New goal','','Notes'],
-    energy:['New check-in','7/10','Focused']
+    timeline: ['New party task', '', 'Notes'],
+    budget: ['Other', '0', '0'],
+    guests: ['Guest name', 'Pending', 'Notes'],
+    vendors: ['Vendor name', 'Contact', 'Other'],
+    dayof: ['New activity', '', 'Notes'],
+    seating: ['Table / Area', 'Guests', 'Notes'],
+    gifts: ['Gift item', 'From', 'No'],
+    shopping: ['Other', '1', 'Other']
   };
   createRow(sectionId, defaults[sectionId]);
   updateProgress();
@@ -379,12 +536,17 @@ function addRow(sectionId) {
 function deleteRow(button) {
   const item = button.closest('.planner-item');
   item.classList.add('slide-out');
-  setTimeout(() => { item.remove(); updateProgress(); updateBudget(); }, 180);
+  setTimeout(() => {
+    item.remove();
+    updateProgress();
+    updateBudget();
+  }, 180);
 }
 
 function showSection(sectionId, button) {
   document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
   document.getElementById(sectionId).classList.add('active');
+
   document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
   button.classList.add('active');
 }
@@ -392,10 +554,12 @@ function showSection(sectionId, button) {
 function updateProgress() {
   const allChecks = document.querySelectorAll('.planner-item .task-check');
   const checked = document.querySelectorAll('.planner-item .task-check:checked');
+
   const total = allChecks.length;
   const completed = checked.length;
   const pending = total - completed;
   const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+
   document.getElementById('progress-percentage').textContent = percentage + '%';
   document.getElementById('progress-bar').style.width = percentage + '%';
   document.getElementById('progress-text').textContent = completed + ' of ' + total + ' tasks completed';
@@ -406,23 +570,28 @@ function updateProgress() {
 function updateBudget() {
   let planned = 0;
   let spent = 0;
-  document.querySelectorAll('#goals-items .planner-item').forEach(item => {
-    planned += parseMoney(getFieldValue(item, '.field-second') || '0');
-    spent += parseMoney(getFieldValue(item, '.field-third') || '0');
+
+  document.querySelectorAll('#budget-items .planner-item').forEach(item => {
+    const plannedValue = parseMoney(getFieldValue(item, '.field-second') || '0');
+    const spentValue = parseMoney(getFieldValue(item, '.field-third') || '0');
+    planned += plannedValue;
+    spent += spentValue;
   });
-  document.querySelectorAll('#habits-items .planner-item').forEach(item => {
-    spent += parseMoney(getFieldValue(item, '.field-third') || '0');
-  });
-  document.getElementById('budget-total').textContent = formatMoney(planned || 100);
+
+  const left = planned - spent;
+  document.getElementById('budget-total').textContent = formatMoney(planned);
   document.getElementById('budget-spent').textContent = formatMoney(spent);
-  document.getElementById('budget-left').textContent = formatMoney((planned || 100) - spent);
+  document.getElementById('budget-left').textContent = formatMoney(left);
 }
 
 function parseMoney(value) {
   const number = parseFloat(String(value).replace(/[^0-9.-]/g, ''));
   return isNaN(number) ? 0 : number;
 }
-function formatMoney(value) { return '$' + value.toLocaleString('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 }); }
+
+function formatMoney(value) {
+  return '$' + value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
 
 function getPlannerData() {
   const data = [];
@@ -441,29 +610,42 @@ function getPlannerData() {
 }
 
 function exportToCSV() {
-  const plannerName = document.getElementById('planner-name').value || 'Focus Planner';
-  const plannerDate = document.getElementById('planner-date').value || '';
+  const partyName = document.getElementById('party-name').value || 'Birthday Party';
+  const partyDate = document.getElementById('party-date').value || '';
   const rows = getPlannerData();
+
   const csvLines = [];
-  csvLines.push('ADHD / FOCUS / PRODUCTIVITY PLANNER');
-  csvLines.push('Planner Name,' + escapeCSV(plannerName));
-  csvLines.push('Planner Date,' + escapeCSV(plannerDate));
+  csvLines.push('BIRTHDAY PARTY PLANNER');
+  csvLines.push('Party Name,' + escapeCSV(partyName));
+  csvLines.push('Party Date,' + escapeCSV(partyDate));
   csvLines.push('Generated,' + escapeCSV(new Date().toLocaleDateString()));
   csvLines.push('');
   csvLines.push('Section,Completed,Item,Detail,Notes');
-  rows.forEach(row => { csvLines.push([row.section,row.completed,row.item,row.detail,row.notes].map(escapeCSV).join(',')); });
+
+  rows.forEach(row => {
+    csvLines.push([
+      row.section,
+      row.completed,
+      row.item,
+      row.detail,
+      row.notes
+    ].map(escapeCSV).join(','));
+  });
+
   csvLines.push('');
-  csvLines.push('Productivity Budget Summary');
+  csvLines.push('Budget Summary');
   csvLines.push('Total Budget,' + escapeCSV(document.getElementById('budget-total').textContent));
   csvLines.push('Total Spent,' + escapeCSV(document.getElementById('budget-spent').textContent));
   csvLines.push('Remaining,' + escapeCSV(document.getElementById('budget-left').textContent));
-  downloadFile(csvLines.join('\\r\\n'), 'ADHD_Focus_Productivity_Planner_Google_Sheets_' + todayStamp() + '.csv', 'text/csv;charset=utf-8;');
+
+  downloadFile(csvLines.join('\r\n'), 'Birthday_Party_Planner_Google_Sheets_' + todayStamp() + '.csv', 'text/csv;charset=utf-8;');
 }
 
 function exportToExcel() {
-  const plannerName = document.getElementById('planner-name').value || 'Focus Planner';
-  const plannerDate = document.getElementById('planner-date').value || '';
+  const partyName = document.getElementById('party-name').value || 'Birthday Party';
+  const partyDate = document.getElementById('party-date').value || '';
   const rows = getPlannerData();
+
   let tableRows = rows.map(row => `
     <tr>
       <td>${escapeHTML(row.section)}</td>
@@ -471,24 +653,26 @@ function exportToExcel() {
       <td>${escapeHTML(row.item)}</td>
       <td>${escapeHTML(row.detail)}</td>
       <td>${escapeHTML(row.notes)}</td>
-    </tr>`).join('');
+    </tr>
+  `).join('');
+
   const htmlTable = `
     <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel">
     <head>
       <meta charset="UTF-8">
       <style>
         table { border-collapse: collapse; font-family: Arial, sans-serif; }
-        th { background: #7c3aed; color: #ffffff; font-weight: bold; }
+        th { background: #7e22ce; color: #ffffff; font-weight: bold; }
         th, td { border: 1px solid #999999; padding: 8px; }
-        .title { background: #fef3c7; color: #7c2d12; font-size: 18px; font-weight: bold; }
-        .summary { background: #dbeafe; font-weight: bold; }
+        .title { background: #fce7f3; font-size: 18px; font-weight: bold; }
+        .summary { background: #dcfce7; font-weight: bold; }
       </style>
     </head>
     <body>
       <table>
-        <tr><td colspan="5" class="title">ADHD / FOCUS / PRODUCTIVITY PLANNER</td></tr>
-        <tr><td colspan="2">Planner Name</td><td colspan="3">${escapeHTML(plannerName)}</td></tr>
-        <tr><td colspan="2">Planner Date</td><td colspan="3">${escapeHTML(plannerDate)}</td></tr>
+        <tr><td colspan="5" class="title">BIRTHDAY PARTY PLANNER</td></tr>
+        <tr><td colspan="2">Party Name</td><td colspan="3">${escapeHTML(partyName)}</td></tr>
+        <tr><td colspan="2">Party Date</td><td colspan="3">${escapeHTML(partyDate)}</td></tr>
         <tr><td colspan="2">Generated</td><td colspan="3">${escapeHTML(new Date().toLocaleDateString())}</td></tr>
         <tr><td colspan="5"></td></tr>
         <tr><th>Section</th><th>Completed</th><th>Item</th><th>Detail</th><th>Notes</th></tr>
@@ -499,14 +683,16 @@ function exportToExcel() {
         <tr class="summary"><td colspan="2">Remaining</td><td colspan="3">${escapeHTML(document.getElementById('budget-left').textContent)}</td></tr>
       </table>
     </body>
-    </html>`;
-  downloadFile(htmlTable, 'ADHD_Focus_Productivity_Planner_' + todayStamp() + '.xls', 'application/vnd.ms-excel;charset=utf-8;');
+    </html>
+  `;
+
+  downloadFile(htmlTable, 'Birthday_Party_Planner_' + todayStamp() + '.xls', 'application/vnd.ms-excel;charset=utf-8;');
 }
 
 
 function exportToWord() {
-  const plannerName = document.getElementById('planner-name').value || 'Focus Planner';
-  const plannerDate = document.getElementById('planner-date').value || '';
+  const partyName = document.getElementById('party-name').value || 'Birthday Party';
+  const partyDate = document.getElementById('party-date').value || '';
   const rows = getPlannerData();
 
   let tableRows = rows.map(row => `
@@ -516,53 +702,78 @@ function exportToWord() {
       <td>${escapeHTML(row.item)}</td>
       <td>${escapeHTML(row.detail)}</td>
       <td>${escapeHTML(row.notes)}</td>
-    </tr>`).join('');
+    </tr>
+  `).join('');
 
   const wordContent = `
     <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word">
     <head>
       <meta charset="UTF-8">
-      <title>ADHD / Focus / Productivity Planner</title>
+      <title>Birthday Party Planner</title>
       <style>
         body { font-family: Arial, sans-serif; color: #1f2937; }
-        h1 { color: #7c3aed; }
-        .subtitle { color: #7c2d12; font-weight: bold; }
+        h1 { color: #7e22ce; }
+        p { font-size: 14px; }
         table { border-collapse: collapse; width: 100%; margin-top: 16px; }
-        th { background: #7c3aed; color: #ffffff; font-weight: bold; }
+        th { background: #7e22ce; color: #ffffff; font-weight: bold; }
         th, td { border: 1px solid #999999; padding: 8px; text-align: left; }
-        .summary { background: #dbeafe; font-weight: bold; }
+        .summary { background: #dcfce7; font-weight: bold; }
       </style>
     </head>
     <body>
-      <h1>ADHD / Focus / Productivity Planner</h1>
-      <p class="subtitle">Planner Name: ${escapeHTML(plannerName)}</p>
-      <p class="subtitle">Planner Date: ${escapeHTML(plannerDate)}</p>
-      <p>Generated: ${escapeHTML(new Date().toLocaleDateString())}</p>
+      <h1>Birthday Party Planner</h1>
+      <p><strong>Party Name:</strong> ${escapeHTML(partyName)}</p>
+      <p><strong>Party Date:</strong> ${escapeHTML(partyDate)}</p>
+      <p><strong>Generated:</strong> ${escapeHTML(new Date().toLocaleDateString())}</p>
 
       <table>
-        <tr><th>Section</th><th>Completed</th><th>Item</th><th>Detail</th><th>Notes</th></tr>
+        <tr>
+          <th>Section</th>
+          <th>Completed</th>
+          <th>Item</th>
+          <th>Detail</th>
+          <th>Notes / Option</th>
+        </tr>
         ${tableRows}
       </table>
 
-      <h2>Productivity Budget Summary</h2>
+      <h2>Budget Summary</h2>
       <table>
         <tr class="summary"><td>Total Budget</td><td>${escapeHTML(document.getElementById('budget-total').textContent)}</td></tr>
         <tr class="summary"><td>Total Spent</td><td>${escapeHTML(document.getElementById('budget-spent').textContent)}</td></tr>
         <tr class="summary"><td>Remaining</td><td>${escapeHTML(document.getElementById('budget-left').textContent)}</td></tr>
       </table>
     </body>
-    </html>`;
+    </html>
+  `;
 
-  downloadFile(wordContent, 'ADHD_Focus_Productivity_Planner_' + todayStamp() + '.doc', 'application/msword;charset=utf-8;');
+  downloadFile(wordContent, 'Birthday_Party_Planner_' + todayStamp() + '.doc', 'application/msword;charset=utf-8;');
 }
 
+function importCSVFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
 
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+    const rows = parseCSV(e.target.result);
+    const dataRows = rows.filter(row => row.length >= 5 && row[0] !== 'Section' && row[0] !== 'BIRTHDAY PARTY PLANNER');
+
+    importPlannerRows(dataRows);
+    alert('Excel/Google Sheet CSV uploaded successfully. Your planner has been updated.');
+    event.target.value = '';
+  };
+
+  reader.readAsText(file);
+}
 
 function importWordFile(event) {
   const file = event.target.files[0];
   if (!file) return;
 
   const reader = new FileReader();
+
   reader.onload = function(e) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(e.target.result, 'text/html');
@@ -570,7 +781,10 @@ function importWordFile(event) {
 
     Array.from(doc.querySelectorAll('tr')).forEach(tr => {
       const cells = Array.from(tr.querySelectorAll('td')).map(td => td.textContent.trim());
-      if (cells.length >= 5 && cells[0] !== 'Section') importedRows.push(cells);
+
+      if (cells.length >= 5 && cells[0] !== 'Section') {
+        importedRows.push(cells);
+      }
     });
 
     if (importedRows.length === 0) {
@@ -579,8 +793,10 @@ function importWordFile(event) {
       importPlannerRows(importedRows);
       alert('Word/Google Docs file uploaded successfully. Your planner has been updated.');
     }
+
     event.target.value = '';
   };
+
   reader.readAsText(file);
 }
 
@@ -592,12 +808,17 @@ function importPlannerRows(rows) {
 
   rows.forEach(row => {
     const sectionId = findSectionIdByTitle(row[0] || '');
+
     if (sectionId) {
       createRow(sectionId, [row[2] || '', row[3] || '', row[4] || '']);
+
       const container = document.getElementById(sectionId + '-items');
       const lastItem = container.lastElementChild;
       const checkbox = lastItem ? lastItem.querySelector('.task-check') : null;
-      if (checkbox && String(row[1] || '').toLowerCase() === 'yes') checkbox.checked = true;
+
+      if (checkbox && String(row[1] || '').toLowerCase() === 'yes') {
+        checkbox.checked = true;
+      }
     }
   });
 
@@ -607,7 +828,10 @@ function importPlannerRows(rows) {
 
 function findSectionIdByTitle(title) {
   const cleanTitle = String(title).toLowerCase().trim();
-  return Object.keys(sectionData).find(sectionId => sectionData[sectionId].title.toLowerCase().trim() === cleanTitle);
+
+  return Object.keys(sectionData).find(sectionId => {
+    return sectionData[sectionId].title.toLowerCase().trim() === cleanTitle;
+  });
 }
 
 function parseCSV(text) {
@@ -635,6 +859,7 @@ function parseCSV(text) {
         row = [];
         value = '';
       }
+
       if (char === '\r' && nextChar === '\n') i++;
     } else {
       value += char;
@@ -650,16 +875,18 @@ function parseCSV(text) {
 }
 
 
-function saveBeautifulFormToComputer() {
-  const plannerName = document.getElementById('planner-name').value || 'Focus Planner';
-  const plannerDate = document.getElementById('planner-date').value || '';
+
+
+function savePlannerToComputer() {
+  const partyName = document.getElementById('party-name').value || 'Birthday Party';
+  const partyDate = document.getElementById('party-date').value || '';
   const rows = getPlannerData();
 
   const backupPayload = {
-    plannerType: 'ADHD / Focus / Productivity Planner',
+    plannerType: 'Birthday Party Planner',
     version: '2.0',
-    plannerName,
-    plannerDate,
+    partyName,
+    partyDate,
     rows,
     savedAt: new Date().toISOString()
   };
@@ -696,7 +923,9 @@ function saveBeautifulFormToComputer() {
               <th>Notes / Option</th>
             </tr>
           </thead>
-          <tbody>${sectionRows}</tbody>
+          <tbody>
+            ${sectionRows}
+          </tbody>
         </table>
       </section>
     `;
@@ -707,15 +936,16 @@ function saveBeautifulFormToComputer() {
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Saved ADHD Focus Planner</title>
+  <title>Saved Birthday Party Planner</title>
   <style>
     body {
       margin: 0;
       padding: 30px;
       font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #fff7ed, #ede9fe, #dbeafe);
+      background: linear-gradient(135deg, #fce7f3, #f5f3ff, #dbeafe);
       color: #1f2937;
     }
+
     .page {
       max-width: 1100px;
       margin: auto;
@@ -723,16 +953,19 @@ function saveBeautifulFormToComputer() {
       border-radius: 28px;
       overflow: hidden;
       box-shadow: 0 20px 50px rgba(88, 28, 135, 0.18);
-      border: 2px solid #ddd6fe;
+      border: 2px solid #e9d5ff;
     }
+
     .header {
-      background: linear-gradient(135deg, #f97316 0%, #7c3aed 55%, #2563eb 100%);
+      background: linear-gradient(135deg, #f9a8d4 0%, #c084fc 45%, #93c5fd 100%);
       color: white;
       padding: 40px 30px;
       text-align: center;
     }
-    .header h1 { margin: 0; font-size: 42px; }
+
+    .header h1 { margin: 0; font-size: 42px; letter-spacing: 1px; }
     .header p { margin: 10px 0 0; font-size: 18px; opacity: 0.95; }
+
     .summary {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -740,40 +973,53 @@ function saveBeautifulFormToComputer() {
       padding: 24px;
       background: #faf5ff;
     }
+
     .card {
       background: white;
       border-radius: 18px;
       padding: 18px;
-      border: 2px solid #ddd6fe;
+      border: 2px solid #e9d5ff;
       box-shadow: 0 8px 20px rgba(88, 28, 135, 0.08);
     }
-    .card-title { font-weight: bold; color: #7c3aed; margin-bottom: 8px; font-size: 15px; }
+
+    .card-title { font-weight: bold; color: #7e22ce; margin-bottom: 8px; font-size: 15px; }
     .card-value { font-size: 20px; font-weight: bold; color: #111827; }
-    .planner-section { padding: 24px; border-top: 1px solid #ede9fe; }
-    .planner-section h2 { color: #7c3aed; font-size: 26px; margin: 0 0 14px; }
+
+    .planner-section { padding: 24px; border-top: 1px solid #f3e8ff; }
+    .planner-section h2 { color: #7e22ce; font-size: 26px; margin: 0 0 14px; }
+
     table {
       width: 100%;
       border-collapse: collapse;
       overflow: hidden;
       border-radius: 14px;
-      border: 1px solid #ddd6fe;
+      border: 1px solid #e9d5ff;
     }
+
     th {
-      background: #ede9fe;
-      color: #4c1d95;
+      background: #f3e8ff;
+      color: #581c87;
       text-align: left;
       padding: 12px;
       font-size: 14px;
     }
-    td { padding: 12px; border-top: 1px solid #ede9fe; font-size: 14px; }
-    tr:nth-child(even) td { background: #fff7ed; }
+
+    td {
+      padding: 12px;
+      border-top: 1px solid #f3e8ff;
+      font-size: 14px;
+    }
+
+    tr:nth-child(even) td { background: #fdf4ff; }
+
     .small-note {
       text-align: center;
       padding: 0 24px 20px;
-      color: #7c3aed;
+      color: #7e22ce;
       font-weight: bold;
       font-size: 14px;
     }
+
     .footer {
       text-align: center;
       padding: 22px;
@@ -781,6 +1027,7 @@ function saveBeautifulFormToComputer() {
       background: #fafafa;
       font-size: 13px;
     }
+
     @media print {
       body { background: white; padding: 0; }
       .page { box-shadow: none; border: none; }
@@ -790,22 +1037,22 @@ function saveBeautifulFormToComputer() {
 <body>
   <div class="page">
     <div class="header">
-      <h1>🧠 ADHD / Focus Planner</h1>
+      <h1>🎂 Birthday Party Planner</h1>
       <p>Saved beautiful form — easy to read, print, and keep as a backup</p>
     </div>
 
     <div class="summary">
-      <div class="card"><div class="card-title">Planner Name</div><div class="card-value">${escapeHTML(plannerName)}</div></div>
-      <div class="card"><div class="card-title">Planner Date</div><div class="card-value">${escapeHTML(plannerDate || 'Not set')}</div></div>
+      <div class="card"><div class="card-title">Party Name</div><div class="card-value">${escapeHTML(partyName)}</div></div>
+      <div class="card"><div class="card-title">Party Date</div><div class="card-value">${escapeHTML(partyDate || 'Not set')}</div></div>
       <div class="card"><div class="card-title">Progress</div><div class="card-value">${escapeHTML(document.getElementById('progress-percentage').textContent)}</div></div>
-      <div class="card"><div class="card-title">Completed</div><div class="card-value">${escapeHTML(document.getElementById('completed-count').textContent)}</div></div>
+      <div class="card"><div class="card-title">Budget Left</div><div class="card-value">${escapeHTML(document.getElementById('budget-left').textContent)}</div></div>
     </div>
 
     <div class="summary">
+      <div class="card"><div class="card-title">Completed</div><div class="card-value">${escapeHTML(document.getElementById('completed-count').textContent)}</div></div>
       <div class="card"><div class="card-title">Pending</div><div class="card-value">${escapeHTML(document.getElementById('pending-count').textContent)}</div></div>
-      <div class="card"><div class="card-title">Budget</div><div class="card-value">${escapeHTML(document.getElementById('budget-total').textContent)}</div></div>
-      <div class="card"><div class="card-title">Spent</div><div class="card-value">${escapeHTML(document.getElementById('budget-spent').textContent)}</div></div>
-      <div class="card"><div class="card-title">Left</div><div class="card-value">${escapeHTML(document.getElementById('budget-left').textContent)}</div></div>
+      <div class="card"><div class="card-title">Total Budget</div><div class="card-value">${escapeHTML(document.getElementById('budget-total').textContent)}</div></div>
+      <div class="card"><div class="card-title">Total Spent</div><div class="card-value">${escapeHTML(document.getElementById('budget-spent').textContent)}</div></div>
     </div>
 
     <div class="small-note">You can open this file in any browser, read it easily, print it, or upload it back into your planner from your device.</div>
@@ -813,7 +1060,7 @@ function saveBeautifulFormToComputer() {
     ${sectionsHTML}
 
     <div class="footer">
-      Saved from the Interactive ADHD / Focus Planner. Keep this file on your device as a readable backup.
+      Saved from the Interactive Birthday Party Planner. Keep this file on your device as a readable backup.
     </div>
   </div>
 
@@ -822,7 +1069,7 @@ function saveBeautifulFormToComputer() {
 </html>
 `;
 
-  const safeName = (plannerName || 'ADHD_Focus_Planner')
+  const safeName = (partyName || 'Birthday_Party_Planner')
     .replace(/[^a-z0-9_-]+/gi, '_')
     .replace(/^_+|_+$/g, '');
 
@@ -867,8 +1114,8 @@ function importBeautifulFormFile(event) {
 }
 
 function restorePlannerFromBeautifulBackup(backup) {
-  document.getElementById('planner-name').value = backup.plannerName || 'My Focus Planner';
-  document.getElementById('planner-date').value = backup.plannerDate || '';
+  document.getElementById('party-name').value = backup.partyName || 'My Birthday Party';
+  document.getElementById('party-date').value = backup.partyDate || '';
 
   Object.keys(sectionData).forEach(sectionId => {
     const container = document.getElementById(sectionId + '-items');
@@ -895,8 +1142,9 @@ function restorePlannerFromBeautifulBackup(backup) {
   updateBudget();
 }
 
+
 function downloadFile(content, fileName, type) {
-  const blob = new Blob([content], { type:type });
+  const blob = new Blob([content], { type: type });
   const link = document.createElement('a');
   const url = URL.createObjectURL(blob);
   link.href = url;
@@ -906,20 +1154,33 @@ function downloadFile(content, fileName, type) {
   document.body.removeChild(link);
   URL.revokeObjectURL(url);
 }
-function todayStamp() { return new Date().toISOString().split('T')[0]; }
+
+function todayStamp() {
+  return new Date().toISOString().split('T')[0];
+}
+
 function escapeCSV(str) {
   if (str === null || str === undefined) return '';
   str = str.toString();
-  if (str.includes(',') || str.includes('"') || str.includes('\\n')) { return '"' + str.replace(/"/g, '""') + '"'; }
+  if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+    return '"' + str.replace(/"/g, '""') + '"';
+  }
   return str;
 }
+
 function escapeHTML(str) {
   if (str === null || str === undefined) return '';
-  return str.toString().replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+  return str.toString()
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
-function escapeAttribute(str) { return escapeHTML(str).replace(/`/g, '&#096;'); }
+
+function escapeAttribute(str) {
+  return escapeHTML(str).replace(/`/g, '&#096;');
+}
 </script>
 </body>
 </html>
-
-
