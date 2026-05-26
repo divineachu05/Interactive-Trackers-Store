@@ -84,15 +84,33 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 px-6 pb-6">
-        <button onclick="exportToCSV()" class="button-shine bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-6 py-4 rounded-2xl font-black shadow-xl transition-all">📊 Download to Excel/Google Sheets (CSV)</button>
-        <button onclick="exportToWord()" class="button-shine bg-gradient-to-r from-blue-600 to-purple-700 hover:from-blue-700 hover:to-purple-800 text-white px-6 py-4 rounded-2xl font-black shadow-xl transition-all">📄 Download Word/Google Docs</button>
-        <button onclick="document.getElementById('csv-upload').click()" class="button-shine bg-gradient-to-r from-orange-500 to-pink-600 hover:from-orange-600 hover:to-pink-700 text-white px-6 py-4 rounded-2xl font-black shadow-xl transition-all">⬆️ Upload Excel/Google Sheets (CSV)</button>
-        <button onclick="document.getElementById('word-upload').click()" class="button-shine bg-gradient-to-r from-violet-600 to-indigo-700 hover:from-violet-700 hover:to-indigo-800 text-white px-6 py-4 rounded-2xl font-black shadow-xl transition-all">⬆️ Upload Word/Google Docs</button>
-        <input id="csv-upload" type="file" accept=".csv,.txt" class="hidden" onchange="importCSVFile(event)">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 px-6 pb-6">
+        <button onclick="saveBeautifulFormToComputer()" class="button-shine min-h-[76px] flex items-center justify-center text-center leading-tight bg-gradient-to-r from-pink-500 via-purple-600 to-blue-600 hover:from-pink-600 hover:via-purple-700 hover:to-blue-700 text-white px-4 py-3 rounded-2xl font-black shadow-xl transition-all">
+          💾 Save Beautiful Form<br>to Your Device
+        </button>
+
+        <button onclick="document.getElementById('beautiful-form-upload').click()" class="button-shine min-h-[76px] flex items-center justify-center text-center leading-tight bg-gradient-to-r from-fuchsia-600 to-pink-600 hover:from-fuchsia-700 hover:to-pink-700 text-white px-4 py-3 rounded-2xl font-black shadow-xl transition-all">
+          ⬆️ Upload Beautiful Form<br>from Your Device
+        </button>
+
+        <button onclick="exportToWord()" class="button-shine min-h-[76px] flex items-center justify-center text-center leading-tight bg-gradient-to-r from-blue-600 to-purple-700 hover:from-blue-700 hover:to-purple-800 text-white px-4 py-3 rounded-2xl font-black shadow-xl transition-all">
+          📄 Download Word<br>Google Docs
+        </button>
+
+        <button onclick="document.getElementById('word-upload').click()" class="button-shine min-h-[76px] flex items-center justify-center text-center leading-tight bg-gradient-to-r from-violet-600 to-indigo-700 hover:from-violet-700 hover:to-indigo-800 text-white px-4 py-3 rounded-2xl font-black shadow-xl transition-all">
+          ⬆️ Upload Word<br>Google Docs
+        </button>
+
+        <button onclick="exportToCSV()" class="button-shine min-h-[76px] flex items-center justify-center text-center leading-tight bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white px-4 py-3 rounded-2xl font-black shadow-xl transition-all">
+          📊 Download Excel<br>Google Sheet
+        </button>
+
+        <input id="beautiful-form-upload" type="file" accept=".html,.htm" class="hidden" onchange="importBeautifulFormFile(event)">
         <input id="word-upload" type="file" accept=".doc,.html,.htm,.txt" class="hidden" onchange="importWordFile(event)">
       </div>
-      <p class="text-center text-sm text-slate-500 px-6 pb-6 font-semibold">Download or upload CSV files for Excel/Google Sheets. Download or upload Word/Google Docs files for document-style planning.</p>
+      <p class="text-center text-sm text-slate-500 px-6 pb-6 font-semibold">
+        Save a beautiful readable form to your device, upload it from your device later, or download/upload with Word/Google Docs and Excel/Google Sheet files.
+      </p>
     </div>
 
     <div class="glass-card rounded-3xl shadow-xl border border-orange-200 overflow-hidden mb-8">
@@ -175,15 +193,15 @@ function createRow(sectionId, rowValues) {
       </div>
       <div class="md:col-span-4">
         <label class="md:hidden text-sm font-black text-orange-700">Item</label>
-        <input type="text" value="${escapeAttribute(rowValues[0])}" class="field-main w-full px-3 py-2 rounded-xl border-2 border-white font-bold focus:ring-2 focus:ring-orange-500 shadow-sm">
+        ${buildMainField(sectionId, rowValues[0])}
       </div>
       <div class="md:col-span-2">
         <label class="md:hidden text-sm font-black text-orange-700">Detail</label>
-        <input type="text" value="${escapeAttribute(rowValues[1])}" class="field-second w-full px-3 py-2 rounded-xl border-2 border-white text-center font-semibold focus:ring-2 focus:ring-orange-500 shadow-sm" oninput="updateBudget()">
+        ${buildSecondField(sectionId, rowValues[1])}
       </div>
       <div class="md:col-span-3">
-        <label class="md:hidden text-sm font-black text-orange-700">Notes / Spent</label>
-        <input type="text" value="${escapeAttribute(rowValues[2])}" class="field-third w-full px-3 py-2 rounded-xl border-2 border-white text-center font-semibold focus:ring-2 focus:ring-orange-500 shadow-sm" oninput="updateBudget()">
+        <label class="md:hidden text-sm font-black text-orange-700">Notes / Option</label>
+        ${buildThirdField(sectionId, rowValues[2])}
       </div>
       <div class="md:col-span-2 flex justify-center">
         <button onclick="deleteRow(this)" class="bg-red-100 text-red-700 hover:bg-red-200 px-4 py-2 rounded-xl font-black transition-all">🗑 Delete</button>
@@ -192,16 +210,166 @@ function createRow(sectionId, rowValues) {
   container.appendChild(item);
 }
 
+function buildMainField(sectionId, value) {
+  return `<input type="text" value="${escapeAttribute(value)}" class="field-main w-full px-3 py-2 rounded-xl border-2 border-white font-bold focus:ring-2 focus:ring-orange-500 shadow-sm">`;
+}
+
+function buildSecondField(sectionId, value) {
+  if (sectionId === 'priorities') {
+    return buildSelectWithOther('field-second', value, ['High', 'Medium', 'Low', 'Urgent', 'Later', 'Other'], 'updateBudget()');
+  }
+
+  if (sectionId === 'timeblocks') {
+    return `<input type="time" value="${toTimeValue(value)}" class="field-second w-full px-3 py-2 rounded-xl border-2 border-white text-center font-semibold focus:ring-2 focus:ring-orange-500 shadow-sm" oninput="updateBudget()">`;
+  }
+
+  if (sectionId === 'habits') {
+    return buildSelectWithOther('field-second', value, ['Daily', 'Weekly', 'Morning', 'Afternoon', 'Evening', 'As Needed', 'Other'], 'updateBudget()');
+  }
+
+  if (sectionId === 'braindump') {
+    return buildSelectWithOther('field-second', value, ['Work', 'Personal', 'School', 'Errand', 'Idea', 'Reminder', 'Other'], 'updateBudget()');
+  }
+
+  if (sectionId === 'weekly') {
+    return buildSelectWithOther('field-second', value, ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Other'], 'updateBudget()');
+  }
+
+  if (sectionId === 'goals') {
+    return `<input type="date" value="${toDateValue(value)}" class="field-second w-full px-3 py-2 rounded-xl border-2 border-white text-center font-semibold focus:ring-2 focus:ring-orange-500 shadow-sm" oninput="updateBudget()">`;
+  }
+
+  if (sectionId === 'energy') {
+    return buildSelectWithOther('field-second', value, ['1/10', '2/10', '3/10', '4/10', '5/10', '6/10', '7/10', '8/10', '9/10', '10/10', 'Other'], 'updateBudget()');
+  }
+
+  return `<input type="text" value="${escapeAttribute(value)}" class="field-second w-full px-3 py-2 rounded-xl border-2 border-white text-center font-semibold focus:ring-2 focus:ring-orange-500 shadow-sm" oninput="updateBudget()">`;
+}
+
+function buildThirdField(sectionId, value) {
+  if (sectionId === 'focus') {
+    return buildSelectWithOther('field-third', value, ['Use timer', 'Remove distractions', 'Break into small steps', 'Take a short break', 'Ask for help', 'Other'], 'updateBudget()');
+  }
+
+  if (sectionId === 'timeblocks') {
+    return buildSelectWithOther('field-third', value, ['Focus Mode', 'Admin Task', 'Break', 'Meeting', 'Errand', 'Self Care', 'Other'], 'updateBudget()');
+  }
+
+  if (sectionId === 'habits') {
+    return buildSelectWithOther('field-third', value, ['Not Started', 'In Progress', 'Completed', 'Skipped', 'Other'], 'updateBudget()');
+  }
+
+  if (sectionId === 'energy') {
+    return buildSelectWithOther('field-third', value, ['Calm', 'Focused', 'Tired', 'Overwhelmed', 'Motivated', 'Distracted', 'Other'], 'updateBudget()');
+  }
+
+  return `<input type="text" value="${escapeAttribute(value)}" class="field-third w-full px-3 py-2 rounded-xl border-2 border-white text-center font-semibold focus:ring-2 focus:ring-orange-500 shadow-sm" oninput="updateBudget()">`;
+}
+
+function buildSelectWithOther(className, value, options, changeHandler = '') {
+  const safeValue = value || '';
+  const hasExactOption = options.includes(safeValue);
+  const shouldShowOtherInput = safeValue && !hasExactOption;
+  const selectedValue = shouldShowOtherInput ? 'Other' : safeValue;
+  const uniqueId = 'other_' + Math.random().toString(36).slice(2, 10);
+  const allOptions = [...options];
+
+  if (!allOptions.includes('Other')) allOptions.push('Other');
+
+  const optionHTML = allOptions.map(option => {
+    const selected = option === selectedValue ? 'selected' : '';
+    return `<option value="${escapeAttribute(option)}" ${selected}>${escapeHTML(option)}</option>`;
+  }).join('');
+
+  const extraHandler = changeHandler ? `${changeHandler}; ` : '';
+
+  return `
+    <div class="space-y-2">
+      <select class="${className} dropdown-source w-full px-3 py-2 rounded-xl border-2 border-white text-center font-semibold focus:ring-2 focus:ring-orange-500 shadow-sm bg-white"
+              data-other-target="${uniqueId}"
+              onchange="${extraHandler}toggleOtherInput(this)">
+        ${optionHTML}
+      </select>
+      <input id="${uniqueId}"
+             type="text"
+             value="${shouldShowOtherInput ? escapeAttribute(safeValue) : ''}"
+             placeholder="Type other option here..."
+             class="other-input ${className} ${selectedValue === 'Other' ? '' : 'hidden'} w-full px-3 py-2 rounded-xl border-2 border-orange-100 text-center font-semibold focus:ring-2 focus:ring-orange-500 shadow-sm bg-white"
+             oninput="${changeHandler || ''}">
+    </div>
+  `;
+}
+
+function toggleOtherInput(selectElement) {
+  const targetId = selectElement.getAttribute('data-other-target');
+  const otherInput = document.getElementById(targetId);
+
+  if (!otherInput) return;
+
+  if (selectElement.value === 'Other') {
+    otherInput.classList.remove('hidden');
+    otherInput.focus();
+  } else {
+    otherInput.classList.add('hidden');
+    otherInput.value = '';
+  }
+}
+
+function getFieldValue(container, selector) {
+  const field = container.querySelector(selector);
+
+  if (!field) return '';
+
+  if (field.tagName === 'SELECT' && field.value === 'Other') {
+    const wrapper = field.closest('div');
+    const otherInput = wrapper ? wrapper.querySelector('.other-input') : null;
+    return otherInput && otherInput.value.trim() ? otherInput.value.trim() : 'Other';
+  }
+
+  return field.value || '';
+}
+
+function toDateValue(value) {
+  if (!value) return '';
+  const text = String(value).trim();
+
+  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) return text;
+
+  return '';
+}
+
+function toTimeValue(value) {
+  if (!value) return '';
+  const text = String(value).trim();
+
+  const match24 = text.match(/^([01]?\d|2[0-3]):([0-5]\d)$/);
+  if (match24) return `${match24[1].padStart(2, '0')}:${match24[2]}`;
+
+  const match12 = text.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+  if (match12) {
+    let hour = parseInt(match12[1], 10);
+    const minute = match12[2];
+    const period = match12[3].toUpperCase();
+
+    if (period === 'PM' && hour < 12) hour += 12;
+    if (period === 'AM' && hour === 12) hour = 0;
+
+    return `${String(hour).padStart(2, '0')}:${minute}`;
+  }
+
+  return '';
+}
+
 function addRow(sectionId) {
   const defaults = {
     focus:['New focus task','25 minutes','Notes'],
     priorities:['New priority task','Medium','Notes'],
-    timeblocks:['New activity','Time block','Notes'],
+    timeblocks:['New activity','','Focus Mode'],
     habits:['New habit','Daily','Notes'],
     braindump:['New thought / task','Category','Notes'],
-    weekly:['New weekly item','Day / Time','Notes'],
-    goals:['New goal','Target / Deadline','Notes'],
-    energy:['New check-in','Level / Rating','Notes']
+    weekly:['New weekly item','Monday','Notes'],
+    goals:['New goal','','Notes'],
+    energy:['New check-in','7/10','Focused']
   };
   createRow(sectionId, defaults[sectionId]);
   updateProgress();
@@ -239,11 +407,11 @@ function updateBudget() {
   let planned = 0;
   let spent = 0;
   document.querySelectorAll('#goals-items .planner-item').forEach(item => {
-    planned += parseMoney(item.querySelector('.field-second')?.value || '0');
-    spent += parseMoney(item.querySelector('.field-third')?.value || '0');
+    planned += parseMoney(getFieldValue(item, '.field-second') || '0');
+    spent += parseMoney(getFieldValue(item, '.field-third') || '0');
   });
   document.querySelectorAll('#habits-items .planner-item').forEach(item => {
-    spent += parseMoney(item.querySelector('.field-third')?.value || '0');
+    spent += parseMoney(getFieldValue(item, '.field-third') || '0');
   });
   document.getElementById('budget-total').textContent = formatMoney(planned || 100);
   document.getElementById('budget-spent').textContent = formatMoney(spent);
@@ -263,9 +431,9 @@ function getPlannerData() {
       data.push({
         section: sectionData[sectionId].title,
         completed: item.querySelector('.task-check')?.checked ? 'Yes' : 'No',
-        item: item.querySelector('.field-main')?.value || '',
-        detail: item.querySelector('.field-second')?.value || '',
-        notes: item.querySelector('.field-third')?.value || ''
+        item: getFieldValue(item, '.field-main'),
+        detail: getFieldValue(item, '.field-second'),
+        notes: getFieldValue(item, '.field-third')
       });
     });
   });
@@ -390,21 +558,6 @@ function exportToWord() {
 
 
 
-function importCSVFile(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-
-  const reader = new FileReader();
-  reader.onload = function(e) {
-    const rows = parseCSV(e.target.result);
-    const dataRows = rows.filter(row => row.length >= 5 && row[0] !== 'Section' && row[0] !== 'ADHD / FOCUS / PRODUCTIVITY PLANNER');
-    importPlannerRows(dataRows);
-    alert('CSV uploaded successfully. Your planner has been updated.');
-    event.target.value = '';
-  };
-  reader.readAsText(file);
-}
-
 function importWordFile(event) {
   const file = event.target.files[0];
   if (!file) return;
@@ -496,6 +649,252 @@ function parseCSV(text) {
   return rows;
 }
 
+
+function saveBeautifulFormToComputer() {
+  const plannerName = document.getElementById('planner-name').value || 'Focus Planner';
+  const plannerDate = document.getElementById('planner-date').value || '';
+  const rows = getPlannerData();
+
+  const backupPayload = {
+    plannerType: 'ADHD / Focus / Productivity Planner',
+    version: '2.0',
+    plannerName,
+    plannerDate,
+    rows,
+    savedAt: new Date().toISOString()
+  };
+
+  const backupJSON = JSON.stringify(backupPayload).replace(/</g, '\\u003c');
+
+  const groupedRows = {};
+  rows.forEach(row => {
+    if (!groupedRows[row.section]) groupedRows[row.section] = [];
+    groupedRows[row.section].push(row);
+  });
+
+  let sectionsHTML = '';
+
+  Object.keys(groupedRows).forEach(sectionName => {
+    const sectionRows = groupedRows[sectionName].map(row => `
+      <tr>
+        <td>${escapeHTML(row.completed)}</td>
+        <td>${escapeHTML(row.item)}</td>
+        <td>${escapeHTML(row.detail)}</td>
+        <td>${escapeHTML(row.notes)}</td>
+      </tr>
+    `).join('');
+
+    sectionsHTML += `
+      <section class="planner-section">
+        <h2>${escapeHTML(sectionName)}</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Completed</th>
+              <th>Item</th>
+              <th>Detail</th>
+              <th>Notes / Option</th>
+            </tr>
+          </thead>
+          <tbody>${sectionRows}</tbody>
+        </table>
+      </section>
+    `;
+  });
+
+  const beautifulForm = `
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Saved ADHD Focus Planner</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 30px;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #fff7ed, #ede9fe, #dbeafe);
+      color: #1f2937;
+    }
+    .page {
+      max-width: 1100px;
+      margin: auto;
+      background: white;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(88, 28, 135, 0.18);
+      border: 2px solid #ddd6fe;
+    }
+    .header {
+      background: linear-gradient(135deg, #f97316 0%, #7c3aed 55%, #2563eb 100%);
+      color: white;
+      padding: 40px 30px;
+      text-align: center;
+    }
+    .header h1 { margin: 0; font-size: 42px; }
+    .header p { margin: 10px 0 0; font-size: 18px; opacity: 0.95; }
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      padding: 24px;
+      background: #faf5ff;
+    }
+    .card {
+      background: white;
+      border-radius: 18px;
+      padding: 18px;
+      border: 2px solid #ddd6fe;
+      box-shadow: 0 8px 20px rgba(88, 28, 135, 0.08);
+    }
+    .card-title { font-weight: bold; color: #7c3aed; margin-bottom: 8px; font-size: 15px; }
+    .card-value { font-size: 20px; font-weight: bold; color: #111827; }
+    .planner-section { padding: 24px; border-top: 1px solid #ede9fe; }
+    .planner-section h2 { color: #7c3aed; font-size: 26px; margin: 0 0 14px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 14px;
+      border: 1px solid #ddd6fe;
+    }
+    th {
+      background: #ede9fe;
+      color: #4c1d95;
+      text-align: left;
+      padding: 12px;
+      font-size: 14px;
+    }
+    td { padding: 12px; border-top: 1px solid #ede9fe; font-size: 14px; }
+    tr:nth-child(even) td { background: #fff7ed; }
+    .small-note {
+      text-align: center;
+      padding: 0 24px 20px;
+      color: #7c3aed;
+      font-weight: bold;
+      font-size: 14px;
+    }
+    .footer {
+      text-align: center;
+      padding: 22px;
+      color: #6b7280;
+      background: #fafafa;
+      font-size: 13px;
+    }
+    @media print {
+      body { background: white; padding: 0; }
+      .page { box-shadow: none; border: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="header">
+      <h1>🧠 ADHD / Focus Planner</h1>
+      <p>Saved beautiful form — easy to read, print, and keep as a backup</p>
+    </div>
+
+    <div class="summary">
+      <div class="card"><div class="card-title">Planner Name</div><div class="card-value">${escapeHTML(plannerName)}</div></div>
+      <div class="card"><div class="card-title">Planner Date</div><div class="card-value">${escapeHTML(plannerDate || 'Not set')}</div></div>
+      <div class="card"><div class="card-title">Progress</div><div class="card-value">${escapeHTML(document.getElementById('progress-percentage').textContent)}</div></div>
+      <div class="card"><div class="card-title">Completed</div><div class="card-value">${escapeHTML(document.getElementById('completed-count').textContent)}</div></div>
+    </div>
+
+    <div class="summary">
+      <div class="card"><div class="card-title">Pending</div><div class="card-value">${escapeHTML(document.getElementById('pending-count').textContent)}</div></div>
+      <div class="card"><div class="card-title">Budget</div><div class="card-value">${escapeHTML(document.getElementById('budget-total').textContent)}</div></div>
+      <div class="card"><div class="card-title">Spent</div><div class="card-value">${escapeHTML(document.getElementById('budget-spent').textContent)}</div></div>
+      <div class="card"><div class="card-title">Left</div><div class="card-value">${escapeHTML(document.getElementById('budget-left').textContent)}</div></div>
+    </div>
+
+    <div class="small-note">You can open this file in any browser, read it easily, print it, or upload it back into your planner from your device.</div>
+
+    ${sectionsHTML}
+
+    <div class="footer">
+      Saved from the Interactive ADHD / Focus Planner. Keep this file on your device as a readable backup.
+    </div>
+  </div>
+
+  <script id="planner-backup-data" type="application/json">${backupJSON}<\/script>
+</body>
+</html>
+`;
+
+  const safeName = (plannerName || 'ADHD_Focus_Planner')
+    .replace(/[^a-z0-9_-]+/gi, '_')
+    .replace(/^_+|_+$/g, '');
+
+  downloadFile(
+    beautifulForm,
+    safeName + '_Beautiful_Planner_Form_' + todayStamp() + '.html',
+    'text/html;charset=utf-8;'
+  );
+
+  alert('Your beautiful planner form has been downloaded to your device. Open it in your browser, print it, or keep it as a readable backup.');
+}
+
+function importBeautifulFormFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+    try {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(e.target.result, 'text/html');
+      const backupNode = doc.getElementById('planner-backup-data');
+
+      if (!backupNode) {
+        alert('No saved planner data was found. Please upload a beautiful form file exported from this planner.');
+        event.target.value = '';
+        return;
+      }
+
+      const backup = JSON.parse(backupNode.textContent);
+      restorePlannerFromBeautifulBackup(backup);
+      alert('Beautiful form uploaded successfully. Your planner has been restored.');
+    } catch (error) {
+      alert('Unable to upload the beautiful form. Please choose a valid beautiful form file exported from this planner.');
+    }
+
+    event.target.value = '';
+  };
+
+  reader.readAsText(file);
+}
+
+function restorePlannerFromBeautifulBackup(backup) {
+  document.getElementById('planner-name').value = backup.plannerName || 'My Focus Planner';
+  document.getElementById('planner-date').value = backup.plannerDate || '';
+
+  Object.keys(sectionData).forEach(sectionId => {
+    const container = document.getElementById(sectionId + '-items');
+    if (container) container.innerHTML = '';
+  });
+
+  (backup.rows || []).forEach(row => {
+    const sectionId = findSectionIdByTitle(row.section || '');
+
+    if (sectionId) {
+      createRow(sectionId, [row.item || '', row.detail || '', row.notes || '']);
+
+      const container = document.getElementById(sectionId + '-items');
+      const lastItem = container ? container.lastElementChild : null;
+      const checkbox = lastItem ? lastItem.querySelector('.task-check') : null;
+
+      if (checkbox && String(row.completed || '').toLowerCase() === 'yes') {
+        checkbox.checked = true;
+      }
+    }
+  });
+
+  updateProgress();
+  updateBudget();
+}
+
 function downloadFile(content, fileName, type) {
   const blob = new Blob([content], { type:type });
   const link = document.createElement('a');
@@ -522,3 +921,4 @@ function escapeAttribute(str) { return escapeHTML(str).replace(/`/g, '&#096;'); 
 </script>
 </body>
 </html>
+
