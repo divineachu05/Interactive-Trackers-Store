@@ -94,7 +94,7 @@
         <input id="word-upload" type="file" accept=".doc,.html,.htm,.txt" class="hidden" onchange="importWordFile(event)">
       </div>
       <p class="text-center text-sm text-slate-500 px-6 pb-6">
-        Download, upload, or save your planner to your computer using Word/Google Docs, Excel/Google Sheet CSV, or a reusable planner save file.
+        Use dropdown menus with 15+ options and Other typing space, calendar dates, time pickers, checkboxes, Add/Delete buttons, and save/download options.
       </p>
     </div>
 
@@ -313,32 +313,58 @@ function createRow(sectionId, rowValues) {
 }
 
 function buildMainField(sectionId, value) {
-  if (sectionId === 'budget') {
-    return buildSelectWithOther('field-main', value, [
-      'Venue / Decorations',
-      'Food and Drinks',
-      'Cake',
-      'Games / Activities',
-      'Entertainment',
-      'Photography',
-      'Other'
-    ]);
-  }
+  const mainOptions = {
+    timeline: [
+      'Choose birthday theme', 'Set party date', 'Create guest list', 'Choose party venue', 'Book venue',
+      'Send save-the-date', 'Send invitations', 'Confirm RSVPs', 'Order cake', 'Plan food menu',
+      'Buy decorations', 'Prepare party games', 'Create music playlist', 'Confirm vendors', 'Prepare party favors',
+      'Set up party area', 'Clean up plan', 'Other'
+    ],
+    budget: [
+      'Venue / Decorations', 'Food and Drinks', 'Birthday Cake', 'Cupcakes / Desserts', 'Invitations',
+      'Party Favors', 'Balloons', 'Backdrop', 'Tableware', 'Entertainment',
+      'Games / Activities', 'Photography', 'Music / Speaker', 'Gifts', 'Outfits',
+      'Transportation', 'Cleaning Supplies', 'Other'
+    ],
+    guests: [
+      'Parent / Guardian', 'Sibling', 'Grandparent', 'Aunt', 'Uncle',
+      'Cousin', 'Best Friend', 'School Friend', 'Work Friend', 'Neighbor',
+      'Family Friend', 'Child Guest', 'Adult Guest', 'Special Guest', 'VIP Guest',
+      'Guest Group', 'Other'
+    ],
+    vendors: [
+      'Cake Vendor', 'Caterer', 'Decorator', 'Balloon Artist', 'Photographer',
+      'Videographer', 'DJ / Music', 'Entertainer', 'Face Painter', 'Magician',
+      'Venue Contact', 'Rental Company', 'Florist', 'Party Store', 'Cleaning Service',
+      'Transportation', 'Other'
+    ],
+    dayof: [
+      'Wake up / Start prep', 'Pick up cake', 'Pick up food', 'Decorate venue', 'Set up tables',
+      'Set up chairs', 'Set up gift table', 'Set up photo area', 'Guests arrive', 'Welcome activity',
+      'Serve food', 'Games begin', 'Cake cutting', 'Open gifts', 'Take photos',
+      'Clean up', 'Other'
+    ],
+    seating: [
+      'Family Table', 'Friends Table', 'Kids Table', 'Adults Table', 'VIP Table',
+      'Cake Table', 'Gift Table', 'Food Table', 'Dessert Table', 'Activity Area',
+      'Photo Area', 'Outdoor Seating', 'Indoor Seating', 'Quiet Area', 'Extra Chairs',
+      'Reserved Seats', 'Other'
+    ],
+    gifts: [
+      'Gift Card', 'Toy', 'Book', 'Clothing', 'Shoes',
+      'Jewelry', 'Electronics', 'Art Supplies', 'Sports Item', 'Game',
+      'Handmade Gift', 'Money Gift', 'Experience Gift', 'Personalized Gift', 'Surprise Gift',
+      'Thank-you Note', 'Other'
+    ],
+    shopping: [
+      'Balloons', 'Candles', 'Cake Knife', 'Paper Plates', 'Cups',
+      'Napkins', 'Tablecloths', 'Party Hats', 'Streamers', 'Backdrop',
+      'Confetti', 'Gift Bags', 'Party Favors', 'Drinks', 'Snacks',
+      'Ice', 'Trash Bags', 'Other'
+    ]
+  };
 
-  if (sectionId === 'shopping') {
-    return buildSelectWithOther('field-main', value, [
-      'Balloons',
-      'Paper plates',
-      'Candles',
-      'Decorations',
-      'Drinks',
-      'Snacks',
-      'Party favors',
-      'Other'
-    ]);
-  }
-
-  return `<input type="text" value="${escapeAttribute(value)}" class="field-main w-full px-3 py-2 rounded-lg border border-purple-100 font-semibold focus:ring-2 focus:ring-purple-400">`;
+  return buildSelectWithOther('field-main', value, mainOptions[sectionId] || ['Task Item', 'Checklist Item', 'Planner Item', 'Other']);
 }
 
 function buildSecondField(sectionId, value) {
@@ -352,11 +378,10 @@ function buildSecondField(sectionId, value) {
 
   if (sectionId === 'guests') {
     return buildSelectWithOther('field-second amount-or-detail', value, [
-      'Pending',
-      'Confirmed',
-      'Declined',
-      'Maybe',
-      'Other'
+      'Pending', 'Confirmed', 'Declined', 'Maybe', 'Invited',
+      'Not Invited Yet', 'Needs Follow-up', 'No Response', 'Attending Alone', 'Bringing Guest',
+      'Bringing Child', 'VIP Guest', 'Family', 'Friend', 'Neighbor',
+      'Special Note', 'Other'
     ], 'updateBudget()');
   }
 
@@ -378,33 +403,28 @@ function buildThirdField(sectionId, value) {
 
   if (sectionId === 'vendors') {
     return buildSelectWithOther('field-third', value, [
-      'Cake',
-      'Decorations',
-      'Catering',
-      'Entertainment',
-      'Photography',
-      'Venue',
-      'Other'
+      'Cake', 'Decorations', 'Catering', 'Entertainment', 'Photography',
+      'Videography', 'Venue', 'Balloons', 'Backdrop', 'Music',
+      'DJ', 'Games', 'Party Rentals', 'Flowers', 'Cleaning',
+      'Transportation', 'Other'
     ], 'updateBudget()');
   }
 
   if (sectionId === 'gifts') {
     return buildSelectWithOther('field-third', value, [
-      'No',
-      'Yes',
-      'Not Needed',
+      'No', 'Yes', 'Not Needed', 'To Write', 'Written',
+      'Sent', 'Delivered', 'Hand Delivered', 'Email Sent', 'Text Sent',
+      'Call Made', 'Needs Address', 'Waiting', 'Follow Up', 'Completed',
       'Other'
     ], 'updateBudget()');
   }
 
   if (sectionId === 'shopping') {
     return buildSelectWithOther('field-third', value, [
-      'Party Store',
-      'Grocery Store',
-      'Dollar Store',
-      'Online',
-      'Already Have',
-      'Other'
+      'Party Store', 'Grocery Store', 'Dollar Store', 'Online', 'Amazon',
+      'Walmart', 'Target', 'Costco', 'Bakery', 'Craft Store',
+      'Home Store', 'Rental Shop', 'Already Have', 'Need to Buy', 'Borrowed',
+      'Picked Up', 'Other'
     ], 'updateBudget()');
   }
 
@@ -519,14 +539,14 @@ function numberOnly(value) {
 
 function addRow(sectionId) {
   const defaults = {
-    timeline: ['New party task', '', 'Notes'],
-    budget: ['Other', '0', '0'],
-    guests: ['Guest name', 'Pending', 'Notes'],
-    vendors: ['Vendor name', 'Contact', 'Other'],
-    dayof: ['New activity', '', 'Notes'],
-    seating: ['Table / Area', 'Guests', 'Notes'],
-    gifts: ['Gift item', 'From', 'No'],
-    shopping: ['Other', '1', 'Other']
+    timeline: ['Choose birthday theme', '', 'Notes'],
+    budget: ['Venue / Decorations', '0', '0'],
+    guests: ['Family Friend', 'Pending', 'Notes'],
+    vendors: ['Cake Vendor', 'Contact', 'Cake'],
+    dayof: ['Guests arrive', '', 'Notes'],
+    seating: ['Family Table', 'Guests', 'Notes'],
+    gifts: ['Gift Card', 'From', 'No'],
+    shopping: ['Balloons', '1', 'Party Store']
   };
   createRow(sectionId, defaults[sectionId]);
   updateProgress();
