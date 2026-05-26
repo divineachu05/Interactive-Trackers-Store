@@ -109,7 +109,7 @@
         <input id="word-upload" type="file" accept=".doc,.html,.htm,.txt" class="hidden" onchange="importWordFile(event)">
       </div>
       <p class="text-center text-sm text-slate-500 px-6 pb-6 font-semibold">
-        Save a beautiful readable form to your device, upload it from your device later, or download/upload with Word/Google Docs and Excel/Google Sheet files.
+        Use dropdown menus with 15+ options and Other typing space, calendar goal dates, time-block time pickers, checkboxes, Add/Delete buttons, and save/download options.
       </p>
     </div>
 
@@ -211,12 +211,189 @@ function createRow(sectionId, rowValues) {
 }
 
 function buildMainField(sectionId, value) {
-  return `<input type="text" value="${escapeAttribute(value)}" class="field-main w-full px-3 py-2 rounded-xl border-2 border-white font-bold focus:ring-2 focus:ring-orange-500 shadow-sm">`;
+  const mainOptions = {
+    focus: [
+      'Top focus task',
+      'Second focus task',
+      'Quick win task',
+      'Important email',
+      'School assignment',
+      'Work project',
+      'Household task',
+      'Appointment reminder',
+      'Self-care task',
+      'Meal prep',
+      'Exercise / movement',
+      'Study session',
+      'Cleaning task',
+      'Creative project',
+      'Admin task',
+      'Break task into steps',
+      'Other'
+    ],
+    priorities: [
+      'Reply to important email',
+      'Submit assignment / report',
+      'Organize workspace',
+      'Finish urgent task',
+      'Plan today',
+      'Pay bill',
+      'Call / message someone',
+      'Prepare document',
+      'Complete schoolwork',
+      'Review deadline',
+      'Schedule appointment',
+      'Clean priority area',
+      'Prepare meeting notes',
+      'Handle errand',
+      'Start hard task',
+      'Review weekly goals',
+      'Other'
+    ],
+    timeblocks: [
+      'Morning routine',
+      'Deep work session',
+      'Admin / Email',
+      'Study block',
+      'Work block',
+      'Cleaning block',
+      'Meal break',
+      'Exercise block',
+      'Rest break',
+      'Creative time',
+      'Planning time',
+      'Errand block',
+      'Family time',
+      'Self-care time',
+      'Evening reset',
+      'Sleep routine',
+      'Other'
+    ],
+    habits: [
+      'Drink water',
+      'Take medication / vitamins',
+      '5-minute tidy-up',
+      'Morning routine',
+      'Evening routine',
+      'Stretching',
+      'Exercise',
+      'Read',
+      'Journal',
+      'Plan tomorrow',
+      'Limit phone time',
+      'Eat breakfast',
+      'Prepare clothes',
+      'Pack bag',
+      'Check calendar',
+      'Gratitude practice',
+      'Other'
+    ],
+    braindump: [
+      'Idea for project',
+      'Need to buy groceries',
+      'Schedule appointment',
+      'Random reminder',
+      'Future task',
+      'Errand idea',
+      'Work idea',
+      'School idea',
+      'Home task',
+      'Cleaning reminder',
+      'Budget thought',
+      'Content idea',
+      'Question to ask',
+      'Person to contact',
+      'Problem to solve',
+      'Later list item',
+      'Other'
+    ],
+    weekly: [
+      'Plan the week',
+      'Check deadlines',
+      'Weekly review',
+      'Set weekly priorities',
+      'Choose focus days',
+      'Plan meals',
+      'Plan cleaning',
+      'Schedule appointments',
+      'Prepare outfits',
+      'Review budget',
+      'Plan errands',
+      'Family schedule',
+      'Study plan',
+      'Work plan',
+      'Rest / self-care plan',
+      'Celebrate progress',
+      'Other'
+    ],
+    goals: [
+      'Finish one major project',
+      'Improve morning routine',
+      'Reduce overwhelm',
+      'Build better focus',
+      'Complete course',
+      'Start workout routine',
+      'Save money',
+      'Organize home',
+      'Improve sleep',
+      'Finish reading goal',
+      'Launch project',
+      'Plan content',
+      'Improve consistency',
+      'Reduce procrastination',
+      'Create weekly routine',
+      'Track progress',
+      'Other'
+    ],
+    energy: [
+      'Morning energy',
+      'Focus level',
+      'Mood check',
+      'Stress level',
+      'Sleep quality',
+      'Motivation level',
+      'Overwhelm level',
+      'Physical energy',
+      'Mental clarity',
+      'Distraction level',
+      'Calm level',
+      'Productivity level',
+      'Evening energy',
+      'Social energy',
+      'Screen fatigue',
+      'Self-care check',
+      'Other'
+    ]
+  };
+
+  return buildSelectWithOther(
+    'field-main',
+    value,
+    mainOptions[sectionId] || ['Task Item', 'Checklist Item', 'Planner Item', 'Other']
+  );
 }
 
 function buildSecondField(sectionId, value) {
   if (sectionId === 'priorities') {
-    return buildSelectWithOther('field-second', value, ['High', 'Medium', 'Low', 'Urgent', 'Later', 'Other'], 'updateBudget()');
+    return buildSelectWithOther('field-second', value, [
+      'Urgent',
+      'High',
+      'Medium',
+      'Low',
+      'Today',
+      'Tomorrow',
+      'This Week',
+      'Next Week',
+      'Important',
+      'Quick Win',
+      'Deep Work',
+      'Waiting',
+      'Delegated',
+      'Optional',
+      'Later',
+      'Someday',
+      'Other'
+    ], 'updateBudget()');
   }
 
   if (sectionId === 'timeblocks') {
@@ -224,15 +401,69 @@ function buildSecondField(sectionId, value) {
   }
 
   if (sectionId === 'habits') {
-    return buildSelectWithOther('field-second', value, ['Daily', 'Weekly', 'Morning', 'Afternoon', 'Evening', 'As Needed', 'Other'], 'updateBudget()');
+    return buildSelectWithOther('field-second', value, [
+      'Daily',
+      'Weekly',
+      'Monthly',
+      'Morning',
+      'Afternoon',
+      'Evening',
+      'Before Work',
+      'After Work',
+      'Before School',
+      'After School',
+      'Weekdays',
+      'Weekends',
+      'Every Other Day',
+      'Twice Daily',
+      'As Needed',
+      'Custom Frequency',
+      'Other'
+    ], 'updateBudget()');
   }
 
   if (sectionId === 'braindump') {
-    return buildSelectWithOther('field-second', value, ['Work', 'Personal', 'School', 'Errand', 'Idea', 'Reminder', 'Other'], 'updateBudget()');
+    return buildSelectWithOther('field-second', value, [
+      'Work',
+      'Personal',
+      'School',
+      'Errand',
+      'Idea',
+      'Reminder',
+      'Home',
+      'Family',
+      'Health',
+      'Finance',
+      'Cleaning',
+      'Shopping',
+      'Appointment',
+      'Creative',
+      'Urgent',
+      'Later',
+      'Other'
+    ], 'updateBudget()');
   }
 
   if (sectionId === 'weekly') {
-    return buildSelectWithOther('field-second', value, ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday', 'Other'], 'updateBudget()');
+    return buildSelectWithOther('field-second', value, [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday',
+      'Monday Morning',
+      'Monday Afternoon',
+      'Midweek',
+      'Weekend',
+      'Morning',
+      'Afternoon',
+      'Evening',
+      'Anytime',
+      'Weekly Review',
+      'Other'
+    ], 'updateBudget()');
   }
 
   if (sectionId === 'goals') {
@@ -240,7 +471,25 @@ function buildSecondField(sectionId, value) {
   }
 
   if (sectionId === 'energy') {
-    return buildSelectWithOther('field-second', value, ['1/10', '2/10', '3/10', '4/10', '5/10', '6/10', '7/10', '8/10', '9/10', '10/10', 'Other'], 'updateBudget()');
+    return buildSelectWithOther('field-second', value, [
+      '1/10',
+      '2/10',
+      '3/10',
+      '4/10',
+      '5/10',
+      '6/10',
+      '7/10',
+      '8/10',
+      '9/10',
+      '10/10',
+      'Very Low',
+      'Low',
+      'Medium',
+      'Good',
+      'High',
+      'Very High',
+      'Other'
+    ], 'updateBudget()');
   }
 
   return `<input type="text" value="${escapeAttribute(value)}" class="field-second w-full px-3 py-2 rounded-xl border-2 border-white text-center font-semibold focus:ring-2 focus:ring-orange-500 shadow-sm" oninput="updateBudget()">`;
@@ -248,19 +497,91 @@ function buildSecondField(sectionId, value) {
 
 function buildThirdField(sectionId, value) {
   if (sectionId === 'focus') {
-    return buildSelectWithOther('field-third', value, ['Use timer', 'Remove distractions', 'Break into small steps', 'Take a short break', 'Ask for help', 'Other'], 'updateBudget()');
+    return buildSelectWithOther('field-third', value, [
+      'Use timer',
+      'Remove distractions',
+      'Break into small steps',
+      'Take a short break',
+      'Ask for help',
+      'Start with 5 minutes',
+      'Use checklist',
+      'Set reminder',
+      'Put phone away',
+      'Use headphones',
+      'Clear workspace',
+      'Reward after task',
+      'Do easiest step first',
+      'Prepare materials',
+      'Use body doubling',
+      'Repeat tomorrow',
+      'Other'
+    ], 'updateBudget()');
   }
 
   if (sectionId === 'timeblocks') {
-    return buildSelectWithOther('field-third', value, ['Focus Mode', 'Admin Task', 'Break', 'Meeting', 'Errand', 'Self Care', 'Other'], 'updateBudget()');
+    return buildSelectWithOther('field-third', value, [
+      'Focus Mode',
+      'Admin Task',
+      'Break',
+      'Meeting',
+      'Errand',
+      'Self Care',
+      'Deep Work',
+      'Light Work',
+      'Creative Work',
+      'Study Time',
+      'Cleaning',
+      'Meal Time',
+      'Exercise',
+      'Family Time',
+      'Planning',
+      'Rest',
+      'Other'
+    ], 'updateBudget()');
   }
 
   if (sectionId === 'habits') {
-    return buildSelectWithOther('field-third', value, ['Not Started', 'In Progress', 'Completed', 'Skipped', 'Other'], 'updateBudget()');
+    return buildSelectWithOther('field-third', value, [
+      'Not Started',
+      'In Progress',
+      'Completed',
+      'Skipped',
+      'Needs Reminder',
+      'Easy Today',
+      'Hard Today',
+      'Repeat Tomorrow',
+      'Done Morning',
+      'Done Afternoon',
+      'Done Evening',
+      'Partial Progress',
+      'Missed',
+      'Restart',
+      'Streak Continued',
+      'Track Again',
+      'Other'
+    ], 'updateBudget()');
   }
 
   if (sectionId === 'energy') {
-    return buildSelectWithOther('field-third', value, ['Calm', 'Focused', 'Tired', 'Overwhelmed', 'Motivated', 'Distracted', 'Other'], 'updateBudget()');
+    return buildSelectWithOther('field-third', value, [
+      'Calm',
+      'Focused',
+      'Tired',
+      'Overwhelmed',
+      'Motivated',
+      'Distracted',
+      'Happy',
+      'Neutral',
+      'Stressed',
+      'Anxious',
+      'Rested',
+      'Busy',
+      'Low Energy',
+      'High Energy',
+      'Need Break',
+      'Productive',
+      'Other'
+    ], 'updateBudget()');
   }
 
   return `<input type="text" value="${escapeAttribute(value)}" class="field-third w-full px-3 py-2 rounded-xl border-2 border-white text-center font-semibold focus:ring-2 focus:ring-orange-500 shadow-sm" oninput="updateBudget()">`;
@@ -362,14 +683,14 @@ function toTimeValue(value) {
 
 function addRow(sectionId) {
   const defaults = {
-    focus:['New focus task','25 minutes','Notes'],
-    priorities:['New priority task','Medium','Notes'],
-    timeblocks:['New activity','','Focus Mode'],
-    habits:['New habit','Daily','Notes'],
-    braindump:['New thought / task','Category','Notes'],
-    weekly:['New weekly item','Monday','Notes'],
-    goals:['New goal','','Notes'],
-    energy:['New check-in','7/10','Focused']
+    focus:['Top focus task','25 minutes','Use timer'],
+    priorities:['Reply to important email','Medium','Notes'],
+    timeblocks:['Deep work session','','Focus Mode'],
+    habits:['Drink water','Daily','Completed'],
+    braindump:['Idea for project','Idea','Notes'],
+    weekly:['Plan the week','Monday','Notes'],
+    goals:['Finish one major project','','Notes'],
+    energy:['Morning energy','7/10','Focused']
   };
   createRow(sectionId, defaults[sectionId]);
   updateProgress();
@@ -921,4 +1242,3 @@ function escapeAttribute(str) { return escapeHTML(str).replace(/`/g, '&#096;'); 
 </script>
 </body>
 </html>
-
