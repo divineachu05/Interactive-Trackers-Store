@@ -70,27 +70,36 @@
 
       <!-- Export / Upload Controls -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4 px-6 pb-6">
-        <button onclick="exportToWord()" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition-all">
-          📄 Download Word/Google Docs
+        <button onclick="exportToWord()" class="flex items-center justify-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-700 hover:from-blue-700 hover:to-indigo-800 text-white px-6 py-4 rounded-2xl font-extrabold shadow-xl transition-all">
+          <span>📄</span>
+          <span>Download Word/Google Docs</span>
         </button>
 
-        <button onclick="document.getElementById('word-upload').click()" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition-all">
-          ⬆️ Upload Word/Google Docs
+        <button onclick="document.getElementById('word-upload').click()" class="flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 to-fuchsia-700 hover:from-purple-700 hover:to-fuchsia-800 text-white px-6 py-4 rounded-2xl font-extrabold shadow-xl transition-all">
+          <span>⬆️</span>
+          <span>Upload Word/Google Docs</span>
         </button>
 
-        <button onclick="exportToCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition-all">
-          📊 Download Excel/Google Sheet
+        <button onclick="exportToCSV()" class="flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white px-6 py-4 rounded-2xl font-extrabold shadow-xl transition-all">
+          <span>📊</span>
+          <span>Download Excel/Google Sheet</span>
         </button>
 
-        <button onclick="document.getElementById('csv-upload').click()" class="bg-orange-600 hover:bg-orange-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg transition-all">
-          ⬆️ Upload Excel/Google Sheet
+        <button onclick="document.getElementById('csv-upload').click()" class="flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-pink-600 hover:from-orange-600 hover:to-pink-700 text-white px-6 py-4 rounded-2xl font-extrabold shadow-xl transition-all">
+          <span>⬆️</span>
+          <span>Upload Excel/Google Sheet</span>
+        </button>
+
+        <button onclick="savePlannerToComputer()" class="md:col-span-2 flex items-center justify-center gap-2 bg-gradient-to-r from-pink-500 via-purple-600 to-blue-600 hover:from-pink-600 hover:via-purple-700 hover:to-blue-700 text-white px-6 py-4 rounded-2xl font-extrabold shadow-xl transition-all">
+          <span>💾</span>
+          <span>Save Beautiful Form to Computer</span>
         </button>
 
         <input id="word-upload" type="file" accept=".doc,.html,.htm,.txt" class="hidden" onchange="importWordFile(event)">
         <input id="csv-upload" type="file" accept=".csv,.txt" class="hidden" onchange="importCSVFile(event)">
       </div>
       <p class="text-center text-sm text-slate-500 px-6 pb-6">
-        Download or upload your planner using Word/Google Docs or Excel/Google Sheet CSV files.
+        Download, upload, or save your planner to your computer using Word/Google Docs, Excel/Google Sheet CSV, or a reusable planner save file.
       </p>
     </div>
 
@@ -310,7 +319,7 @@ function createRow(sectionId, rowValues) {
 
 function buildMainField(sectionId, value) {
   if (sectionId === 'budget') {
-    return buildSelect('field-main', value, [
+    return buildSelectWithOther('field-main', value, [
       'Venue / Decorations',
       'Food and Drinks',
       'Cake',
@@ -322,7 +331,7 @@ function buildMainField(sectionId, value) {
   }
 
   if (sectionId === 'shopping') {
-    return buildSelect('field-main', value, [
+    return buildSelectWithOther('field-main', value, [
       'Balloons',
       'Paper plates',
       'Candles',
@@ -347,11 +356,12 @@ function buildSecondField(sectionId, value) {
   }
 
   if (sectionId === 'guests') {
-    return buildSelect('field-second amount-or-detail', value, [
+    return buildSelectWithOther('field-second amount-or-detail', value, [
       'Pending',
       'Confirmed',
       'Declined',
-      'Maybe'
+      'Maybe',
+      'Other'
     ], 'updateBudget()');
   }
 
@@ -372,7 +382,7 @@ function buildThirdField(sectionId, value) {
   }
 
   if (sectionId === 'vendors') {
-    return buildSelect('field-third', value, [
+    return buildSelectWithOther('field-third', value, [
       'Cake',
       'Decorations',
       'Catering',
@@ -384,15 +394,16 @@ function buildThirdField(sectionId, value) {
   }
 
   if (sectionId === 'gifts') {
-    return buildSelect('field-third', value, [
+    return buildSelectWithOther('field-third', value, [
       'No',
       'Yes',
-      'Not Needed'
+      'Not Needed',
+      'Other'
     ], 'updateBudget()');
   }
 
   if (sectionId === 'shopping') {
-    return buildSelect('field-third', value, [
+    return buildSelectWithOther('field-third', value, [
       'Party Store',
       'Grocery Store',
       'Dollar Store',
@@ -405,22 +416,70 @@ function buildThirdField(sectionId, value) {
   return `<input type="text" value="${escapeAttribute(value)}" class="field-third w-full px-3 py-2 rounded-lg border border-purple-100 text-center focus:ring-2 focus:ring-purple-400" oninput="updateBudget()">`;
 }
 
-function buildSelect(className, value, options, changeHandler = '') {
+function buildSelectWithOther(className, value, options, changeHandler = '') {
   const safeValue = value || '';
-  let allOptions = [...options];
+  const hasExactOption = options.includes(safeValue);
+  const shouldShowOtherInput = safeValue && !hasExactOption;
+  const selectedValue = shouldShowOtherInput ? 'Other' : safeValue;
+  const uniqueId = 'other_' + Math.random().toString(36).slice(2, 10);
+  const allOptions = [...options];
 
-  if (safeValue && !allOptions.includes(safeValue)) {
-    allOptions.unshift(safeValue);
+  if (!allOptions.includes('Other')) {
+    allOptions.push('Other');
   }
 
   const optionHTML = allOptions.map(option => {
-    const selected = option === safeValue ? 'selected' : '';
+    const selected = option === selectedValue ? 'selected' : '';
     return `<option value="${escapeAttribute(option)}" ${selected}>${escapeHTML(option)}</option>`;
   }).join('');
 
-  const onChange = changeHandler ? `onchange="${changeHandler}"` : '';
+  const extraHandler = changeHandler ? `${changeHandler}; ` : '';
 
-  return `<select class="${className} w-full px-3 py-2 rounded-lg border border-purple-100 text-center font-semibold focus:ring-2 focus:ring-purple-400 bg-white" ${onChange}>${optionHTML}</select>`;
+  return `
+    <div class="space-y-2">
+      <select class="${className} dropdown-source w-full px-3 py-2 rounded-lg border border-purple-100 text-center font-semibold focus:ring-2 focus:ring-purple-400 bg-white"
+              data-other-target="${uniqueId}"
+              onchange="${extraHandler}toggleOtherInput(this)">
+        ${optionHTML}
+      </select>
+
+      <input id="${uniqueId}"
+             type="text"
+             value="${shouldShowOtherInput ? escapeAttribute(safeValue) : ''}"
+             placeholder="Type other option here..."
+             class="other-input ${className} ${selectedValue === 'Other' ? '' : 'hidden'} w-full px-3 py-2 rounded-lg border border-purple-200 text-center font-semibold focus:ring-2 focus:ring-purple-400 bg-white"
+             oninput="${changeHandler || ''}">
+    </div>
+  `;
+}
+
+function toggleOtherInput(selectElement) {
+  const targetId = selectElement.getAttribute('data-other-target');
+  const otherInput = document.getElementById(targetId);
+
+  if (!otherInput) return;
+
+  if (selectElement.value === 'Other') {
+    otherInput.classList.remove('hidden');
+    otherInput.focus();
+  } else {
+    otherInput.classList.add('hidden');
+    otherInput.value = '';
+  }
+}
+
+function getFieldValue(container, selector) {
+  const field = container.querySelector(selector);
+
+  if (!field) return '';
+
+  if (field.tagName === 'SELECT' && field.value === 'Other') {
+    const wrapper = field.closest('div');
+    const otherInput = wrapper ? wrapper.querySelector('.other-input') : null;
+    return otherInput && otherInput.value.trim() ? otherInput.value.trim() : 'Other';
+  }
+
+  return field.value || '';
 }
 
 function toDateValue(value) {
@@ -466,7 +525,7 @@ function numberOnly(value) {
 function addRow(sectionId) {
   const defaults = {
     timeline: ['New party task', '', 'Notes'],
-    budget: ['New budget item', '0', '0'],
+    budget: ['Other', '0', '0'],
     guests: ['Guest name', 'Pending', 'Notes'],
     vendors: ['Vendor name', 'Contact', 'Other'],
     dayof: ['New activity', '', 'Notes'],
@@ -518,8 +577,8 @@ function updateBudget() {
   let spent = 0;
 
   document.querySelectorAll('#budget-items .planner-item').forEach(item => {
-    const plannedValue = parseMoney(item.querySelector('.field-second')?.value || '0');
-    const spentValue = parseMoney(item.querySelector('.field-third')?.value || '0');
+    const plannedValue = parseMoney(getFieldValue(item, '.field-second') || '0');
+    const spentValue = parseMoney(getFieldValue(item, '.field-third') || '0');
     planned += plannedValue;
     spent += spentValue;
   });
@@ -546,9 +605,9 @@ function getPlannerData() {
       data.push({
         section: sectionData[sectionId].title,
         completed: item.querySelector('.task-check')?.checked ? 'Yes' : 'No',
-        item: item.querySelector('.field-main')?.value || '',
-        detail: item.querySelector('.field-second')?.value || '',
-        notes: item.querySelector('.field-third')?.value || ''
+        item: getFieldValue(item, '.field-main'),
+        detail: getFieldValue(item, '.field-second'),
+        notes: getFieldValue(item, '.field-third')
       });
     });
   });
@@ -821,6 +880,257 @@ function parseCSV(text) {
 }
 
 
+
+
+function savePlannerToComputer() {
+  const partyName = document.getElementById('party-name').value || 'Birthday Party';
+  const partyDate = document.getElementById('party-date').value || '';
+  const rows = getPlannerData();
+
+  const groupedRows = {};
+  rows.forEach(row => {
+    if (!groupedRows[row.section]) groupedRows[row.section] = [];
+    groupedRows[row.section].push(row);
+  });
+
+  let sectionsHTML = '';
+
+  Object.keys(groupedRows).forEach(sectionName => {
+    const sectionRows = groupedRows[sectionName].map(row => `
+      <tr>
+        <td>${escapeHTML(row.completed)}</td>
+        <td>${escapeHTML(row.item)}</td>
+        <td>${escapeHTML(row.detail)}</td>
+        <td>${escapeHTML(row.notes)}</td>
+      </tr>
+    `).join('');
+
+    sectionsHTML += `
+      <section class="planner-section">
+        <h2>${escapeHTML(sectionName)}</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Completed</th>
+              <th>Item</th>
+              <th>Detail</th>
+              <th>Notes / Option</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${sectionRows}
+          </tbody>
+        </table>
+      </section>
+    `;
+  });
+
+  const beautifulForm = `
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Saved Birthday Party Planner</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 30px;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #fce7f3, #f5f3ff, #dbeafe);
+      color: #1f2937;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: auto;
+      background: white;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(88, 28, 135, 0.18);
+      border: 2px solid #e9d5ff;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #f9a8d4 0%, #c084fc 45%, #93c5fd 100%);
+      color: white;
+      padding: 40px 30px;
+      text-align: center;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 42px;
+      letter-spacing: 1px;
+    }
+
+    .header p {
+      margin: 10px 0 0;
+      font-size: 18px;
+      opacity: 0.95;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      padding: 24px;
+      background: #faf5ff;
+    }
+
+    .card {
+      background: white;
+      border-radius: 18px;
+      padding: 18px;
+      border: 2px solid #e9d5ff;
+      box-shadow: 0 8px 20px rgba(88, 28, 135, 0.08);
+    }
+
+    .card-title {
+      font-weight: bold;
+      color: #7e22ce;
+      margin-bottom: 8px;
+      font-size: 15px;
+    }
+
+    .card-value {
+      font-size: 20px;
+      font-weight: bold;
+      color: #111827;
+    }
+
+    .planner-section {
+      padding: 24px;
+      border-top: 1px solid #f3e8ff;
+    }
+
+    .planner-section h2 {
+      color: #7e22ce;
+      font-size: 26px;
+      margin: 0 0 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 14px;
+      border: 1px solid #e9d5ff;
+    }
+
+    th {
+      background: #f3e8ff;
+      color: #581c87;
+      text-align: left;
+      padding: 12px;
+      font-size: 14px;
+    }
+
+    td {
+      padding: 12px;
+      border-top: 1px solid #f3e8ff;
+      font-size: 14px;
+    }
+
+    tr:nth-child(even) td {
+      background: #fdf4ff;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 22px;
+      color: #6b7280;
+      background: #fafafa;
+      font-size: 13px;
+    }
+
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+
+      .page {
+        box-shadow: none;
+        border: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="header">
+      <h1>🎂 Birthday Party Planner</h1>
+      <p>Saved planner form — easy to read, print, or keep as a backup</p>
+    </div>
+
+    <div class="summary">
+      <div class="card">
+        <div class="card-title">Party Name</div>
+        <div class="card-value">${escapeHTML(partyName)}</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Party Date</div>
+        <div class="card-value">${escapeHTML(partyDate || 'Not set')}</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Progress</div>
+        <div class="card-value">${escapeHTML(document.getElementById('progress-percentage').textContent)}</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Budget Left</div>
+        <div class="card-value">${escapeHTML(document.getElementById('budget-left').textContent)}</div>
+      </div>
+    </div>
+
+    <div class="summary">
+      <div class="card">
+        <div class="card-title">Completed</div>
+        <div class="card-value">${escapeHTML(document.getElementById('completed-count').textContent)}</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Pending</div>
+        <div class="card-value">${escapeHTML(document.getElementById('pending-count').textContent)}</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Total Budget</div>
+        <div class="card-value">${escapeHTML(document.getElementById('budget-total').textContent)}</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Total Spent</div>
+        <div class="card-value">${escapeHTML(document.getElementById('budget-spent').textContent)}</div>
+      </div>
+    </div>
+
+    ${sectionsHTML}
+
+    <div class="footer">
+      Saved from the Interactive Birthday Party Planner. You can open this file in any web browser, print it, or save it for your records.
+    </div>
+  </div>
+</body>
+</html>
+`;
+
+  const safeName = (partyName || 'Birthday_Party_Planner')
+    .replace(/[^a-z0-9_-]+/gi, '_')
+    .replace(/^_+|_+$/g, '');
+
+  downloadFile(
+    beautifulForm,
+    safeName + '_Beautiful_Planner_Form_' + todayStamp() + '.html',
+    'text/html;charset=utf-8;'
+  );
+
+  alert('Your beautiful planner form has been downloaded to your computer. Open it in your browser, print it, or keep it as a readable backup.');
+}
+
+
 function downloadFile(content, fileName, type) {
   const blob = new Blob([content], { type: type });
   const link = document.createElement('a');
@@ -862,3 +1172,4 @@ function escapeAttribute(str) {
 </script>
 </body>
 </html>
+
