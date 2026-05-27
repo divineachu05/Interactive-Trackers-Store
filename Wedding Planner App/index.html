@@ -1,1 +1,1303 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>All in One Wedding Interactive Planner App</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(255, 102, 163, 0.16), transparent 30%),
+        radial-gradient(circle at top right, rgba(99, 102, 241, 0.14), transparent 30%),
+        linear-gradient(135deg, #fff7fb 0%, #fffafc 25%, #faf5ff 58%, #f4f8ff 100%);
+      color: #1f2937;
+    }
+
+    .hero-gradient {
+      background: linear-gradient(135deg, #ff6b9a 0%, #ef4cae 25%, #9b4dff 62%, #4f76ff 100%);
+    }
+
+    .tab.active {
+      background: linear-gradient(135deg, #fde7f3 0%, #f3e8ff 100%);
+      color: #7e22ce;
+      border-bottom: 4px solid #ec4899;
+      box-shadow: inset 0 -2px 0 #ec4899;
+    }
+
+    .section { display: none; }
+    .section.active { display: block; }
+
+    .fade-in { animation: fadeIn .25s ease-in; }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .slide-out { animation: slideOut .18s ease-out forwards; }
+    @keyframes slideOut {
+      to { opacity: 0; transform: translateX(18px); }
+    }
+
+    .button-shine { position: relative; overflow: hidden; }
+    .button-shine::after {
+      content: "";
+      position: absolute;
+      top: 0; left: -120%;
+      width: 80%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.34), transparent);
+      transition: .65s;
+    }
+    .button-shine:hover::after { left: 130%; }
+
+    .shadow-soft { box-shadow: 0 12px 30px rgba(168, 85, 247, 0.12); }
+    .card-soft { box-shadow: 0 8px 20px rgba(236, 72, 153, 0.10); }
+
+    .section-head-timeline { background: linear-gradient(135deg, #ff7b8a 0%, #ff8e5a 48%, #ffb000 100%); }
+    .section-head-budget { background: linear-gradient(135deg, #17c964 0%, #10b981 45%, #14b8a6 100%); }
+    .section-head-guests { background: linear-gradient(135deg, #a855f7 0%, #c026d3 50%, #ec4899 100%); }
+    .section-head-vendors { background: linear-gradient(135deg, #38bdf8 0%, #22c55e 100%); }
+    .section-head-ceremony { background: linear-gradient(135deg, #f472b6 0%, #a855f7 100%); }
+    .section-head-reception { background: linear-gradient(135deg, #fb7185 0%, #f97316 60%, #fbbf24 100%); }
+    .section-head-attire { background: linear-gradient(135deg, #ec4899 0%, #8b5cf6 100%); }
+    .section-head-checklist { background: linear-gradient(135deg, #22c55e 0%, #0ea5e9 100%); }
+    .section-head-goals { background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); }
+
+    .equal-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    @media (max-width: 1024px) {
+      .equal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 640px) {
+      .equal-grid { grid-template-columns: 1fr; }
+    }
+
+    @media print {
+      .no-print { display: none !important; }
+      body { background: white !important; }
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <div class="max-w-7xl mx-auto px-4 md:px-6 py-8">
+
+    <!-- Hero -->
+    <section class="bg-white rounded-[32px] shadow-2xl border border-pink-100 overflow-hidden mb-8">
+      <div class="hero-gradient px-6 md:px-10 py-10 text-center text-white relative overflow-hidden">
+        <div class="absolute -left-10 -top-10 w-40 h-40 bg-white/10 rounded-full"></div>
+        <div class="absolute -right-8 -bottom-10 w-48 h-48 bg-yellow-200/15 rounded-full"></div>
+        <div class="relative z-10">
+          <div class="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-white/18 border border-white/20 font-black uppercase tracking-widest text-sm md:text-base mb-4">
+            <span>All in One</span>
+          </div>
+          <h1 class="text-4xl md:text-6xl font-black tracking-tight leading-tight mb-3">💍 Wedding Interactive Planner App</h1>
+          <p class="text-lg md:text-2xl font-semibold text-white/95">
+            Easy, flexible, colorful, and more visual than Excel and Google Sheets
+          </p>
+        </div>
+      </div>
+
+      <!-- Summary cards -->
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-5 p-6">
+        <div class="rounded-[28px] p-6 border-2 border-pink-200 bg-gradient-to-br from-pink-50 to-rose-50 card-soft">
+          <p class="text-pink-900 font-extrabold mb-2">Overall Progress</p>
+          <p id="progress-percentage" class="text-5xl font-black text-pink-600">0%</p>
+          <div class="w-full bg-white rounded-full h-4 mt-4 shadow-inner">
+            <div id="progress-bar" class="bg-gradient-to-r from-pink-500 via-purple-500 to-blue-600 h-4 rounded-full transition-all duration-700" style="width:0%"></div>
+          </div>
+          <p id="progress-text" class="text-sm text-slate-600 mt-2 font-semibold">0 of 0 items completed</p>
+        </div>
+
+        <div class="rounded-[28px] p-6 border-2 border-violet-200 bg-gradient-to-br from-violet-50 to-fuchsia-50 card-soft">
+          <p class="text-violet-900 font-extrabold mb-2">Task Status</p>
+          <p class="text-slate-700 text-lg">Completed: <span id="completed-count" class="text-emerald-700 font-black">0</span></p>
+          <p class="text-slate-700 text-lg">Pending: <span id="pending-count" class="text-pink-700 font-black">0</span></p>
+        </div>
+
+        <div class="rounded-[28px] p-6 border-2 border-emerald-200 bg-gradient-to-br from-emerald-50 to-teal-50 card-soft">
+          <p class="text-emerald-900 font-extrabold mb-2">Budget Overview</p>
+          <p class="text-slate-700">Budget: <span id="budget-total" class="text-blue-700 font-black">$15,000.00</span></p>
+          <p class="text-slate-700">Spent: <span id="budget-spent" class="text-orange-700 font-black">$0.00</span></p>
+          <p class="text-slate-700">Left: <span id="budget-left" class="text-emerald-700 font-black">$15,000.00</span></p>
+        </div>
+
+        <div class="rounded-[28px] p-6 border-2 border-purple-200 bg-gradient-to-br from-purple-50 to-pink-50 card-soft">
+          <p class="text-purple-900 font-extrabold mb-2">Wedding Details</p>
+          <input id="wedding-name" class="w-full mb-2 px-4 py-3 rounded-2xl border-2 border-pink-200 font-semibold focus:outline-none focus:ring-2 focus:ring-pink-400" value="My Wedding Planner" />
+          <input id="wedding-date" type="date" class="w-full px-4 py-3 rounded-2xl border-2 border-pink-200 font-semibold focus:outline-none focus:ring-2 focus:ring-pink-400" />
+        </div>
+      </div>
+
+      <!-- Equal-length action buttons -->
+      <div class="px-6 pb-6 no-print">
+        <div class="equal-grid">
+          <button onclick="saveBeautifulFormToDevice()" class="button-shine min-h-[78px] flex items-center justify-center text-center leading-tight bg-gradient-to-r from-fuchsia-600 via-pink-500 to-blue-600 text-white px-3 py-3 rounded-2xl font-black shadow-lg">
+            💾 Save Beautiful<br>Form to Device
+          </button>
+
+          <button onclick="document.getElementById('beautiful-form-upload').click()" class="button-shine min-h-[78px] flex items-center justify-center text-center leading-tight bg-gradient-to-r from-pink-600 to-fuchsia-600 text-white px-3 py-3 rounded-2xl font-black shadow-lg">
+            ⬆️ Upload Beautiful<br>Form from Device
+          </button>
+
+          <button onclick="exportToWord()" class="button-shine min-h-[78px] flex items-center justify-center text-center leading-tight bg-gradient-to-r from-blue-600 to-indigo-700 text-white px-3 py-3 rounded-2xl font-black shadow-lg">
+            📄 Download Word<br>Google Docs
+          </button>
+
+          <button onclick="document.getElementById('word-upload').click()" class="button-shine min-h-[78px] flex items-center justify-center text-center leading-tight bg-gradient-to-r from-violet-600 to-indigo-700 text-white px-3 py-3 rounded-2xl font-black shadow-lg">
+            ⬆️ Upload Word<br>Google Docs
+          </button>
+
+          <button onclick="exportToCSV()" class="button-shine min-h-[78px] flex items-center justify-center text-center leading-tight bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-3 py-3 rounded-2xl font-black shadow-lg">
+            📊 Download Excel<br>Google Sheet
+          </button>
+
+          <button onclick="printBeautifulFormFromDashboard()" class="button-shine min-h-[78px] flex items-center justify-center text-center leading-tight bg-gradient-to-r from-orange-500 via-pink-500 to-purple-700 text-white px-3 py-3 rounded-2xl font-black shadow-lg">
+            🖨️ Print Beautiful<br>HTML Form
+          </button>
+        </div>
+
+        <input id="beautiful-form-upload" type="file" accept=".html,.htm" class="hidden" onchange="importBeautifulFormFile(event)">
+        <input id="word-upload" type="file" accept=".doc,.docx,.html,.htm,.txt" class="hidden" onchange="importWordFile(event)">
+      </div>
+
+      <p class="text-center text-sm text-slate-500 px-6 pb-6 font-semibold">
+        Beautiful .html form download opens in any browser, reads easily, includes a print button, and can be printed from the main dashboard.
+      </p>
+    </section>
+
+    <!-- Tabs -->
+    <section class="bg-white rounded-[28px] shadow-soft border border-pink-100 overflow-hidden mb-8 no-print">
+      <div class="flex flex-wrap text-purple-700 font-black">
+        <button class="tab active px-5 py-4 transition-all" onclick="showSection('timeline', this)">📅 Timeline</button>
+        <button class="tab px-5 py-4 transition-all" onclick="showSection('budget', this)">💰 Budget</button>
+        <button class="tab px-5 py-4 transition-all" onclick="showSection('guests', this)">👥 Guests</button>
+        <button class="tab px-5 py-4 transition-all" onclick="showSection('vendors', this)">🏪 Vendors</button>
+        <button class="tab px-5 py-4 transition-all" onclick="showSection('ceremony', this)">💒 Ceremony</button>
+        <button class="tab px-5 py-4 transition-all" onclick="showSection('reception', this)">🥂 Reception</button>
+        <button class="tab px-5 py-4 transition-all" onclick="showSection('attire', this)">👗 Attire &amp; Beauty</button>
+        <button class="tab px-5 py-4 transition-all" onclick="showSection('checklist', this)">✅ Checklist</button>
+        <button class="tab px-5 py-4 transition-all" onclick="showSection('goals', this)">🎯 Goals</button>
+      </div>
+    </section>
+
+    <div id="timeline" class="section active"></div>
+    <div id="budget" class="section"></div>
+    <div id="guests" class="section"></div>
+    <div id="vendors" class="section"></div>
+    <div id="ceremony" class="section"></div>
+    <div id="reception" class="section"></div>
+    <div id="attire" class="section"></div>
+    <div id="checklist" class="section"></div>
+    <div id="goals" class="section"></div>
+  </div>
+
+<script>
+let counters = {
+  timeline: 0, budget: 0, guests: 0, vendors: 0, ceremony: 0,
+  reception: 0, attire: 0, checklist: 0, goals: 0
+};
+
+const sectionData = {
+  timeline: {
+    title: 'Wedding Timeline',
+    icon: '📅',
+    headClass: 'section-head-timeline',
+    headers: ['✓', 'Timeline Task', 'Deadline Date', 'Notes', 'Actions'],
+    rows: [
+      ['Choose wedding date', '', 'Confirm ceremony and reception date'],
+      ['Book venue', '', 'Confirm availability and deposit'],
+      ['Send invitations', '', 'Include RSVP date']
+    ]
+  },
+  budget: {
+    title: 'Budget Tracker',
+    icon: '💰',
+    headClass: 'section-head-budget',
+    headers: ['✓', 'Budget Item', 'Planned ($)', 'Spent ($)', 'Actions'],
+    rows: [
+      ['Venue', '6000', '0'],
+      ['Catering', '4000', '0'],
+      ['Photography', '2000', '0']
+    ]
+  },
+  guests: {
+    title: 'Guest List & RSVP',
+    icon: '👥',
+    headClass: 'section-head-guests',
+    headers: ['✓', 'Guest / Group', 'RSVP Status', 'Notes', 'Actions'],
+    rows: [
+      ['Bride Family', 'Pending', 'Invite list'],
+      ['Groom Family', 'Pending', 'Invite list'],
+      ['Friends', 'Pending', 'Send reminder']
+    ]
+  },
+  vendors: {
+    title: 'Vendor Contacts',
+    icon: '🏪',
+    headClass: 'section-head-vendors',
+    headers: ['✓', 'Vendor', 'Contact / Phone', 'Service', 'Actions'],
+    rows: [
+      ['Photographer', 'Contact details', 'Photography'],
+      ['Florist', 'Contact details', 'Flowers'],
+      ['DJ / Music', 'Contact details', 'Music']
+    ]
+  },
+  ceremony: {
+    title: 'Ceremony Plan',
+    icon: '💒',
+    headClass: 'section-head-ceremony',
+    headers: ['✓', 'Ceremony Item', 'Time', 'Notes', 'Actions'],
+    rows: [
+      ['Processional', '', 'Entrance order'],
+      ['Vows', '', 'Prepare vows'],
+      ['Ring exchange', '', 'Confirm rings']
+    ]
+  },
+  reception: {
+    title: 'Reception Plan',
+    icon: '🥂',
+    headClass: 'section-head-reception',
+    headers: ['✓', 'Reception Item', 'Time', 'Notes', 'Actions'],
+    rows: [
+      ['Cocktail hour', '', 'Drinks and appetizers'],
+      ['Dinner service', '', 'Meal timing'],
+      ['First dance', '', 'Song selected']
+    ]
+  },
+  attire: {
+    title: 'Attire & Beauty',
+    icon: '👗',
+    headClass: 'section-head-attire',
+    headers: ['✓', 'Attire / Beauty Item', 'Deadline Date', 'Notes', 'Actions'],
+    rows: [
+      ['Wedding dress', '', 'Fitting appointment'],
+      ['Suit / Tux', '', 'Measurements'],
+      ['Hair and makeup', '', 'Trial appointment']
+    ]
+  },
+  checklist: {
+    title: 'Final Wedding Checklist',
+    icon: '✅',
+    headClass: 'section-head-checklist',
+    headers: ['✓', 'Checklist Item', 'Deadline Date', 'Notes', 'Actions'],
+    rows: [
+      ['Confirm vendors', '', 'Final confirmations'],
+      ['Prepare emergency kit', '', 'Wedding day bag'],
+      ['Pack honeymoon bag', '', 'Travel documents']
+    ]
+  },
+  goals: {
+    title: 'Wedding Goals & Deadlines',
+    icon: '🎯',
+    headClass: 'section-head-goals',
+    headers: ['✓', 'Goal', 'Target / Deadline Date', 'Notes', 'Actions'],
+    rows: [
+      ['Finalize guest list', '', 'Confirm final count'],
+      ['Stay within budget', '', 'Track every expense'],
+      ['Complete wedding checklist', '', 'Review weekly']
+    ]
+  }
+};
+
+window.addEventListener('DOMContentLoaded', function() {
+  buildAllSections();
+  updateProgress();
+  updateBudget();
+});
+
+function buildAllSections() {
+  Object.keys(sectionData).forEach(sectionId => {
+    const data = sectionData[sectionId];
+    const section = document.getElementById(sectionId);
+
+    section.innerHTML = `
+      <div class="bg-white rounded-[30px] shadow-2xl p-6 md:p-8 border border-pink-100 mb-8">
+        <div class="${data.headClass} rounded-[24px] p-6 mb-6 text-white flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+          <div>
+            <h2 class="text-3xl font-extrabold">${data.icon} ${data.title}</h2>
+            <p class="text-white/95 mt-1">Add, edit, check off, delete, and organize your wedding details.</p>
+          </div>
+          <button onclick="addRow('${sectionId}')" class="button-shine bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-2xl font-bold shadow-lg transition-all no-print">
+            + Add Item
+          </button>
+        </div>
+
+        <div class="hidden md:grid grid-cols-12 gap-4 p-4 rounded-2xl bg-[#f7eff9] text-purple-800 font-bold mb-4">
+          <div class="col-span-1 text-center">${data.headers[0]}</div>
+          <div class="col-span-4">${data.headers[1]}</div>
+          <div class="col-span-2 text-center">${data.headers[2]}</div>
+          <div class="col-span-3 text-center">${data.headers[3]}</div>
+          <div class="col-span-2 text-center">${data.headers[4]}</div>
+        </div>
+
+        <div id="${sectionId}-items" class="space-y-3"></div>
+      </div>
+    `;
+
+    data.rows.forEach(row => createRow(sectionId, row));
+  });
+}
+
+function createRow(sectionId, rowValues) {
+  counters[sectionId]++;
+  const container = document.getElementById(sectionId + '-items');
+  const item = document.createElement('div');
+  item.className = 'planner-item fade-in';
+  item.setAttribute('data-section', sectionId);
+
+  item.innerHTML = `
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-3 md:gap-4 p-4 bg-gradient-to-r from-white to-[#fff9fc] rounded-[24px] border-2 border-[#f3d5e8] hover:shadow-lg transition-all">
+      <div class="md:col-span-1 flex items-center justify-start md:justify-center gap-2">
+        <span class="md:hidden font-bold text-slate-600">Done:</span>
+        <input type="checkbox" class="task-check w-6 h-6 rounded-lg accent-pink-600" onchange="updateProgress()">
+      </div>
+
+      <div class="md:col-span-4">
+        <label class="md:hidden text-sm font-bold text-purple-700">Item</label>
+        ${buildMainField(sectionId, rowValues[0])}
+      </div>
+
+      <div class="md:col-span-2">
+        <label class="md:hidden text-sm font-bold text-purple-700">Detail</label>
+        ${buildSecondField(sectionId, rowValues[1])}
+      </div>
+
+      <div class="md:col-span-3">
+        <label class="md:hidden text-sm font-bold text-purple-700">Notes / Option</label>
+        ${buildThirdField(sectionId, rowValues[2])}
+      </div>
+
+      <div class="md:col-span-2 flex justify-center">
+        <button onclick="deleteRow(this)" class="text-red-500 hover:text-red-700 px-4 py-2 rounded-xl hover:bg-red-50 font-bold transition-all no-print">🗑 Delete</button>
+      </div>
+    </div>
+  `;
+
+  container.appendChild(item);
+}
+
+function buildMainField(sectionId, value) {
+  const mainOptions = {
+    timeline: [
+      'Choose wedding date', 'Create wedding vision board', 'Set wedding budget', 'Book ceremony venue', 'Book reception venue',
+      'Hire wedding planner', 'Create guest list', 'Send save-the-dates', 'Send invitations', 'Track RSVPs',
+      'Schedule dress fitting', 'Book photographer', 'Book caterer', 'Book florist', 'Plan honeymoon',
+      'Finalize wedding timeline', 'Other'
+    ],
+    budget: [
+      'Venue', 'Catering', 'Photography', 'Videography', 'Wedding Dress',
+      'Suit / Tux', 'Flowers', 'Decorations', 'Music / DJ', 'Wedding Planner',
+      'Cake', 'Invitations', 'Transportation', 'Hair and Makeup', 'Rings',
+      'Honeymoon', 'Other'
+    ],
+    guests: [
+      'Bride Family', 'Groom Family', 'Parents', 'Siblings', 'Grandparents',
+      'Aunts / Uncles', 'Cousins', 'Close Friends', 'Work Friends', 'Church / Community',
+      'Children', 'VIP Guests', 'Out-of-town Guests', 'Plus Ones', 'Wedding Party',
+      'Special Guests', 'Other'
+    ],
+    vendors: [
+      'Photographer', 'Videographer', 'Caterer', 'Florist', 'DJ / Music',
+      'Wedding Planner', 'Venue Coordinator', 'Officiant', 'Cake Baker', 'Decorator',
+      'Hair Stylist', 'Makeup Artist', 'Transportation', 'Stationery Designer', 'Rental Company',
+      'Honeymoon Agent', 'Other'
+    ],
+    ceremony: [
+      'Processional', 'Opening prayer / welcome', 'Scripture / reading', 'Vows', 'Ring exchange',
+      'Unity candle / sand', 'Special song', 'Family blessing', 'Marriage declaration', 'First kiss',
+      'Signing documents', 'Recessional', 'Ushers', 'Aisle decor', 'Ceremony seating',
+      'Ceremony program', 'Other'
+    ],
+    reception: [
+      'Cocktail hour', 'Grand entrance', 'First dance', 'Parent dances', 'Dinner service',
+      'Cake cutting', 'Speeches / Toasts', 'Bouquet toss', 'Garter toss', 'Dance floor opens',
+      'Photo booth', 'Guest book', 'Dessert table', 'Send-off', 'Clean-up',
+      'Reception seating', 'Other'
+    ],
+    attire: [
+      'Wedding dress', 'Veil', 'Shoes', 'Jewelry', 'Hair trial',
+      'Makeup trial', 'Bridesmaids dresses', 'Groom suit / tux', 'Groomsmen suits', 'Flower girl outfit',
+      'Ring bearer outfit', 'Alterations', 'Final fitting', 'Emergency kit', 'Beauty appointment',
+      'Getting-ready outfit', 'Other'
+    ],
+    checklist: [
+      'Confirm vendors', 'Final guest count', 'Create seating chart', 'Prepare vows', 'Pick up rings',
+      'Pack wedding day bag', 'Prepare emergency kit', 'Confirm transportation', 'Print programs', 'Prepare tips / payments',
+      'Confirm honeymoon documents', 'Prepare marriage license', 'Assign helper roles', 'Finalize playlist', 'Final venue walkthrough',
+      'Pack honeymoon bag', 'Other'
+    ],
+    goals: [
+      'Finalize guest list', 'Stay within budget', 'Complete checklist', 'Book all vendors', 'Finalize ceremony plan',
+      'Finalize reception plan', 'Complete attire fittings', 'Send all invitations', 'Confirm RSVPs', 'Plan honeymoon',
+      'Complete seating chart', 'Prepare wedding vows', 'Finish decor plan', 'Confirm timeline', 'Prepare backup plan',
+      'Enjoy stress-free wedding day', 'Other'
+    ]
+  };
+
+  return buildSelectWithOther('field-main', value, mainOptions[sectionId] || ['Planner Item', 'Checklist Item', 'Other']);
+}
+
+function buildSecondField(sectionId, value) {
+  if (['timeline', 'attire', 'checklist', 'goals'].includes(sectionId)) {
+    return `<input type="date" value="${toDateValue(value)}" class="field-second w-full px-3 py-3 rounded-2xl border border-pink-100 text-center focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white" oninput="updateBudget()">`;
+  }
+
+  if (['ceremony', 'reception'].includes(sectionId)) {
+    return `<input type="time" value="${toTimeValue(value)}" class="field-second w-full px-3 py-3 rounded-2xl border border-pink-100 text-center focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white" oninput="updateBudget()">`;
+  }
+
+  if (sectionId === 'guests') {
+    return buildSelectWithOther('field-second', value, [
+      'Pending', 'Confirmed', 'Declined', 'Maybe', 'Invited',
+      'Not Invited Yet', 'Needs Follow-up', 'No Response', 'Attending Alone', 'Bringing Guest',
+      'Bringing Children', 'VIP Guest', 'Family', 'Friend', 'Out-of-town',
+      'Special Note', 'Other'
+    ], 'updateBudget()');
+  }
+
+  if (sectionId === 'budget') {
+    return `<input type="number" min="0" step="0.01" value="${numberOnly(value)}" class="field-second w-full px-3 py-3 rounded-2xl border border-pink-100 text-center focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white" oninput="updateBudget()">`;
+  }
+
+  return `<input type="text" value="${escapeAttribute(value)}" class="field-second w-full px-3 py-3 rounded-2xl border border-pink-100 text-center focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white" oninput="updateBudget()">`;
+}
+
+function buildThirdField(sectionId, value) {
+  if (sectionId === 'budget') {
+    return `<input type="number" min="0" step="0.01" value="${numberOnly(value)}" class="field-third w-full px-3 py-3 rounded-2xl border border-pink-100 text-center focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white" oninput="updateBudget()">`;
+  }
+
+  if (sectionId === 'vendors') {
+    return buildSelectWithOther('field-third', value, [
+      'Photography', 'Videography', 'Catering', 'Flowers', 'Music',
+      'Venue', 'Officiant', 'Cake', 'Decor', 'Beauty',
+      'Transportation', 'Rentals', 'Stationery', 'Planning', 'Honeymoon',
+      'Other'
+    ], 'updateBudget()');
+  }
+
+  if (sectionId === 'checklist') {
+    return buildSelectWithOther('field-third', value, [
+      'Not Started', 'In Progress', 'Completed', 'Waiting', 'Needs Follow-up',
+      'Urgent', 'This Week', 'Next Week', 'Assigned', 'Confirmed',
+      'Paid', 'Booked', 'Printed', 'Packed', 'Reviewed',
+      'Other'
+    ], 'updateBudget()');
+  }
+
+  return `<input type="text" value="${escapeAttribute(value)}" class="field-third w-full px-3 py-3 rounded-2xl border border-pink-100 text-center focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white" oninput="updateBudget()">`;
+}
+
+function buildSelectWithOther(className, value, options, changeHandler = '') {
+  const safeValue = value || '';
+  const hasExactOption = options.includes(safeValue);
+  const shouldShowOtherInput = safeValue && !hasExactOption;
+  const selectedValue = shouldShowOtherInput ? 'Other' : safeValue;
+  const uniqueId = 'other_' + Math.random().toString(36).slice(2, 10);
+  const allOptions = [...options];
+  if (!allOptions.includes('Other')) allOptions.push('Other');
+
+  const optionHTML = allOptions.map(option => {
+    const selected = option === selectedValue ? 'selected' : '';
+    return `<option value="${escapeAttribute(option)}" ${selected}>${escapeHTML(option)}</option>`;
+  }).join('');
+
+  const extraHandler = changeHandler ? `${changeHandler}; ` : '';
+
+  return `
+    <div class="space-y-2">
+      <select class="${className} dropdown-source w-full px-3 py-3 rounded-2xl border border-pink-100 text-center font-semibold focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white"
+        data-other-target="${uniqueId}"
+        onchange="${extraHandler}toggleOtherInput(this)">
+        ${optionHTML}
+      </select>
+
+      <input id="${uniqueId}" type="text"
+        value="${shouldShowOtherInput ? escapeAttribute(safeValue) : ''}"
+        placeholder="Type other option here..."
+        class="other-input ${className} ${selectedValue === 'Other' ? '' : 'hidden'} w-full px-3 py-3 rounded-2xl border border-pink-200 text-center font-semibold focus:outline-none focus:ring-2 focus:ring-pink-400 bg-white"
+        oninput="${changeHandler || ''}">
+    </div>
+  `;
+}
+
+function toggleOtherInput(selectElement) {
+  const targetId = selectElement.getAttribute('data-other-target');
+  const otherInput = document.getElementById(targetId);
+  if (!otherInput) return;
+
+  if (selectElement.value === 'Other') {
+    otherInput.classList.remove('hidden');
+    otherInput.focus();
+  } else {
+    otherInput.classList.add('hidden');
+    otherInput.value = '';
+  }
+}
+
+function getFieldValue(container, selector) {
+  const field = container.querySelector(selector);
+  if (!field) return '';
+
+  if (field.tagName === 'SELECT' && field.value === 'Other') {
+    const wrapper = field.closest('div');
+    const otherInput = wrapper ? wrapper.querySelector('.other-input') : null;
+    return otherInput && otherInput.value.trim() ? otherInput.value.trim() : 'Other';
+  }
+  return field.value || '';
+}
+
+function toDateValue(value) {
+  if (!value) return '';
+  const text = String(value).trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(text)) return text;
+  return '';
+}
+
+function toTimeValue(value) {
+  if (!value) return '';
+  const text = String(value).trim();
+
+  const match24 = text.match(/^([01]?\d|2[0-3]):([0-5]\d)$/);
+  if (match24) return `${match24[1].padStart(2, '0')}:${match24[2]}`;
+
+  const match12 = text.match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+  if (match12) {
+    let hour = parseInt(match12[1], 10);
+    const minute = match12[2];
+    const period = match12[3].toUpperCase();
+    if (period === 'PM' && hour < 12) hour += 12;
+    if (period === 'AM' && hour === 12) hour = 0;
+    return `${String(hour).padStart(2, '0')}:${minute}`;
+  }
+  return '';
+}
+
+function numberOnly(value) {
+  const number = parseFloat(String(value || '').replace(/[^0-9.-]/g, ''));
+  return isNaN(number) ? '0' : String(number);
+}
+
+function addRow(sectionId) {
+  const defaults = {
+    timeline: ['Choose wedding date', '', 'Notes'],
+    budget: ['Venue', '0', '0'],
+    guests: ['Bride Family', 'Pending', 'Notes'],
+    vendors: ['Photographer', 'Contact details', 'Photography'],
+    ceremony: ['Processional', '', 'Notes'],
+    reception: ['Cocktail hour', '', 'Notes'],
+    attire: ['Wedding dress', '', 'Notes'],
+    checklist: ['Confirm vendors', '', 'Not Started'],
+    goals: ['Finalize guest list', '', 'Notes']
+  };
+  createRow(sectionId, defaults[sectionId]);
+  updateProgress();
+  updateBudget();
+}
+
+function deleteRow(button) {
+  const item = button.closest('.planner-item');
+  item.classList.add('slide-out');
+  setTimeout(() => {
+    item.remove();
+    updateProgress();
+    updateBudget();
+  }, 180);
+}
+
+function showSection(sectionId, button) {
+  document.querySelectorAll('.section').forEach(section => section.classList.remove('active'));
+  document.getElementById(sectionId).classList.add('active');
+
+  document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+  button.classList.add('active');
+}
+
+function updateProgress() {
+  const allChecks = document.querySelectorAll('.planner-item .task-check');
+  const checked = document.querySelectorAll('.planner-item .task-check:checked');
+
+  const total = allChecks.length;
+  const completed = checked.length;
+  const pending = total - completed;
+  const percentage = total > 0 ? Math.round((completed / total) * 100) : 0;
+
+  document.getElementById('progress-percentage').textContent = percentage + '%';
+  document.getElementById('progress-bar').style.width = percentage + '%';
+  document.getElementById('progress-text').textContent = completed + ' of ' + total + ' items completed';
+  document.getElementById('completed-count').textContent = completed;
+  document.getElementById('pending-count').textContent = pending;
+}
+
+function updateBudget() {
+  let planned = 0;
+  let spent = 0;
+
+  document.querySelectorAll('#budget-items .planner-item').forEach(item => {
+    planned += parseMoney(getFieldValue(item, '.field-second') || '0');
+    spent += parseMoney(getFieldValue(item, '.field-third') || '0');
+  });
+
+  const left = planned - spent;
+  document.getElementById('budget-total').textContent = formatMoney(planned);
+  document.getElementById('budget-spent').textContent = formatMoney(spent);
+  document.getElementById('budget-left').textContent = formatMoney(left);
+}
+
+function parseMoney(value) {
+  const number = parseFloat(String(value).replace(/[^0-9.-]/g, ''));
+  return isNaN(number) ? 0 : number;
+}
+
+function formatMoney(value) {
+  return '$' + value.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function getPlannerData() {
+  const data = [];
+  Object.keys(sectionData).forEach(sectionId => {
+    document.querySelectorAll('#' + sectionId + '-items .planner-item').forEach(item => {
+      data.push({
+        section: sectionData[sectionId].title,
+        completed: item.querySelector('.task-check')?.checked ? 'Yes' : 'No',
+        item: getFieldValue(item, '.field-main'),
+        detail: getFieldValue(item, '.field-second'),
+        notes: getFieldValue(item, '.field-third')
+      });
+    });
+  });
+  return data;
+}
+
+function exportToCSV() {
+  const weddingName = document.getElementById('wedding-name').value || 'Wedding Planner';
+  const weddingDate = document.getElementById('wedding-date').value || '';
+  const rows = getPlannerData();
+
+  const csvLines = [];
+  csvLines.push('ALL IN ONE WEDDING INTERACTIVE PLANNER APP');
+  csvLines.push('Wedding Name,' + escapeCSV(weddingName));
+  csvLines.push('Wedding Date,' + escapeCSV(weddingDate));
+  csvLines.push('Generated,' + escapeCSV(new Date().toLocaleDateString()));
+  csvLines.push('');
+  csvLines.push('Section,Completed,Item,Detail,Notes');
+
+  rows.forEach(row => {
+    csvLines.push([row.section, row.completed, row.item, row.detail, row.notes].map(escapeCSV).join(','));
+  });
+
+  csvLines.push('');
+  csvLines.push('Budget Summary');
+  csvLines.push('Total Budget,' + escapeCSV(document.getElementById('budget-total').textContent));
+  csvLines.push('Total Spent,' + escapeCSV(document.getElementById('budget-spent').textContent));
+  csvLines.push('Remaining,' + escapeCSV(document.getElementById('budget-left').textContent));
+
+  downloadFile(csvLines.join('\r\n'), 'All_In_One_Wedding_Planner_Google_Sheet_' + todayStamp() + '.csv', 'text/csv;charset=utf-8;');
+}
+
+function exportToWord() {
+  const weddingName = document.getElementById('wedding-name').value || 'Wedding Planner';
+  const weddingDate = document.getElementById('wedding-date').value || '';
+  const rows = getPlannerData();
+
+  let tableRows = rows.map(row => `
+    <tr>
+      <td>${escapeHTML(row.section)}</td>
+      <td>${escapeHTML(row.completed)}</td>
+      <td>${escapeHTML(row.item)}</td>
+      <td>${escapeHTML(row.detail)}</td>
+      <td>${escapeHTML(row.notes)}</td>
+    </tr>
+  `).join('');
+
+  const wordContent = `
+    <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word">
+    <head>
+      <meta charset="UTF-8">
+      <title>All in One Wedding Interactive Planner App</title>
+      <style>
+        body { font-family: Arial, sans-serif; color: #1f2937; }
+        h1 { color: #c026d3; }
+        table { border-collapse: collapse; width: 100%; margin-top: 16px; }
+        th { background: #f472b6; color: white; }
+        th, td { border: 1px solid #cbd5e1; padding: 8px; text-align: left; }
+      </style>
+    </head>
+    <body>
+      <h1>All in One Wedding Interactive Planner App</h1>
+      <p><strong>Wedding Name:</strong> ${escapeHTML(weddingName)}</p>
+      <p><strong>Wedding Date:</strong> ${escapeHTML(weddingDate)}</p>
+      <p><strong>Generated:</strong> ${escapeHTML(new Date().toLocaleDateString())}</p>
+
+      <table>
+        <tr><th>Section</th><th>Completed</th><th>Item</th><th>Detail</th><th>Notes / Option</th></tr>
+        ${tableRows}
+      </table>
+
+      <h2>Budget Summary</h2>
+      <table>
+        <tr><td>Total Budget</td><td>${escapeHTML(document.getElementById('budget-total').textContent)}</td></tr>
+        <tr><td>Total Spent</td><td>${escapeHTML(document.getElementById('budget-spent').textContent)}</td></tr>
+        <tr><td>Remaining</td><td>${escapeHTML(document.getElementById('budget-left').textContent)}</td></tr>
+      </table>
+    </body>
+    </html>
+  `;
+
+  downloadFile(wordContent, 'All_In_One_Wedding_Planner_Word_Google_Docs_' + todayStamp() + '.doc', 'application/msword;charset=utf-8;');
+}
+
+function importWordFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(e.target.result, 'text/html');
+    const importedRows = [];
+
+    Array.from(doc.querySelectorAll('tr')).forEach(tr => {
+      const cells = Array.from(tr.querySelectorAll('td')).map(td => td.textContent.trim());
+      if (cells.length >= 5 && cells[0] !== 'Section') importedRows.push(cells);
+    });
+
+    if (importedRows.length === 0) {
+      alert('No planner table was found. Please upload a Word/Google Docs file exported from this planner.');
+    } else {
+      importPlannerRows(importedRows);
+      alert('Word/Google Docs file uploaded successfully. Your wedding planner has been updated.');
+    }
+    event.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+function importPlannerRows(rows) {
+  Object.keys(sectionData).forEach(sectionId => {
+    const container = document.getElementById(sectionId + '-items');
+    if (container) container.innerHTML = '';
+  });
+
+  rows.forEach(row => {
+    const sectionId = findSectionIdByTitle(row[0] || '');
+    if (sectionId) {
+      createRow(sectionId, [row[2] || '', row[3] || '', row[4] || '']);
+      const container = document.getElementById(sectionId + '-items');
+      const lastItem = container.lastElementChild;
+      const checkbox = lastItem ? lastItem.querySelector('.task-check') : null;
+      if (checkbox && String(row[1] || '').toLowerCase() === 'yes') checkbox.checked = true;
+    }
+  });
+
+  updateProgress();
+  updateBudget();
+}
+
+function findSectionIdByTitle(title) {
+  const cleanTitle = String(title).toLowerCase().trim();
+  return Object.keys(sectionData).find(sectionId => sectionData[sectionId].title.toLowerCase().trim() === cleanTitle);
+}
+
+function saveBeautifulFormToDevice() {
+  const weddingName = document.getElementById('wedding-name').value || 'Wedding Planner';
+  const weddingDate = document.getElementById('wedding-date').value || '';
+  const rows = getPlannerData();
+
+  const backupPayload = {
+    plannerType: 'All in One Wedding Interactive Planner App',
+    version: '1.0',
+    weddingName,
+    weddingDate,
+    rows,
+    savedAt: new Date().toISOString()
+  };
+
+  const backupJSON = JSON.stringify(backupPayload).replace(/</g, '\\u003c');
+
+  const groupedRows = {};
+  rows.forEach(row => {
+    if (!groupedRows[row.section]) groupedRows[row.section] = [];
+    groupedRows[row.section].push(row);
+  });
+
+  let sectionsHTML = '';
+  Object.keys(groupedRows).forEach(sectionName => {
+    const sectionRows = groupedRows[sectionName].map(row => `
+      <tr>
+        <td>${escapeHTML(row.completed)}</td>
+        <td>${escapeHTML(row.item)}</td>
+        <td>${escapeHTML(row.detail)}</td>
+        <td>${escapeHTML(row.notes)}</td>
+      </tr>
+    `).join('');
+
+    sectionsHTML += `
+      <section class="planner-section">
+        <h2>${escapeHTML(sectionName)}</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Completed</th>
+              <th>Item</th>
+              <th>Detail</th>
+              <th>Notes / Option</th>
+            </tr>
+          </thead>
+          <tbody>${sectionRows}</tbody>
+        </table>
+      </section>
+    `;
+  });
+
+  const beautifulForm = `
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Saved All in One Wedding Interactive Planner App</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 28px;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #fff1f6 0%, #fdf4ff 50%, #eef4ff 100%);
+      color: #1f2937;
+    }
+    .page {
+      max-width: 1100px;
+      margin: auto;
+      background: #fff;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(236,72,153,.14);
+      border: 2px solid #f9d0e7;
+    }
+    .header {
+      background: linear-gradient(135deg, #ff6b9a 0%, #ef4cae 25%, #9b4dff 62%, #4f76ff 100%);
+      color: white;
+      text-align: center;
+      padding: 36px 28px;
+    }
+    .header h1 { margin: 0; font-size: 38px; }
+    .header p { margin: 10px 0 0; font-size: 18px; }
+    .printbar {
+      text-align: center;
+      padding: 18px;
+      background: #fff7fb;
+      border-bottom: 1px solid #f9d0e7;
+    }
+    .printbar button {
+      border: none;
+      padding: 14px 26px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #ec4899, #7c3aed);
+      color: #fff;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      padding: 22px;
+      background: #fff7fb;
+    }
+    .card {
+      background: white;
+      border-radius: 18px;
+      padding: 18px;
+      border: 2px solid #f9d0e7;
+    }
+    .card-title { color: #be185d; font-weight: bold; margin-bottom: 8px; }
+    .card-value { font-size: 22px; font-weight: bold; }
+    .note {
+      text-align: center;
+      color: #be185d;
+      font-size: 14px;
+      font-weight: bold;
+      padding: 0 22px 20px;
+    }
+    .planner-section { padding: 24px; border-top: 1px solid #fce7f3; }
+    .planner-section h2 { color: #9333ea; margin: 0 0 14px; font-size: 26px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid #edd5f7;
+      overflow: hidden;
+      border-radius: 14px;
+    }
+    th {
+      background: #f5e8fb;
+      color: #7e22ce;
+      text-align: left;
+      padding: 12px;
+      font-size: 14px;
+    }
+    td {
+      padding: 12px;
+      border-top: 1px solid #f3e8ff;
+      font-size: 14px;
+    }
+    tr:nth-child(even) td { background: #fff9fc; }
+    .footer {
+      padding: 20px;
+      text-align: center;
+      color: #6b7280;
+      background: #fafafa;
+      font-size: 13px;
+    }
+    @media print {
+      body { background: white; padding: 0; }
+      .page { box-shadow: none; border: none; }
+      .printbar { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="header">
+      <h1>💍 All in One Wedding Interactive Planner App</h1>
+      <p>Saved beautiful form — easy to read, print, and keep as a backup</p>
+    </div>
+
+    <div class="printbar">
+      <button onclick="window.print()">🖨️ Print This Beautiful Form</button>
+    </div>
+
+    <div class="summary">
+      <div class="card"><div class="card-title">Wedding Name</div><div class="card-value">${escapeHTML(weddingName)}</div></div>
+      <div class="card"><div class="card-title">Wedding Date</div><div class="card-value">${escapeHTML(weddingDate || 'Not set')}</div></div>
+      <div class="card"><div class="card-title">Progress</div><div class="card-value">${escapeHTML(document.getElementById('progress-percentage').textContent)}</div></div>
+      <div class="card"><div class="card-title">Budget Left</div><div class="card-value">${escapeHTML(document.getElementById('budget-left').textContent)}</div></div>
+    </div>
+
+    <div class="summary">
+      <div class="card"><div class="card-title">Completed</div><div class="card-value">${escapeHTML(document.getElementById('completed-count').textContent)}</div></div>
+      <div class="card"><div class="card-title">Pending</div><div class="card-value">${escapeHTML(document.getElementById('pending-count').textContent)}</div></div>
+      <div class="card"><div class="card-title">Total Budget</div><div class="card-value">${escapeHTML(document.getElementById('budget-total').textContent)}</div></div>
+      <div class="card"><div class="card-title">Total Spent</div><div class="card-value">${escapeHTML(document.getElementById('budget-spent').textContent)}</div></div>
+    </div>
+
+    <div class="note">You can open this file in any browser, read it easily, print it, or upload it back into your planner from your device.</div>
+
+    ${sectionsHTML}
+
+    <div class="footer">Saved from the All in One Wedding Interactive Planner App.</div>
+  </div>
+
+  <script id="planner-backup-data" type="application/json">${backupJSON}<\/script>
+</body>
+</html>
+`;
+
+  const safeName = (weddingName || 'All_In_One_Wedding_Planner')
+    .replace(/[^a-z0-9_-]+/gi, '_')
+    .replace(/^_+|_+$/g, '');
+
+  downloadFile(beautifulForm, safeName + '_Beautiful_Planner_Form_' + todayStamp() + '.html', 'text/html;charset=utf-8;');
+  alert('Your beautiful wedding form has been downloaded to your device. You can open it in any browser, print it, and keep it as a backup.');
+}
+
+
+function printBeautifulFormFromDashboard() {
+  const weddingName = document.getElementById('wedding-name').value || 'Wedding Planner';
+  const weddingDate = document.getElementById('wedding-date').value || '';
+  const rows = getPlannerData();
+
+  const groupedRows = {};
+  rows.forEach(row => {
+    if (!groupedRows[row.section]) groupedRows[row.section] = [];
+    groupedRows[row.section].push(row);
+  });
+
+  let sectionsHTML = '';
+  Object.keys(groupedRows).forEach(sectionName => {
+    const sectionRows = groupedRows[sectionName].map(row => `
+      <tr>
+        <td>${escapeHTML(row.completed)}</td>
+        <td>${escapeHTML(row.item)}</td>
+        <td>${escapeHTML(row.detail)}</td>
+        <td>${escapeHTML(row.notes)}</td>
+      </tr>
+    `).join('');
+
+    sectionsHTML += `
+      <section class="planner-section">
+        <h2>${escapeHTML(sectionName)}</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Completed</th>
+              <th>Item</th>
+              <th>Detail</th>
+              <th>Notes / Option</th>
+            </tr>
+          </thead>
+          <tbody>${sectionRows}</tbody>
+        </table>
+      </section>
+    `;
+  });
+
+  const printHTML = `
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Print All in One Wedding Interactive Planner App</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 28px;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #fff1f6 0%, #fdf4ff 50%, #eef4ff 100%);
+      color: #1f2937;
+    }
+    .page {
+      max-width: 1100px;
+      margin: auto;
+      background: #fff;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(236,72,153,.14);
+      border: 2px solid #f9d0e7;
+    }
+    .header {
+      background: linear-gradient(135deg, #ff6b9a 0%, #ef4cae 25%, #9b4dff 62%, #4f76ff 100%);
+      color: white;
+      text-align: center;
+      padding: 36px 28px;
+    }
+    .header h1 { margin: 0; font-size: 38px; }
+    .header p { margin: 10px 0 0; font-size: 18px; }
+    .printbar {
+      text-align: center;
+      padding: 18px;
+      background: #fff7fb;
+      border-bottom: 1px solid #f9d0e7;
+    }
+    .printbar button {
+      border: none;
+      padding: 14px 26px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, #ec4899, #7c3aed);
+      color: #fff;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      padding: 22px;
+      background: #fff7fb;
+    }
+    .card {
+      background: white;
+      border-radius: 18px;
+      padding: 18px;
+      border: 2px solid #f9d0e7;
+    }
+    .card-title { color: #be185d; font-weight: bold; margin-bottom: 8px; }
+    .card-value { font-size: 22px; font-weight: bold; }
+    .note {
+      text-align: center;
+      color: #be185d;
+      font-size: 14px;
+      font-weight: bold;
+      padding: 0 22px 20px;
+    }
+    .planner-section { padding: 24px; border-top: 1px solid #fce7f3; page-break-inside: avoid; }
+    .planner-section h2 { color: #9333ea; margin: 0 0 14px; font-size: 26px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid #edd5f7;
+      overflow: hidden;
+      border-radius: 14px;
+    }
+    th {
+      background: #f5e8fb;
+      color: #7e22ce;
+      text-align: left;
+      padding: 12px;
+      font-size: 14px;
+    }
+    td {
+      padding: 12px;
+      border-top: 1px solid #f3e8ff;
+      font-size: 14px;
+    }
+    tr:nth-child(even) td { background: #fff9fc; }
+    .footer {
+      padding: 20px;
+      text-align: center;
+      color: #6b7280;
+      background: #fafafa;
+      font-size: 13px;
+    }
+    @media print {
+      body { background: white; padding: 0; }
+      .page { box-shadow: none; border: none; }
+      .printbar { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="header">
+      <h1>💍 All in One Wedding Interactive Planner App</h1>
+      <p>Printable beautiful form — all your saved wedding information in one easy-to-read view</p>
+    </div>
+
+    <div class="printbar">
+      <button onclick="window.print()">🖨️ Print This Beautiful Form</button>
+    </div>
+
+    <div class="summary">
+      <div class="card"><div class="card-title">Wedding Name</div><div class="card-value">${escapeHTML(weddingName)}</div></div>
+      <div class="card"><div class="card-title">Wedding Date</div><div class="card-value">${escapeHTML(weddingDate || 'Not set')}</div></div>
+      <div class="card"><div class="card-title">Progress</div><div class="card-value">${escapeHTML(document.getElementById('progress-percentage').textContent)}</div></div>
+      <div class="card"><div class="card-title">Budget Left</div><div class="card-value">${escapeHTML(document.getElementById('budget-left').textContent)}</div></div>
+    </div>
+
+    <div class="summary">
+      <div class="card"><div class="card-title">Completed</div><div class="card-value">${escapeHTML(document.getElementById('completed-count').textContent)}</div></div>
+      <div class="card"><div class="card-title">Pending</div><div class="card-value">${escapeHTML(document.getElementById('pending-count').textContent)}</div></div>
+      <div class="card"><div class="card-title">Total Budget</div><div class="card-value">${escapeHTML(document.getElementById('budget-total').textContent)}</div></div>
+      <div class="card"><div class="card-title">Total Spent</div><div class="card-value">${escapeHTML(document.getElementById('budget-spent').textContent)}</div></div>
+    </div>
+
+    <div class="note">This printable form shows the buyer's planner information in a beautiful easy-to-read HTML/PDF style.</div>
+
+    ${sectionsHTML}
+
+    <div class="footer">Printed from the All in One Wedding Interactive Planner App.</div>
+  </div>
+</body>
+</html>
+`;
+
+  const printWindow = window.open('', '_blank');
+  if (!printWindow) {
+    alert('Please allow popups to print the beautiful form.');
+    return;
+  }
+
+  printWindow.document.open();
+  printWindow.document.write(printHTML);
+  printWindow.document.close();
+  printWindow.focus();
+
+  setTimeout(() => {
+    printWindow.print();
+  }, 500);
+}
+
+
+function importBeautifulFormFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(e.target.result, 'text/html');
+      const backupNode = doc.getElementById('planner-backup-data');
+
+      if (!backupNode) {
+        alert('No saved planner data was found. Please upload a beautiful form file exported from this planner.');
+        event.target.value = '';
+        return;
+      }
+
+      const backup = JSON.parse(backupNode.textContent);
+      restorePlannerFromBeautifulBackup(backup);
+      alert('Beautiful form uploaded successfully. Your wedding planner has been restored.');
+    } catch (error) {
+      alert('Unable to upload the beautiful form. Please choose a valid beautiful form file exported from this planner.');
+    }
+    event.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+function restorePlannerFromBeautifulBackup(backup) {
+  document.getElementById('wedding-name').value = backup.weddingName || 'My Wedding Planner';
+  document.getElementById('wedding-date').value = backup.weddingDate || '';
+
+  Object.keys(sectionData).forEach(sectionId => {
+    const container = document.getElementById(sectionId + '-items');
+    if (container) container.innerHTML = '';
+  });
+
+  (backup.rows || []).forEach(row => {
+    const sectionId = findSectionIdByTitle(row.section || '');
+    if (sectionId) {
+      createRow(sectionId, [row.item || '', row.detail || '', row.notes || '']);
+      const container = document.getElementById(sectionId + '-items');
+      const lastItem = container ? container.lastElementChild : null;
+      const checkbox = lastItem ? lastItem.querySelector('.task-check') : null;
+      if (checkbox && String(row.completed || '').toLowerCase() === 'yes') checkbox.checked = true;
+    }
+  });
+
+  updateProgress();
+  updateBudget();
+}
+
+function downloadFile(content, fileName, type) {
+  const blob = new Blob([content], { type });
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  link.href = url;
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
+function todayStamp() {
+  return new Date().toISOString().split('T')[0];
+}
+
+function escapeCSV(str) {
+  if (str === null || str === undefined) return '';
+  str = str.toString();
+  if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+    return '"' + str.replace(/"/g, '""') + '"';
+  }
+  return str;
+}
+
+function escapeHTML(str) {
+  if (str === null || str === undefined) return '';
+  return str.toString()
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function escapeAttribute(str) {
+  return escapeHTML(str).replace(/`/g, '&#096;');
+}
+</script>
+</body>
+</html>
 
