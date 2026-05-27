@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Birthday Party Planner</title>
+  <title>All in One Birthday Interactive Planner App</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
@@ -24,6 +24,18 @@
     .tab.active { background: #fce7f3; color: #7e22ce; border-bottom: 4px solid #d946ef; }
     .section { display: none; }
     .section.active { display: block; }
+    .button-shine { position: relative; overflow: hidden; }
+    .button-shine::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 80%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
+      transition: .6s;
+    }
+    .button-shine:hover::after { left: 120%; }
   </style>
 </head>
 
@@ -33,8 +45,9 @@
     <!-- Header -->
     <div class="bg-white rounded-3xl shadow-2xl border border-purple-200 overflow-hidden mb-8">
       <div class="header-gradient p-8 text-center text-white">
-        <h1 class="text-4xl md:text-5xl font-extrabold mb-3">🎂 Birthday Party Planner</h1>
-        <p class="text-lg md:text-xl text-white/90">Plan the perfect celebration with ease</p>
+        <p class="inline-block px-5 py-2 rounded-full bg-white/20 text-white font-extrabold mb-4">All in One</p>
+        <h1 class="text-4xl md:text-5xl font-extrabold mb-3">🎂 All in One Birthday Interactive Planner App</h1>
+        <p class="text-lg md:text-xl text-white/90">Easy, flexible, colorful, and more visual than Excel and Google Sheets</p>
       </div>
 
       <!-- Summary Cards -->
@@ -62,14 +75,19 @@
         </div>
 
         <div class="rounded-2xl p-6 border-2 border-purple-300 bg-purple-50">
-          <p class="text-purple-700 font-semibold mb-2">Party Details</p>
+          <div class="flex items-center justify-between gap-3 mb-2">
+            <p class="text-purple-700 font-semibold">Party Details</p>
+            <button onclick="printBeautifulHTMLForm()" title="Print Beautiful HTML Form" class="w-11 h-11 rounded-full bg-white hover:bg-purple-100 text-purple-700 border-2 border-purple-200 shadow-md font-black transition-all">
+              🖨️
+            </button>
+          </div>
           <input id="party-name" class="w-full mb-2 px-3 py-2 rounded-lg border border-purple-200" value="My Birthday Party" />
           <input id="party-date" type="date" class="w-full px-3 py-2 rounded-lg border border-purple-200" />
         </div>
       </div>
 
       <!-- Export / Upload Controls -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 px-6 pb-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 px-6 pb-6">
         <button onclick="savePlannerToComputer()" class="button-shine min-h-[76px] flex items-center justify-center text-center leading-tight bg-gradient-to-r from-pink-500 via-purple-600 to-blue-600 hover:from-pink-600 hover:via-purple-700 hover:to-blue-700 text-white px-4 py-3 rounded-2xl font-black shadow-xl transition-all">
           💾 Save Beautiful Form<br>to Your Device
         </button>
@@ -90,11 +108,15 @@
           📊 Download Excel<br>Google Sheet
         </button>
 
+        <button onclick="printBeautifulHTMLForm()" class="button-shine min-h-[76px] flex items-center justify-center text-center leading-tight bg-gradient-to-r from-orange-500 via-pink-500 to-purple-700 hover:from-orange-600 hover:via-pink-600 hover:to-purple-800 text-white px-4 py-3 rounded-2xl font-black shadow-xl transition-all">
+          🖨️ Print Beautiful<br>HTML Form
+        </button>
+
         <input id="beautiful-form-upload" type="file" accept=".html,.htm" class="hidden" onchange="importBeautifulFormFile(event)">
         <input id="word-upload" type="file" accept=".doc,.html,.htm,.txt" class="hidden" onchange="importWordFile(event)">
       </div>
       <p class="text-center text-sm text-slate-500 px-6 pb-6">
-        Use dropdown menus with 15+ options and Other typing space, calendar dates, time pickers, checkboxes, Add/Delete buttons, and save/download options.
+        Main menus: 📅 Timeline, 💰 Budget, 👥 Guests, 🏪 Vendors, ⏰ Day-of, 🪑 Seating, 🎁 Gifts, 🛒 Shopping. Includes dropdown menus with 15+ options plus Other typing space, calendar dates, time pickers, checkboxes, Add/Delete buttons, Word/Google Docs, Excel/Google Sheet, Beautiful HTML form save/upload, and print.
       </p>
     </div>
 
@@ -729,7 +751,7 @@ function exportToWord() {
     <html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word">
     <head>
       <meta charset="UTF-8">
-      <title>Birthday Party Planner</title>
+      <title>All in One Birthday Interactive Planner App</title>
       <style>
         body { font-family: Arial, sans-serif; color: #1f2937; }
         h1 { color: #7e22ce; }
@@ -903,7 +925,7 @@ function savePlannerToComputer() {
   const rows = getPlannerData();
 
   const backupPayload = {
-    plannerType: 'Birthday Party Planner',
+    plannerType: 'All in One Birthday Interactive Planner App',
     version: '2.0',
     partyName,
     partyDate,
@@ -956,7 +978,7 @@ function savePlannerToComputer() {
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Saved Birthday Party Planner</title>
+  <title>Saved All in One Birthday Interactive Planner App</title>
   <style>
     body {
       margin: 0;
@@ -985,6 +1007,25 @@ function savePlannerToComputer() {
 
     .header h1 { margin: 0; font-size: 42px; letter-spacing: 1px; }
     .header p { margin: 10px 0 0; font-size: 18px; opacity: 0.95; }
+
+    .printbar {
+      text-align: center;
+      padding: 18px;
+      background: #fdf4ff;
+      border-bottom: 1px solid #e9d5ff;
+    }
+
+    .printbar button {
+      border: none;
+      padding: 14px 26px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #ec4899, #8b5cf6, #3b82f6);
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(126,34,206,.18);
+    }
 
     .summary {
       display: grid;
@@ -1051,14 +1092,19 @@ function savePlannerToComputer() {
     @media print {
       body { background: white; padding: 0; }
       .page { box-shadow: none; border: none; }
+      .printbar { display: none; }
     }
   </style>
 </head>
 <body>
   <div class="page">
     <div class="header">
-      <h1>🎂 Birthday Party Planner</h1>
+      <h1>🎂 All in One Birthday Interactive Planner App</h1>
       <p>Saved beautiful form — easy to read, print, and keep as a backup</p>
+    </div>
+
+    <div class="printbar">
+      <button onclick="window.print()">🖨️ Print This Beautiful Form</button>
     </div>
 
     <div class="summary">
@@ -1080,7 +1126,7 @@ function savePlannerToComputer() {
     ${sectionsHTML}
 
     <div class="footer">
-      Saved from the Interactive Birthday Party Planner. Keep this file on your device as a readable backup.
+      Saved from the All in One Birthday Interactive Planner App. Keep this file on your device as a readable backup.
     </div>
   </div>
 
@@ -1101,6 +1147,225 @@ function savePlannerToComputer() {
 
   alert('Your beautiful planner form has been downloaded to your device. Open it in your browser, print it, or keep it as a readable backup.');
 }
+
+
+function printBeautifulHTMLForm() {
+  const partyName = document.getElementById('party-name').value || 'Birthday Party';
+  const partyDate = document.getElementById('party-date').value || '';
+  const rows = getPlannerData();
+
+  const groupedRows = {};
+  rows.forEach(row => {
+    if (!groupedRows[row.section]) groupedRows[row.section] = [];
+    groupedRows[row.section].push(row);
+  });
+
+  let sectionsHTML = '';
+
+  Object.keys(groupedRows).forEach(sectionName => {
+    const sectionRows = groupedRows[sectionName].map(row => `
+      <tr>
+        <td>${escapeHTML(row.completed)}</td>
+        <td>${escapeHTML(row.item)}</td>
+        <td>${escapeHTML(row.detail)}</td>
+        <td>${escapeHTML(row.notes)}</td>
+      </tr>
+    `).join('');
+
+    sectionsHTML += `
+      <section class="planner-section">
+        <h2>${escapeHTML(sectionName)}</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Completed</th>
+              <th>Item</th>
+              <th>Detail</th>
+              <th>Notes / Option</th>
+            </tr>
+          </thead>
+          <tbody>${sectionRows}</tbody>
+        </table>
+      </section>
+    `;
+  });
+
+  const printableHTML = `
+<!doctype html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Print All in One Birthday Interactive Planner App</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 30px;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #fce7f3, #f5f3ff, #dbeafe);
+      color: #1f2937;
+    }
+
+    .page {
+      max-width: 1100px;
+      margin: auto;
+      background: white;
+      border-radius: 28px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(88, 28, 135, 0.18);
+      border: 2px solid #e9d5ff;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #f9a8d4 0%, #c084fc 45%, #93c5fd 100%);
+      color: white;
+      padding: 40px 30px;
+      text-align: center;
+    }
+
+    .header h1 { margin: 0; font-size: 42px; letter-spacing: 1px; }
+    .header p { margin: 10px 0 0; font-size: 18px; opacity: 0.95; }
+
+    .printbar {
+      text-align: center;
+      padding: 18px;
+      background: #fdf4ff;
+      border-bottom: 1px solid #e9d5ff;
+    }
+
+    .printbar button {
+      border: none;
+      padding: 14px 26px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #ec4899, #8b5cf6, #3b82f6);
+      color: white;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(126,34,206,.18);
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      padding: 24px;
+      background: #faf5ff;
+    }
+
+    .card {
+      background: white;
+      border-radius: 18px;
+      padding: 18px;
+      border: 2px solid #e9d5ff;
+      box-shadow: 0 8px 20px rgba(88, 28, 135, 0.08);
+    }
+
+    .card-title { font-weight: bold; color: #7e22ce; margin-bottom: 8px; font-size: 15px; }
+    .card-value { font-size: 20px; font-weight: bold; color: #111827; }
+
+    .planner-section { padding: 24px; border-top: 1px solid #f3e8ff; page-break-inside: avoid; }
+    .planner-section h2 { color: #7e22ce; font-size: 26px; margin: 0 0 14px; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 14px;
+      border: 1px solid #e9d5ff;
+    }
+
+    th {
+      background: #f3e8ff;
+      color: #581c87;
+      text-align: left;
+      padding: 12px;
+      font-size: 14px;
+    }
+
+    td {
+      padding: 12px;
+      border-top: 1px solid #f3e8ff;
+      font-size: 14px;
+    }
+
+    tr:nth-child(even) td { background: #fdf4ff; }
+
+    .small-note {
+      text-align: center;
+      padding: 0 24px 20px;
+      color: #7e22ce;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 22px;
+      color: #6b7280;
+      background: #fafafa;
+      font-size: 13px;
+    }
+
+    @media print {
+      body { background: white; padding: 0; }
+      .page { box-shadow: none; border: none; }
+      .printbar { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="header">
+      <h1>🎂 All in One Birthday Interactive Planner App</h1>
+      <p>Printable beautiful form — all your party information in one easy-to-read view</p>
+    </div>
+
+    <div class="printbar">
+      <button onclick="window.print()">🖨️ Print This Beautiful Form</button>
+    </div>
+
+    <div class="summary">
+      <div class="card"><div class="card-title">Party Name</div><div class="card-value">${escapeHTML(partyName)}</div></div>
+      <div class="card"><div class="card-title">Party Date</div><div class="card-value">${escapeHTML(partyDate || 'Not set')}</div></div>
+      <div class="card"><div class="card-title">Progress</div><div class="card-value">${escapeHTML(document.getElementById('progress-percentage').textContent)}</div></div>
+      <div class="card"><div class="card-title">Budget Left</div><div class="card-value">${escapeHTML(document.getElementById('budget-left').textContent)}</div></div>
+    </div>
+
+    <div class="summary">
+      <div class="card"><div class="card-title">Completed</div><div class="card-value">${escapeHTML(document.getElementById('completed-count').textContent)}</div></div>
+      <div class="card"><div class="card-title">Pending</div><div class="card-value">${escapeHTML(document.getElementById('pending-count').textContent)}</div></div>
+      <div class="card"><div class="card-title">Total Budget</div><div class="card-value">${escapeHTML(document.getElementById('budget-total').textContent)}</div></div>
+      <div class="card"><div class="card-title">Total Spent</div><div class="card-value">${escapeHTML(document.getElementById('budget-spent').textContent)}</div></div>
+    </div>
+
+    <div class="small-note">This printable HTML form shows the buyer's birthday planner information in a beautiful easy-to-read layout.</div>
+
+    ${sectionsHTML}
+
+    <div class="footer">
+      Printed from the All in One Birthday Interactive Planner App.
+    </div>
+  </div>
+</body>
+</html>
+`;
+
+  const printWindow = window.open('', '_blank');
+  if (!printWindow) {
+    alert('Please allow popups to print the beautiful HTML form.');
+    return;
+  }
+
+  printWindow.document.open();
+  printWindow.document.write(printableHTML);
+  printWindow.document.close();
+  printWindow.focus();
+
+  setTimeout(() => {
+    printWindow.print();
+  }, 500);
+}
+
 
 function importBeautifulFormFile(event) {
   const file = event.target.files[0];
